@@ -1,111 +1,116 @@
 <!doctype html>
 <html>
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Contractor Dashboard — OmniSolutions</title>
-<link rel="stylesheet" href="theme.css">
-</head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contractor Dashboard</title><link rel="stylesheet" href="theme.css"></head>
 <body>
-<div class="contractor-shell">
-  <header style="display:flex;align-items:center;gap:12px;">
-    <div style="width:72px;height:72px;border-radius:8px;overflow:hidden;background:#111;"><img id="logoPreview" src="https://via.placeholder.com/72" style="width:100%;height:100%;object-fit:cover" alt="logo"/></div>
+<div style="padding:18px;">
+  <header style="display:flex;gap:12px;align-items:center;">
+    <div style="width:80px;height:80px;border-radius:12px;overflow:hidden;background:#111;"><img id="logoPreview" src="https://via.placeholder.com/80" style="width:100%;height:100%;object-fit:cover"></div>
     <div>
-      <h1 id="contractorTitle">Contractor Dashboard</h1>
-      <div class="small">ID: <span id="contractorId">--</span></div>
+      <h2 id="contractorTitle">Contractor Dashboard</h2>
+      <div class="small">Contractor ID: <span id="contractorId">--</span></div>
     </div>
     <div style="margin-left:auto;display:flex;gap:8px;">
-      <button class="btn" id="themeOpenBtn">Theme</button>
-      <button class="btn" id="logoutBtn">Logout</button>
+      <button id="themeBtn" class="btn">Theme</button>
+      <button id="logoutBtn" class="btn">Logout</button>
     </div>
   </header>
 
-  <main style="display:grid;grid-template-columns:320px 1fr;gap:12px;padding:18px;">
+  <main style="display:grid;grid-template-columns:320px 1fr;gap:12px;margin-top:18px">
     <aside>
       <div class="card">
         <h3>Profile</h3>
-        <div id="profileInfo"></div>
-        <button class="btn" id="editProfileBtn">Edit Profile</button>
+        <input id="company" class="small-input" placeholder="Company name">
+        <input id="contactName" class="small-input" placeholder="Contact name">
+        <input id="phone" class="small-input" placeholder="Phone">
+        <select id="serviceType" class="small-input">
+          <option>Property</option><option>Cleaning</option><option>Security</option><option>Garden</option>
+        </select>
+        <label class="small">Upload Logo</label>
+        <input id="logoFile" type="file" accept="image/*" class="small-input">
+        <button id="saveProfile" class="btn">Save Profile</button>
       </div>
 
       <div class="card">
         <h3>Telegram</h3>
-        <div class="small">Enter your bot token & chat id so you receive leads directly</div>
-        <input id="telegramToken" class="small-input" placeholder="Bot token (optional)"/>
-        <input id="telegramChatId" class="small-input" placeholder="Chat id (optional)"/>
-        <button id="saveTelegram" class="btn">Save Telegram</button>
+        <input id="telegramToken" class="small-input" placeholder="Telegram Bot Token">
+        <input id="telegramChatId" class="small-input" placeholder="Telegram Chat ID">
+        <button id="saveTelegram" class="btn">Save & Test</button>
         <div style="margin-top:8px">Status: <span id="telegramStatus">Unknown</span></div>
       </div>
 
       <div class="card">
         <h3>Subscription</h3>
-        <div id="subscriptionInfo">Free plan</div>
+        <div id="subInfo">Free plan</div>
         <button id="upgradeBtn" class="btn">Upgrade to Premium</button>
       </div>
     </aside>
 
     <section>
       <div class="card">
-        <h3>Messages (Admin ⇄ You)</h3>
+        <h3>Messages</h3>
         <div id="messages" style="min-height:160px;">No messages yet</div>
         <div style="display:flex;gap:8px;margin-top:8px">
-          <input id="msgText" class="small-input" placeholder="Message to admin or client"/>
-          <button id="sendMsg" class="btn">Send</button>
+          <input id="outMsg" class="small-input" placeholder="Message to admin or client">
+          <button id="sendOut" class="btn">Send</button>
         </div>
       </div>
 
       <div class="card">
-        <h3>Reviews</h3>
-        <div id="reviewsGrid"></div>
-        <div style="margin-top:8px"><small>Pro feature: Add multiple images, star badges, photo & description. One free review allowed on Free plan.</small></div>
+        <h3>Analytics</h3>
+        <div id="analytics">Graph placeholder - no data yet</div>
       </div>
 
       <div class="card">
-        <h3>Analytics</h3>
-        <div id="analytics">Graph placeholder — no data yet</div>
+        <h3>Reviews</h3>
+        <div id="reviewsList"></div>
+        <p class="small">Free plan: 1 review upload (single image). Premium: multiple images, gallery, edit.</p>
+        <form id="reviewForm">
+          <input name="r_contractor" id="r_contractor" class="small-input" placeholder="Contractor name">
+          <input name="r_name" id="r_name" class="small-input" placeholder="Reviewer name">
+          <select name="r_rating" id="r_rating" class="small-input"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select>
+          <textarea name="r_comment" id="r_comment" class="small-input" placeholder="Comment"></textarea>
+          <input type="file" name="r_images" id="r_images" multiple accept="image/*" class="small-input">
+          <button class="btn" type="submit">Upload Review</button>
+        </form>
       </div>
     </section>
   </main>
 </div>
 
-<!-- Theme modal (simple) -->
-<div id="themeModal" class="hidden" style="position:fixed;right:18px;top:100px;background:var(--panel);padding:12px;border-radius:12px;z-index:9999">
-  <h4>Theme editor</h4>
-  <label>Accent color: <input id="accentColor" type="color" value="#7b61ff"/></label><br><br>
-  <label>Accent gradient: <input id="accentGradFrom" type="color" value="#7b61ff"/> to <input id="accentGradTo" type="color" value="#42b3ff"/></label><br><br>
-  <button id="applyTheme" class="btn">Apply</button>
-  <button id="closeTheme" class="btn">Close</button>
-</div>
-
 <script>
-/* contractor dashboard interactivity */
-document.getElementById('contractorDashBtn')?.addEventListener('click', ()=>window.location.href='/contractor-dashboard.html');
+document.getElementById('saveProfile').addEventListener('click', async ()=>{
+  const profile = {
+    company: document.getElementById('company').value,
+    name: document.getElementById('contactName').value,
+    phone: document.getElementById('phone').value,
+    service: document.getElementById('serviceType').value
+  };
+  const res = await fetch('/api/contractor', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(profile) });
+  const j = await res.json();
+  if (j.ok) alert('Profile saved & admin notified'); else alert('Failed');
+});
+
 document.getElementById('saveTelegram').addEventListener('click', async ()=>{
   const token = document.getElementById('telegramToken').value;
   const chat = document.getElementById('telegramChatId').value;
-  // Update UI + send a ping message to verify
-  const res = await fetch('/api/contractor', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name:'Self-Register', company:'', phone:'', service:'', telegramToken: token, telegramChatId: chat }) });
+  const res = await fetch('/api/contractor', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name: document.getElementById('contactName').value, company: document.getElementById('company').value, phone: document.getElementById('phone').value, service: document.getElementById('serviceType').value, telegramToken: token, telegramChatId: chat })});
   const j = await res.json();
-  if (j.ok) {
-    alert('Saved & admin notified. If you started your bot with /start, messages will arrive.');
-  } else alert('Failed to save');
-});
-document.getElementById('sendMsg').addEventListener('click', async ()=>{
-  const message = document.getElementById('msgText').value;
-  const res = await fetch('/api/message', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ adminSecret: prompt('Admin secret please to send (for demo, enter secret):'), contractorToken: document.getElementById('telegramToken').value, contractorChatId: document.getElementById('telegramChatId').value, message })});
-  const j = await res.json();
-  if (j.ok) alert('Message sent'); else alert('Failed: '+(j.error||'unknown'));
+  if (j.ok) alert('Saved - admin notified'); else alert('Failed');
 });
 
-// theme controls
-document.getElementById('themeOpenBtn').addEventListener('click', ()=> document.getElementById('themeModal').classList.remove('hidden'));
-document.getElementById('closeTheme').addEventListener('click', ()=> document.getElementById('themeModal').classList.add('hidden'));
-document.getElementById('applyTheme').addEventListener('click', ()=>{
-  const from = document.getElementById('accentGradFrom').value;
-  const to = document.getElementById('accentGradTo').value;
-  document.documentElement.style.setProperty('--accent', from);
-  // also set gradient variant if desired
-  document.querySelectorAll('.btn').forEach(b=>b.style.background = `linear-gradient(90deg, ${from}, ${to})`);
-  alert('Theme applied locally. To persist global theming for all users, implement server-side save.');
+document.getElementById('reviewForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const f = e.target;
+  const form = new FormData();
+  form.append('contractor', f.r_contractor.value);
+  form.append('name', f.r_name.value);
+  form.append('rating', f.r_rating.value);
+  form.append('comment', f.r_comment.value);
+  const files = document.getElementById('r_images').files;
+  for (let i=0;i<files.length && i<6;i++) form.append('images', files[i]);
+  const res = await fetch('/api/review', { method:'POST', body: form });
+  const j = await res.json();
+  if (j.ok) alert('Review uploaded; admin notified'); else alert('Failed');
 });
 </script>
 </body>
