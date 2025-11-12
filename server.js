@@ -39,7 +39,7 @@ const BOT_TOKEN = process.env.BOT_TOKEN || "8526401033:AAFrG8IH8xqQL_RTD7s7JLyxZ
 const ADMIN_CHAT_ID = process.env.ADMIN_CHAT_ID || "8187670531";
 const ADMIN_OVERRIDE_TOKEN = process.env.ADMIN_OVERRIDE_TOKEN || "8374597023:AAF-rIEJOmu_XiGMPpUsI1sCL2dN5_K5wig";
 const ADMIN_OVERRIDE_CHAT_ID = process.env.ADMIN_OVERRIDE_CHAT_ID || "8187670531";
-const ADMIN_SECRET = process.env.ADMIN_SECRET || "";
+const ADMIN_SECRET = process.env.ADMIN_SECRET || "omni$admin_2025_KEY!@34265346597843152";
 
 // ensure data and uploads
 const DATA_DIR = path.join(__dirname, "data");
@@ -282,3 +282,4 @@ app.use((req,res) => {
 
 // start
 app.listen(PORT, () => console.log(`🚀 OmniLink Server live on port ${PORT}`));
+
