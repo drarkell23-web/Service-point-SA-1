@@ -1,7 +1,7 @@
 {
   "name": "omnilink-solutions",
   "version": "1.0.0",
-  "description": "OmniLink Solutions — Telegram lead and contractor management",
+  "description": "OmniLink Solutions - site + Telegram lead routing",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -11,8 +11,9 @@
     "node": "18.x"
   },
   "dependencies": {
-    "express": "^4.19.2",
     "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
     "node-fetch": "^3.3.2"
   }
 }
