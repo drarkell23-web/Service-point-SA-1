@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contractor Dashboard — OmniSolutions</title>
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+<div class="contractor-shell">
+  <header><h1>Contractor Dashboard</h1></header>
+
+  <main>
+    <section class="card">
+      <h3>Profile & Telegram</h3>
+      <form id="profileForm">
+        <input name="company" placeholder="Company" class="small-input" required>
+        <input name="name" placeholder="Contact name" class="small-input" required>
+        <input name="phone" placeholder="Phone" class="small-input" required>
+        <input name="telegramToken" placeholder="Telegram Bot Token (optional)" class="small-input">
+        <input name="telegramChatId" placeholder="Telegram Chat ID (optional)" class="small-input">
+        <button class="btn" type="submit">Save Profile & Register</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h3>My Jobs</h3>
+      <div id="jobs">No jobs yet — graph will appear here when data exists.</div>
+    </section>
+
+    <section class="card">
+      <h3>Upload Review (free: 1)</h3>
+      <form id="reviewForm">
+        <input name="contractor" placeholder="Contractor name" class="small-input"><br>
+        <input name="name" placeholder="Your name" class="small-input"><br>
+        <select name="rating" class="small-input"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select><br>
+        <textarea name="comment" placeholder="Comment" class="small-input"></textarea><br>
+        <input type="file" name="images" multiple accept="image/*" class="small-input"><br>
+        <button class="btn" type="submit">Submit Review</button>
+      </form>
+    </section>
+  </main>
+</div>
+
+<script>
+document.getElementById('profileForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const f = e.target;
+  const data = {
+    name: f.name.value,
+    company: f.company.value,
+    phone: f.phone.value,
+    telegramToken: f.telegramToken.value,
+    telegramChatId: f.telegramChatId.value,
+    service: "unspecified"
+  };
+  // Save to server
+  const res = await fetch('/api/contractor', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) });
+  const j = await res.json();
+  if (j.ok) alert('Profile saved; admin notified.');
+  else alert('Failed to save');
+});
+
+document.getElementById('reviewForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const f = e.target;
+  const form = new FormData();
+  form.append('contractor', f.contractor.value);
+  form.append('name', f.name.value);
+  form.append('rating', f.rating.value);
+  form.append('comment', f.comment.value);
+  const files = f.images.files;
+  for (let i=0;i<files.length && i<5;i++) form.append('images', files[i]);
+  const res = await fetch('/api/review', { method:'POST', body: form });
+  const json = await res.json();
+  if (json.ok) alert('Review uploaded; admin notified.');
+  else alert('Failed to upload');
+});
+</script>
+</body>
+</html>
