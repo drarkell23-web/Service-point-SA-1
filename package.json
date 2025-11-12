@@ -1,28 +1,18 @@
 {
-  "name": "functions",
-  "description": "Cloud Functions for Firebase",
+  "name": "omnilink-solutions",
+  "version": "1.0.0",
+  "description": "OmniLink Solutions — Telegram lead and contractor management",
+  "main": "server.js",
+  "type": "module",
   "scripts": {
-    "serve": "firebase emulators:start --only functions",
-    "shell": "firebase functions:shell",
-    "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "start": "node server.js"
   },
   "engines": {
-    "node": "22"
+    "node": "18.x"
   },
-  "main": "index.js",
   "dependencies": {
-    "firebase-admin": "^12.6.0",
-    "firebase-functions": "^6.0.1"
-  },
-  "devDependencies": {
-    "firebase-functions-test": "^3.1.0"
-  },
-  "private": true
-}
-"dependencies": {
-  "express": "^4.19.2",
-  "dotenv": "^16.4.5",
-  "node-fetch": "^3.3.2"
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5",
+    "node-fetch": "^3.3.2"
+  }
 }
