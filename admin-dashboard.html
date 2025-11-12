@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Dashboard — OmniSolutions</title>
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+<div class="admin-shell">
+  <header class="admin-header">
+    <h1>Admin Dashboard</h1>
+    <div class="controls">
+      <label>Override Bot Token<input id="overrideToken" class="small-input"></label>
+      <label>Override Chat ID<input id="overrideChat" class="small-input"></label>
+      <button id="saveOverride" class="btn">Save (note: update Render env for persistence)</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <section class="card">
+      <h3>Leads (recent)</h3>
+      <div id="leadsList"></div>
+    </section>
+
+    <section class="card">
+      <h3>Contractors (recent)</h3>
+      <div id="contractorsList"></div>
+    </section>
+
+    <section class="card">
+      <h3>Send Message to Contractor</h3>
+      <form id="msgForm">
+        <input name="contractorToken" placeholder="Contractor Bot Token (optional)" class="small-input">
+        <input name="contractorChatId" placeholder="Contractor Chat ID (optional)" class="small-input">
+        <textarea name="message" placeholder="Message" class="small-input" rows="4"></textarea>
+        <input name="adminSecret" placeholder="Admin secret" class="small-input" required>
+        <button class="btn" type="submit">Send Message</button>
+      </form>
+    </section>
+  </main>
+</div>
+
+<script>
+async function loadLogs() {
+  const leads = await fetch('/api/logs/leads').then(r=>r.json());
+  const contractors = await fetch('/api/logs/contractors').then(r=>r.json());
+  const leadsList = document.getElementById('leadsList');
+  leadsList.innerHTML = leads.map(l=>`<div class="mini">${l.ts} — ${l.name||'-'} — ${l.phone||'-'} — ${l.service||'-'}</div>`).join('');
+  const contractorsList = document.getElementById('contractorsList');
+  contractorsList.innerHTML = contractors.map(c=>`<div class="mini">${c.ts} — ${c.company||c.name||'-'} — ${c.phone||'-'} — ${c.service||'-'}</div>`).join('');
+}
+
+document.getElementById('msgForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const f = e.target;
+  const payload = {
+    adminSecret: f.adminSecret.value,
+    contractorToken: f.contractorToken.value,
+    contractorChatId: f.contractorChatId.value,
+    message: f.message.value
+  };
+  const res = await fetch('/api/message', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+  const json = await res.json();
+  if (json.ok) alert('Message sent');
+  else alert('Failed: '+ (json.error||'unknown'));
+});
+
+document.getElementById('saveOverride').addEventListener('click', async ()=>{
+  const token = document.getElementById('overrideToken').value;
+  const chat = document.getElementById('overrideChat').value;
+  // advise: update Render environment variables for persistence
+  alert('To persist override, update Render environment variables. This UI only logs the change.');
+  await fetch('/api/set-override', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ adminSecret: prompt('Enter admin secret:'), overrideToken: token, overrideChatId: chat }) });
+});
+
+window.addEventListener('load', loadLogs);
+</script>
+</body>
+</html>
