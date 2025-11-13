@@ -1,96 +1,83 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>OmniSolutions — All-in-One Service Network</title>
-  <link rel="stylesheet" href="/main.css">
-  <script type="module" src="/main.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omni-Solutions | All Services. One Network.</title>
+
+<link rel="stylesheet" href="main.css">
+<script src="main.js" defer></script>
+
 </head>
-<body class="bg">
-  <div class="app">
-    <!-- Left sidebar: categories -->
-    <aside class="sidebar" aria-label="Categories">
-      <div class="brand">
-        <div class="logo" id="mainLogo">OMNI</div>
-        <h1>OmniSolutions</h1>
-      </div>
+<body>
 
-      <div class="search-wrap">
-        <input id="searchInput" placeholder="Search services or contractors..." />
-      </div>
+<!-- ===================== NAVBAR ===================== -->
+<header class="nav">
+    <div class="logo">Omni-Solutions</div>
+    <nav class="nav-links">
+        <a href="/" class="nav-btn">Home</a>
+        <a href="/contractor-dashboard.html" class="nav-btn">Contractor Login</a>
+        <a href="/reviews.html" class="nav-btn">Reviews</a>
+        <button class="admin-secret-btn" onclick="openAdminLogin()">Admin</button>
+    </nav>
+</header>
 
-      <div class="categories" id="categoriesList">
-        <!-- categories injected here -->
-      </div>
+<!-- ===================== MAIN GRID ===================== -->
+<div class="main-grid">
 
-      <div class="bottom-links">
-        <button id="adminBtn" class="admin-only">Admin</button>
-        <a href="/contractor.html" class="btn">Contractor Dashboard</a>
-      </div>
+    <!-- ========== LEFT: CATEGORIES ========== -->
+    <aside class="left-panel">
+        <h2 class="section-title">Categories</h2>
+        <div id="categoryList" class="category-list">
+            <!-- Filled by JS -->
+        </div>
     </aside>
 
-    <!-- Main content -->
-    <main class="main">
-      <header class="main-header">
-        <div>
-          <h2>Find a service</h2>
-          <p class="muted">Choose a category on the left or search — a chatbot will help you narrow down what you need.</p>
+    <!-- ========== CENTER: SERVICES ========== -->
+    <main class="center-panel">
+        <h2 class="section-title">Choose a Service</h2>
+        <div id="serviceList" class="service-grid">
+            <!-- Populated dynamically -->
         </div>
-        <div class="stats">
-          <div>Leads: <span id="siteLeadsCount">—</span></div>
-          <div>Contractors: <span id="siteContractorsCount">—</span></div>
-        </div>
-      </header>
-
-      <section class="services-area">
-        <div class="services-grid" id="servicesGrid">
-          <!-- service cards -->
-        </div>
-
-        <aside class="right-panel">
-          <div class="bubble-list" id="bubbleList">
-            <!-- bubbles (contractor highlights) -->
-          </div>
-
-          <div class="top-contractors card">
-            <h3>Top Contractors</h3>
-            <div id="topContractors"></div>
-          </div>
-
-          <div class="testimonials card" id="testimonials">
-            <h3>Client Reviews</h3>
-            <div id="reviewsCarousel"></div>
-          </div>
-        </aside>
-      </section>
     </main>
-  </div>
 
-  <!-- Chatbot / Lead modal -->
-  <div id="leadModal" class="modal hidden">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h3 id="leadModalTitle">Request Service</h3>
-        <button id="closeLeadModal">✕</button>
-      </div>
-      <form id="leadForm" class="modal-body">
-        <input name="service" id="leadService" readonly />
-        <input name="name" placeholder="Your full name" required />
-        <input name="phone" placeholder="Phone (e.g. +2771...)" required />
-        <input name="email" placeholder="Email (optional)" />
-        <textarea name="details" placeholder="Tell us what you need" required></textarea>
-        <div class="modal-actions">
-          <button type="submit" class="primary">Send Request</button>
-          <button type="button" id="leadCancel" class="ghost">Cancel</button>
+    <!-- ========== RIGHT: POPULAR CONTRACTORS ========== -->
+    <aside class="right-panel">
+        <h2 class="section-title">Top Contractors</h2>
+        <div id="contractorCards" class="contractor-list">
+            <!-- Loaded from /api/contractors -->
         </div>
-        <div id="leadResult" class="lead-result"></div>
-      </form>
-    </div>
-  </div>
 
-  <!-- Floating admin small button (bottom-right), only visible if you're admin (client-side hide/show) -->
-  <button id="floatingAdmin" class="floating-admin hidden">Admin</button>
+        <h2 class="section-title">Testimonials</h2>
+        <div id="testimonials" class="testimonials-container">
+            <!-- Rotates automatically -->
+        </div>
+    </aside>
+
+</div>
+
+<!-- ===================== CHATBOT / LEAD MODAL ===================== -->
+<div id="leadModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close" onclick="closeLeadModal()">&times;</span>
+
+        <h3 id="leadTitle">Request Service</h3>
+
+        <label>Name</label>
+        <input id="leadName">
+
+        <label>Phone</label>
+        <input id="leadPhone">
+
+        <label>Email</label>
+        <input id="leadEmail">
+
+        <label>Message</label>
+        <textarea id="leadMessage"></textarea>
+
+        <button class="send-btn" onclick="submitLead()">Send Lead</button>
+    </div>
+</div>
 
 </body>
 </html>
