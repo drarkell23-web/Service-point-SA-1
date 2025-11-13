@@ -1,98 +1,55 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Admin Dashboard — Omni</title>
-<link rel="stylesheet" href="theme.css">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin — OmniSolutions</title>
+  <link rel="stylesheet" href="/admin-dashboard.css">
+  <script type="module" src="/admin-dashboard.js" defer></script>
 </head>
-<body>
-<div style="padding:18px">
-  <header style="display:flex;gap:12px;align-items:center">
-    <h1>Admin Dashboard</h1>
-    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-      <input id="adminSecret" type="password" class="small-input" placeholder="Admin secret (required)"/>
-      <button id="loadData" class="btn">Load Data</button>
-    </div>
-  </header>
-
-  <main style="display:grid;grid-template-columns:360px 1fr;gap:12px;margin-top:18px">
-    <aside>
-      <div class="card">
-        <h3>Quick Stats</h3>
-        <div id="statLeads">Leads: 0</div>
-        <div id="statContractors">Contractors: 0</div>
-        <div id="statReviews">Reviews: 0</div>
+<body class="admin-bg">
+  <div class="admin-shell">
+    <header class="admin-top">
+      <div><h2>Admin Panel</h2><div class="muted">Manage contractors, badges, logs, subscriptions</div></div>
+      <div>
+        <button id="refreshBtn" class="primary">Refresh</button>
       </div>
+    </header>
 
-      <div class="card">
-        <h3>Theme Editor</h3>
-        <label>Accent from <input id="accentFrom" type="color" value="#7b61ff"></label><br>
-        <label>Accent to <input id="accentTo" type="color" value="#42b3ff"></label><br>
-        <button id="applyTheme" class="btn" style="margin-top:8px">Apply</button>
-      </div>
-
-      <div class="card">
-        <h3>Subscription Prices</h3>
-        <div class="small">Standard: 1m R350 | 6m R1999 | 1y R3599</div>
-        <div style="margin-top:8px" class="small">Premium: 1m R500 | 6m R2599 | 1y R4999</div>
-      </div>
-    </aside>
-
-    <section>
-      <div class="card">
-        <h3>Contractors</h3>
-        <div id="contractorsList"></div>
-      </div>
-
-      <div class="card">
-        <h3>Leads (recent)</h3>
-        <div id="leadsList"></div>
-      </div>
-
-      <div class="card">
-        <h3>Actions</h3>
-        <div style="display:flex;gap:8px;align-items:center">
-          <input id="badgeForId" class="small-input" placeholder="Contractor ID">
-          <select id="badgeSelect" class="small-input"><option value="platinum">platinum</option><option value="gold">gold</option><option value="silver">silver</option><option value="verified">verified</option></select>
-          <button id="applyBadge" class="btn">Apply Badge</button>
+    <main class="admin-main">
+      <section class="left-col">
+        <div class="card">
+          <h3>Contractors</h3>
+          <div id="contractorsTable" class="table-wrap"></div>
         </div>
-      </div>
-    </section>
-  </main>
-</div>
 
-<script>
-document.getElementById('loadData').addEventListener('click', loadAll);
+        <div class="card" style="margin-top:12px">
+          <h3>Apply Badge</h3>
+          <form id="badgeForm">
+            <input name="contractorId" placeholder="Contractor ID or phone" required />
+            <input name="badge" placeholder="Badge name (platinum, gold, verified)" required />
+            <input name="adminSecret" placeholder="Admin secret" required />
+            <div style="margin-top:8px"><button class="primary">Apply Badge</button></div>
+            <div id="badgeResult" class="muted"></div>
+          </form>
+        </div>
+      </section>
 
-async function loadAll(){
-  const secret = document.getElementById('adminSecret').value;
-  if (!secret) return alert('Enter admin secret');
-  const contractors = await fetch('/api/contractors').then(r=>r.json()).then(j=>j.contractors || []);
-  const leads = await fetch('/api/logs/leads').then(r=>r.json()).catch(()=>[]);
-  const reviews = await fetch('/api/logs/reviews').then(r=>r.json()).catch(()=>[]);
+      <aside class="right-col">
+        <div class="card">
+          <h3>Logs</h3>
+          <select id="logSelect"><option value="leads">leads</option><option value="contractors">contractors</option><option value="reviews">reviews</option><option value="messages">messages</option></select>
+          <button id="loadLogsBtn" class="ghost">Load</button>
+          <div id="logsArea" class="log-area"></div>
+        </div>
 
-  document.getElementById('statLeads').textContent = `Leads: ${leads.length}`;
-  document.getElementById('statContractors').textContent = `Contractors: ${contractors.length}`;
-  document.getElementById('statReviews').textContent = `Reviews: ${reviews.length}`;
-
-  document.getElementById('contractorsList').innerHTML = contractors.map(c => `<div class="mini"><strong>${c.company||c.name||'Unnamed'}</strong> — ${c.phone||'-'} — ${c.service||'-'} <button class="btn" onclick="viewContractor('${c.id}')">View</button></div>`).join('') || '<div class="small">No contractors</div>';
-  document.getElementById('leadsList').innerHTML = leads.slice(0,80).map(l=>`<div class="mini">${l.ts} — ${l.name||'-'} — ${l.phone||'-'} — ${l.service||'-'}</div>`).join('');
-}
-
-function viewContractor(id) {
-  window.open(`/contractor-dashboard.html?contractor=${encodeURIComponent(id)}`, '_blank');
-}
-
-document.getElementById('applyBadge').addEventListener('click', async ()=>{
-  const id = document.getElementById('badgeForId').value.trim();
-  const badge = document.getElementById('badgeSelect').value;
-  const secret = document.getElementById('adminSecret').value;
-  if (!secret) return alert('Admin secret required');
-  if (!id) return alert('Contractor id required');
-  const res = await fetch('/api/apply-badge', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ adminSecret: secret, contractorId: id, badge })});
-  const j = await res.json();
-  if (j.ok) alert('Badge applied'); else alert('Failed: ' + (j.error||'unknown'));
-});
-</script>
+        <div class="card" style="margin-top:12px">
+          <h3>Global Settings</h3>
+          <div><label>Default lead limit (free): <input id="leadLimit" type="number" value="10" min="0" /></label></div>
+          <div style="margin-top:8px"><button id="saveSettingsBtn" class="primary">Save Settings</button></div>
+        </div>
+      </aside>
+    </main>
+  </div>
 </body>
 </html>
