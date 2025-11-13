@@ -1,83 +1,97 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Omni-Solutions | All Services. One Network.</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Omni-Solutions — All Services, One Network</title>
 
-<link rel="stylesheet" href="main.css">
-<script src="main.js" defer></script>
+  <!-- main CSS -->
+  <link rel="stylesheet" href="/main.css">
 
+  <!-- main JS (loads services & handles lead modal) -->
+  <script type="module" src="/main.js" defer></script>
 </head>
 <body>
-
-<!-- ===================== NAVBAR ===================== -->
-<header class="nav">
-    <div class="logo">Omni-Solutions</div>
-    <nav class="nav-links">
-        <a href="/" class="nav-btn">Home</a>
-        <a href="/contractor-dashboard.html" class="nav-btn">Contractor Login</a>
-        <a href="/reviews.html" class="nav-btn">Reviews</a>
-        <button class="admin-secret-btn" onclick="openAdminLogin()">Admin</button>
+  <!-- NAV -->
+  <header class="nav">
+    <div class="nav-left">
+      <div class="logo">Omni-Solutions</div>
+      <div class="tag">Find trusted local pros — instant leads</div>
+    </div>
+    <nav class="nav-right">
+      <a href="/contractor-dashboard.html" class="nav-link">Contractor</a>
+      <a href="/reviews.html" class="nav-link">Reviews</a>
+      <button class="nav-ghost" onclick="openAdminLogin()">Admin</button>
     </nav>
-</header>
+  </header>
 
-<!-- ===================== MAIN GRID ===================== -->
-<div class="main-grid">
+  <!-- GRID -->
+  <div class="page-grid">
 
-    <!-- ========== LEFT: CATEGORIES ========== -->
-    <aside class="left-panel">
-        <h2 class="section-title">Categories</h2>
-        <div id="categoryList" class="category-list">
-            <!-- Filled by JS -->
-        </div>
+    <!-- LEFT: CATEGORIES -->
+    <aside class="panel left">
+      <h3>Categories</h3>
+      <div id="categories" class="categories"></div>
     </aside>
 
-    <!-- ========== CENTER: SERVICES ========== -->
-    <main class="center-panel">
-        <h2 class="section-title">Choose a Service</h2>
-        <div id="serviceList" class="service-grid">
-            <!-- Populated dynamically -->
+    <!-- CENTER: SERVICES -->
+    <main class="panel center">
+      <div class="center-header">
+        <h2>Services</h2>
+        <div class="search-wrap">
+          <input id="serviceSearch" placeholder="Search services (e.g. plumbing, roofing...)" />
         </div>
+      </div>
+
+      <div id="serviceGrid" class="service-grid" aria-live="polite"></div>
     </main>
 
-    <!-- ========== RIGHT: POPULAR CONTRACTORS ========== -->
-    <aside class="right-panel">
-        <h2 class="section-title">Top Contractors</h2>
-        <div id="contractorCards" class="contractor-list">
-            <!-- Loaded from /api/contractors -->
-        </div>
+    <!-- RIGHT: TOP CONTRACTORS & TESTIMONIALS -->
+    <aside class="panel right">
+      <h3>Top Contractors</h3>
+      <div id="topContractors" class="top-contractors"></div>
 
-        <h2 class="section-title">Testimonials</h2>
-        <div id="testimonials" class="testimonials-container">
-            <!-- Rotates automatically -->
-        </div>
+      <h3 style="margin-top:18px">Testimonials</h3>
+      <div id="testimonials" class="testimonials"></div>
     </aside>
+  </div>
 
-</div>
+  <!-- LEAD CHATBOT MODAL -->
+  <div id="leadModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <button class="modal-close" aria-label="close" onclick="closeLeadModal()">✕</button>
+      <div id="modalHeader" class="modal-header">Request Service</div>
 
-<!-- ===================== CHATBOT / LEAD MODAL ===================== -->
-<div id="leadModal" class="modal hidden">
-    <div class="modal-content">
-        <span class="close" onclick="closeLeadModal()">&times;</span>
+      <div class="modal-body">
+        <label>Service</label>
+        <input id="modalService" readonly />
 
-        <h3 id="leadTitle">Request Service</h3>
-
-        <label>Name</label>
-        <input id="leadName">
+        <label>Your name</label>
+        <input id="modalName" placeholder="Full name" />
 
         <label>Phone</label>
-        <input id="leadPhone">
+        <input id="modalPhone" placeholder="+27 ..." />
 
         <label>Email</label>
-        <input id="leadEmail">
+        <input id="modalEmail" placeholder="you@example.com (optional)" />
 
-        <label>Message</label>
-        <textarea id="leadMessage"></textarea>
+        <label>Message / details</label>
+        <textarea id="modalMessage" rows="4" placeholder="Tell us location, urgency, details..."></textarea>
 
-        <button class="send-btn" onclick="submitLead()">Send Lead</button>
+        <div class="modal-actions">
+          <select id="chooseContractor"><option value="">Send to all / Admin</option></select>
+          <button id="sendLeadBtn" class="btn-primary">Send Request</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
+  <!-- bottom-right admin badge (only visible to admin who logs in) -->
+  <div id="adminBadge" class="admin-badge hidden" title="Admin access">Admin</div>
+
+  <footer class="site-footer">
+    <div>© Omni-Solutions</div>
+    <div class="small muted">Trusted local pros — instant quotes & vetted contractors</div>
+  </footer>
 </body>
 </html>
