@@ -45,14 +45,12 @@
 
       <section class="card">
         <h2>Testimonials</h2>
-        <div id="testimonials" style="display:flex;gap:12px;align-items:center;overflow:hidden;position:relative">
-          <!-- Auto-rotating testimonial cards will be injected here -->
-        </div>
+        <div id="testimonials" style="display:flex;gap:12px;align-items:center;overflow:hidden;position:relative"></div>
       </section>
     </main>
   </div>
 
-  <!-- Local services modal -->
+  <!-- Local overlay modal -->
   <div id="localOverlay" style="display:none;position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(2,2,6,0.75);z-index:9999;align-items:center;justify-content:center">
     <div style="background:linear-gradient(180deg,#0b0813,#0d0a17);padding:18px;border-radius:12px;width:920px;max-width:96%;color:var(--ink)">
       <div style="display:flex;justify-content:space-between;align-items:center">
@@ -73,7 +71,7 @@
     </div>
   </div>
 
-  <!-- Chat widget (floating) -->
+  <!-- Chat widget -->
   <button id="chatOpen" class="admin-btn">Chat</button>
   <div id="chatWindow" style="display:none;position:fixed;right:18px;bottom:80px;width:380px;max-width:92vw;z-index:10000;border-radius:12px;overflow:hidden">
     <div style="background:linear-gradient(90deg,var(--accent-from),var(--accent-to));padding:10px;color:white;font-weight:700">Omni Chat</div>
@@ -88,31 +86,23 @@
 
 <script type="module">
 import confettiSpark from './confetti.js';
-import { createLead } from './Firebase-bridge.js';
-
+import { createLead, fetchServices, fetchContractors } from './Firebase-bridge.js';
 confettiSpark.init(document.getElementById('confettiCanvas'));
-
-async function loadServices() {
-  const res = await fetch('/api/services'); const j = await res.json(); return j.services || [];
-}
-async function loadContractors() {
-  const res = await fetch('/api/contractors'); const j = await res.json(); return j.contractors || [];
-}
 
 let SERVICES = [], CONTRACTORS = [];
 (async ()=>{
-  SERVICES = await loadServices();
-  CONTRACTORS = await loadContractors();
+  SERVICES = await fetchServices();
+  CONTRACTORS = await fetchContractors();
 
-  // build categories
+  // categories
   const cats = [...new Set(SERVICES.map(s => s.cat))];
   const container = document.getElementById('categoriesContainer');
-  cats.forEach(cat => {
+  cats.forEach(cat=>{
     const row = document.createElement('div');
     row.innerHTML = `<div class="cat-toggle">${cat} <span style="opacity:.6">▸</span></div><div class="services-list"></div>`;
     const sl = row.querySelector('.services-list');
-    SERVICES.filter(s => s.cat === cat).forEach(s => {
-      const b = document.createElement('button'); b.className='svc-bubble'; b.textContent=s.name;
+    SERVICES.filter(s=>s.cat===cat).forEach(s=>{
+      const b = document.createElement('button'); b.className='svc-bubble'; b.textContent = s.name;
       b.addEventListener('click', ()=> openLocal(s));
       sl.appendChild(b);
     });
@@ -123,16 +113,16 @@ let SERVICES = [], CONTRACTORS = [];
     container.appendChild(row);
   });
 
-  // popular grid
+  // popular
   const pop = document.getElementById('popular');
-  SERVICES.slice(0,24).forEach(s => {
+  SERVICES.slice(0,24).forEach(s=>{
     const el = document.createElement('div'); el.className='service-card';
     el.innerHTML = `<div style="font-weight:800">${s.name}</div><div class="small" style="color:var(--muted)">${s.cat}</div><div style="margin-top:8px"><button class="btn chooseBtn">Choose</button></div>`;
     el.querySelector('.chooseBtn').addEventListener('click', ()=> openLocal(s));
     pop.appendChild(el);
   });
 
-  // testimonials (rotating sample)
+  // testimonials (sample)
   const tWrap = document.getElementById('testimonials');
   const example = [
     {name:"Janine P.", text:"Quick and reliable. Fixed my roof same day!", rating:5},
@@ -144,38 +134,30 @@ let SERVICES = [], CONTRACTORS = [];
     c.innerHTML = `<div style="font-weight:800">${x.name}</div><div class="small" style="color:var(--muted);margin:8px 0">${x.text}</div><div style="font-weight:700">⭐ ${x.rating}</div>`;
     tWrap.appendChild(c);
   });
-  // simple auto-scroll for testimonials
   let pos = 0;
-  setInterval(()=> {
-    pos = (pos + 1) % tWrap.children.length;
-    tWrap.style.transform = `translateX(-${pos * 280}px)`;
-    tWrap.style.transition = 'transform 600ms ease';
-  }, 4000);
+  setInterval(()=>{ pos=(pos+1)%tWrap.children.length; tWrap.style.transform = `translateX(-${pos*280}px)`; tWrap.style.transition='transform 600ms ease'; }, 4000);
 
 })();
 
 function openLocal(service) {
   document.getElementById('localOverlay').style.display = 'flex';
   document.getElementById('localServiceName').textContent = `${service.name} — ${service.cat}`;
-  const matches = CONTRACTORS.filter(c => (c.service && c.service.toLowerCase().includes(service.cat.split(' ')[0].toLowerCase())) || (c.tags && c.tags.includes(service.name)));
-  const showList = matches.length ? matches : CONTRACTORS;
-  const top3 = [...showList].sort((a,b)=> (b.rating||0) - (a.rating||0)).slice(0,3);
-  const top3Wrap = document.getElementById('top3'); top3Wrap.innerHTML = '';
-  top3.forEach(c => top3Wrap.appendChild(renderContractor(c, true)));
-  const localList = document.getElementById('localList'); localList.innerHTML = '';
-  showList.forEach(c => localList.appendChild(renderContractor(c, false)));
+  const matched = CONTRACTORS.filter(c => (c.service && c.service.toLowerCase().includes(service.cat.split(' ')[0].toLowerCase())) || (Array.isArray(c.tags) && c.tags.some(t=>t.toLowerCase().includes(service.name.toLowerCase()))));
+  const listToShow = matched.length ? matched : CONTRACTORS;
+  const top3 = [...listToShow].sort((a,b)=>(b.rating||0)-(a.rating||0)).slice(0,3);
+  const top3Wrap = document.getElementById('top3'); top3Wrap.innerHTML='';
+  top3.forEach(c => top3Wrap.appendChild(renderContractorCard(c, true)));
+  const localList = document.getElementById('localList'); localList.innerHTML='';
+  listToShow.forEach(c => localList.appendChild(renderContractorCard(c,false)));
 }
 
-function renderContractor(c, isTop) {
-  const el = document.createElement('div'); el.className = 'contractor-card';
+function renderContractorCard(c, isTop=false) {
+  const el = document.createElement('div'); el.className='contractor-card';
   const logo = document.createElement('img'); logo.className='contractor-logo'; logo.src = c.logoUrl || '/assets/default-logo.png';
   const info = document.createElement('div'); info.className='contractor-info';
-  info.innerHTML = `<div style="font-weight:800">${c.company || c.name || 'Unnamed'}</div><div class="small" style="color:var(--muted)">${c.service || c.tags?.join(', ') || 'General'}</div><div style="margin-top:8px" class="small">📞 ${c.phone || '-'} &nbsp; • &nbsp; ⭐ ${(c.rating||0).toFixed(1)}</div>`;
+  info.innerHTML = `<div style="font-weight:800">${c.company||c.name||'Unnamed'}</div><div class="small" style="color:var(--muted)">${c.service||c.tags?.join(', ')||'General'}</div><div style="margin-top:8px" class="small">📞 ${c.phone||'-'} &nbsp; • &nbsp; ⭐ ${(c.rating||0).toFixed(1)}</div>`;
   const btn = document.createElement('button'); btn.className='btn'; btn.textContent='Contact';
-  btn.addEventListener('click', ()=> {
-    openChatForContractor(c);
-    document.getElementById('localOverlay').style.display = 'none';
-  });
+  btn.addEventListener('click', ()=> { openChatForContractor(c); document.getElementById('localOverlay').style.display='none'; });
   el.appendChild(logo); el.appendChild(info); el.appendChild(btn);
   if (isTop) {
     const badge = document.createElement('img'); badge.className='badge-img'; badge.src = c.badge ? `/badges/${c.badge}.png` : '/badges/platinum.png';
@@ -184,18 +166,15 @@ function renderContractor(c, isTop) {
   return el;
 }
 
-document.getElementById('closeLocal').addEventListener('click', ()=> document.getElementById('localOverlay').style.display = 'none');
+document.getElementById('closeLocal').addEventListener('click', ()=> document.getElementById('localOverlay').style.display='none');
 
 function openChatForContractor(c) {
-  // open chat and prefill contractor id so lead goes to them too
-  const chatOpen = document.getElementById('chatOpen');
-  chatOpen.click();
-  // store contractor preference in a global var (chat handler reads it)
   window.__PREFERRED_CONTRACTOR = c.id;
+  document.getElementById('chatOpen').click();
 }
 
-/* CHAT widget basic flow (multi-step) */
-const chatOpenBtn = document.getElementById('chatOpen');
+/* Chat flow */
+const chatOpen = document.getElementById('chatOpen');
 const chatWindow = document.getElementById('chatWindow');
 const chatMsgs = document.getElementById('chatMsgs');
 const chatInput = document.getElementById('chatInput');
@@ -203,38 +182,27 @@ const chatSend = document.getElementById('chatSend');
 
 let convo = { step:0, data:{} };
 
-chatOpenBtn.addEventListener('click', ()=> {
-  chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
+chatOpen.addEventListener('click', ()=> {
+  chatWindow.style.display = chatWindow.style.display==='none' ? 'block' : 'none';
   if (chatWindow.style.display === 'block') startConvo();
 });
+
 chatSend.addEventListener('click', handleChat);
 chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleChat(); });
 
-function pushBot(text) {
-  const el = document.createElement('div'); el.style.padding='10px'; el.style.borderRadius='8px'; el.style.background='#0f0b1a'; el.style.marginBottom='8px'; el.style.color='var(--muted)'; el.textContent = text;
-  chatMsgs.prepend(el);
-}
-function pushUser(text) {
-  const el = document.createElement('div'); el.style.padding='8px'; el.style.borderRadius='8px'; el.style.background='linear-gradient(90deg,var(--accent-from),var(--accent-to))'; el.style.color='white'; el.style.marginBottom='8px'; el.style.alignSelf='flex-end'; el.textContent = text;
-  chatMsgs.prepend(el);
-}
+function pushBot(text){ const d=document.createElement('div'); d.style.padding='10px'; d.style.borderRadius='8px'; d.style.background='#0f0b1a'; d.style.marginBottom='8px'; d.style.color='var(--muted)'; d.textContent=text; chatMsgs.prepend(d); }
+function pushUser(text){ const d=document.createElement('div'); d.style.padding='8px'; d.style.borderRadius='8px'; d.style.background='linear-gradient(90deg,var(--accent-from),var(--accent-to))'; d.style.color='white'; d.style.marginBottom='8px'; d.style.alignSelf='flex-end'; d.textContent=text; chatMsgs.prepend(d); }
 
-function startConvo() {
-  convo = { step:1, data: {} };
-  chatMsgs.innerHTML = '';
-  pushBot("Hi — I'm OmniChat. What's your full name?");
-  chatInput.focus();
-}
+function startConvo() { convo={step:1,data:{}}; chatMsgs.innerHTML=''; pushBot("Hi — I'm OmniChat. What's your full name?"); chatInput.focus(); }
 
-async function handleChat() {
-  const text = chatInput.value.trim(); if (!text) return;
-  pushUser(text); chatInput.value = '';
-  if (convo.step === 1) { convo.data.name = text; convo.step = 2; pushBot("Phone number?"); }
-  else if (convo.step === 2) { convo.data.phone = text; convo.step = 3; pushBot("Your address or suburb?"); }
-  else if (convo.step === 3) { convo.data.address = text; convo.step = 4; pushBot("When would you like the service? (ASAP / Date)"); }
-  else if (convo.step === 4) { convo.data.when = text; convo.step = 5; pushBot("Short details about the job"); }
-  else if (convo.step === 5) {
-    convo.data.details = text;
+async function handleChat(){
+  const text = chatInput.value.trim(); if (!text) return; pushUser(text); chatInput.value='';
+  if (convo.step===1){ convo.data.name=text; convo.step=2; pushBot("Phone number?"); }
+  else if (convo.step===2){ convo.data.phone=text; convo.step=3; pushBot("Your address or suburb?"); }
+  else if (convo.step===3){ convo.data.address=text; convo.step=4; pushBot("When would you like the service? (ASAP / Date)"); }
+  else if (convo.step===4){ convo.data.when=text; convo.step=5; pushBot("Short details about the job"); }
+  else if (convo.step===5){
+    convo.data.details=text;
     pushBot("Sending your request now...");
     confettiSpark.shoot(90);
     const payload = {
@@ -252,18 +220,13 @@ async function handleChat() {
       if (j && j.ok) pushBot("✅ Request sent. Contractors will contact you shortly.");
       else pushBot("❌ Failed to send. Try again later.");
     } catch (err) { console.error(err); pushBot("❌ Network error sending request."); }
-    convo = { step:0, data:{} };
+    convo={step:0,data:{}};
   }
 }
 
-/* admin visibility */
+/* admin button visibility (if ADMIN_SECRET set) */
 (async ()=>{
-  try {
-    const r = await fetch('/api/admin-secret'); const j = await r.json();
-    if (j && j.secret) {
-      document.getElementById('btnAdmin').style.display = 'inline-block';
-    }
-  } catch(e){}
+  try { const r = await fetch('/api/admin-secret'); const j = await r.json(); if (j && j.secret) document.getElementById('btnAdmin').style.display='inline-block'; } catch(e){}
 })();
 </script>
 </body>
