@@ -4,257 +4,141 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Contractor Dashboard — OmniSolutions</title>
-
-  <!-- Tailwind Play CDN for quick styling (production: build with tailwind) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
-  <!-- tinycolor for color manip -->
-  <script src="https://cdn.jsdelivr.net/npm/tinycolor2@1.6.0/dist/tinycolor-min.js"></script>
-
-  <!-- Custom CSS (optional small file) -->
-  <link rel="stylesheet" href="contractor-dashboard.css">
-
-  <!-- Dashboard JS -->
-  <script type="module" src="contractor-dashboard.js" defer></script>
+  <link rel="stylesheet" href="/contractor-dashboard.css">
+  <script type="module" src="/contractor-dashboard.js" defer></script>
 </head>
-<body class="bg-gradient-to-b from-[#070514] to-[#12061d] text-slate-100 antialiased">
-
-  <div class="min-h-screen flex">
-    <!-- Sidebar -->
-    <aside class="w-72 bg-[rgba(10,7,20,0.8)] border-r border-white/6 p-5 flex flex-col gap-4 fixed left-0 top-0 bottom-0">
-      <div class="flex items-center gap-3">
-        <div id="companyLogo" class="w-12 h-12 rounded-lg bg-gradient-to-r from-[#7b61ff] to-[#42b3ff]"></div>
+<body class="dash-bg">
+  <div class="dash-shell">
+    <header class="dash-top">
+      <div class="dash-brand">
+        <div id="logoPreview" class="logo-preview">OM</div>
         <div>
-          <div class="font-bold text-lg">OmniSolutions</div>
-          <div class="text-xs text-slate-400">Contractor Dashboard</div>
+          <div class="dash-title">Contractor Dashboard</div>
+          <div class="dash-sub">Manage your profile, leads & reviews</div>
         </div>
       </div>
 
-      <div class="mt-2">
-        <button id="btnOverview" class="w-full text-left px-3 py-2 rounded-lg bg-white/3 hover:bg-white/4">Overview</button>
-        <button id="btnJobs" class="w-full text-left px-3 py-2 rounded-lg mt-2 hover:bg-white/4">Jobs</button>
-        <button id="btnMessages" class="w-full text-left px-3 py-2 rounded-lg mt-2 hover:bg-white/4">Messages</button>
-        <button id="btnAds" class="w-full text-left px-3 py-2 rounded-lg mt-2 hover:bg-white/4">Create Ad</button>
-        <button id="btnReviews" class="w-full text-left px-3 py-2 rounded-lg mt-2 hover:bg-white/4">Reviews</button>
-        <button id="btnSettings" class="w-full text-left px-3 py-2 rounded-lg mt-2 hover:bg-white/4">Settings</button>
+      <div class="dash-actions">
+        <button id="logoutBtn" class="btn-ghost">Logout</button>
+        <button id="saveProfileBtn" class="btn-primary">Save Profile</button>
       </div>
+    </header>
 
-      <div class="mt-auto">
-        <div class="text-xs text-slate-400">Subscription</div>
-        <div id="subInfo" class="mt-2 p-3 rounded-lg bg-gradient-to-r from-[#1f1430] to-[#0f1830]">
-          <div id="subTier" class="font-semibold">Free</div>
-          <div id="leadQuota" class="text-sm text-slate-300 mt-1">Leads remaining: <span id="leadsRemaining">10</span>/10</div>
-          <button id="upgradeBtn" class="mt-3 w-full bg-gradient-to-r from-[#7b61ff] to-[#42b3ff] text-black py-2 rounded-lg font-semibold">Upgrade to Premium</button>
+    <div class="dash-body">
+      <aside class="left-panel">
+        <div class="card">
+          <h3>Profile</h3>
+          <label class="lbl">Company / Name</label>
+          <input id="fieldName" placeholder="Company or Name">
+          <label class="lbl">Phone</label>
+          <input id="fieldPhone" placeholder="+27...">
+          <label class="lbl">Email</label>
+          <input id="fieldEmail" placeholder="email@example.com">
+          <label class="lbl">Service Category</label>
+          <select id="fieldService">
+            <option value="">Select service</option>
+          </select>
+
+          <label class="lbl">Company Logo (upload)</label>
+          <input id="logoInput" type="file" accept="image/*">
+          <div class="muted small">Logo stored in your profile (base64 fallback) — you can paste a URL below too.</div>
+          <input id="logoURL" placeholder="Paste logo URL (optional)">
+
+          <label class="lbl">Telegram Bot Token</label>
+          <input id="fieldTelegramToken" placeholder="bot token (optional)">
+
+          <label class="lbl">Telegram Chat ID</label>
+          <input id="fieldTelegramChatId" placeholder="chat id (optional)">
+
+          <label class="lbl">Theme Color</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="colorPicker" type="color">
+            <input id="hueRange" type="range" min="0" max="360" value="240">
+          </div>
+
+          <div style="margin-top:10px">
+            <button id="uploadLogoBtn" class="btn-ghost">Apply Logo</button>
+          </div>
         </div>
-      </div>
-    </aside>
 
-    <!-- Main area -->
-    <main class="flex-1 ml-72 p-8">
-      <div class="grid grid-cols-12 gap-6">
+        <div class="card premium-block">
+          <h3>Premium Upgrade</h3>
+          <div class="muted small">Premium features unlock: unlimited ad posts, advanced analytics, priority leads, theme editor & more.</div>
+          <div class="price-badges">
+            <div class="price">R350 / month <div class="muted small">1 month</div></div>
+            <div class="price">R1999 <div class="muted small">6 months</div></div>
+            <div class="price">R3599 <div class="muted small">1 year</div></div>
+          </div>
+          <div style="margin-top:10px">
+            <button id="upgradeBtn" class="btn-primary">Upgrade to Premium</button>
+          </div>
+        </div>
+      </aside>
 
-        <!-- Left column (primary workspace) -->
-        <section class="col-span-8 space-y-6">
-          <!-- Top bar -->
-          <div class="flex items-center justify-between">
+      <main class="center-panel">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h3>Leads & Messages</h3>
+            <div class="muted small">You will receive leads here and on Telegram (if configured)</div>
+          </div>
+
+          <div class="chat-wrap">
+            <div id="chatBox" class="chat-box" aria-live="polite"></div>
+            <div class="chat-controls">
+              <input id="msgInput" placeholder="Message to admin (e.g. need help)" />
+              <button id="msgSend" class="btn-primary">Send</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Your Reviews</h3>
+          <div id="reviewsList" class="reviews-list"></div>
+
+          <div style="margin-top:10px">
+            <label class="lbl">Add Review (demo / premium)</label>
+            <input id="reviewName" placeholder="Your name">
+            <select id="reviewStars">
+              <option value="5">5 stars</option>
+              <option value="4">4 stars</option>
+              <option value="3">3 stars</option>
+              <option value="2">2 stars</option>
+              <option value="1">1 star</option>
+            </select>
+            <textarea id="reviewComment" placeholder="Review text"></textarea>
+            <input id="reviewImages" type="file" accept="image/*" multiple>
+            <button id="submitReview" class="btn-primary">Submit Review</button>
+          </div>
+        </div>
+      </main>
+
+      <aside class="right-panel">
+        <div class="card">
+          <h3>Analytics (preview)</h3>
+          <canvas id="leadsChart" width="300" height="150"></canvas>
+          <div class="muted small" style="margin-top:8px">Graph shows example data until real leads arrive.</div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Profile Preview</h3>
+          <div id="profilePreview" class="profile-preview">
+            <div id="previewLogo" class="preview-logo">OM</div>
             <div>
-              <h2 class="text-2xl font-extrabold">Welcome, <span id="contractorName">Your Company</span></h2>
-              <div class="text-sm text-slate-400">Contractor ID: <span id="contractorId">--</span></div>
-            </div>
-
-            <div class="flex items-center gap-3">
-              <button id="themeToggle" class="px-3 py-2 rounded-lg bg-white/4">Theme</button>
-              <button id="logoutBtn" class="px-3 py-2 rounded-lg bg-red-600">Logout</button>
+              <div id="previewName" style="font-weight:700">Your Company</div>
+              <div id="previewService" class="muted small">Service category</div>
+              <div id="previewRating" class="muted small">⭐ 4.8 (demo)</div>
             </div>
           </div>
-
-          <!-- Stats row -->
-          <div class="grid grid-cols-3 gap-4">
-            <div class="p-4 rounded-xl bg-gradient-to-b from-white/2 to-white/3 border border-white/5">
-              <div class="text-xs text-slate-400">Leads (30 days)</div>
-              <div class="text-3xl font-extrabold mt-2" id="leadsCount">0</div>
-              <div class="text-sm text-slate-400 mt-1">Total received</div>
-            </div>
-            <div class="p-4 rounded-xl bg-gradient-to-b from-white/2 to-white/3 border border-white/5">
-              <div class="text-xs text-slate-400">Active Jobs</div>
-              <div class="text-3xl font-extrabold mt-2" id="activeJobs">0</div>
-              <div class="text-sm text-slate-400 mt-1">In progress</div>
-            </div>
-            <div class="p-4 rounded-xl bg-gradient-to-b from-white/2 to-white/3 border border-white/5">
-              <div class="text-xs text-slate-400">Rating</div>
-              <div class="text-3xl font-extrabold mt-2" id="avgRating">0.0</div>
-              <div class="text-sm text-slate-400 mt-1">Average stars</div>
-            </div>
+          <div style="margin-top:10px">
+            <button id="visitPublicBtn" class="btn-ghost">Open public page</button>
           </div>
-
-          <!-- Graphs -->
-          <div class="grid grid-cols-2 gap-4">
-            <div class="p-4 rounded-xl bg-[rgba(255,255,255,0.02)] border border-white/5">
-              <div class="flex justify-between items-center">
-                <div class="font-semibold">Leads Over Time</div>
-                <div class="text-xs text-slate-400">Last 30 days</div>
-              </div>
-              <canvas id="leadsChart" class="mt-3"></canvas>
-            </div>
-
-            <div class="p-4 rounded-xl bg-[rgba(255,255,255,0.02)] border border-white/5">
-              <div class="flex justify-between items-center">
-                <div class="font-semibold">Badge mix</div>
-                <div class="text-xs text-slate-400">Distribution</div>
-              </div>
-              <canvas id="badgeChart" class="mt-3"></canvas>
-            </div>
-          </div>
-
-          <!-- Messages -->
-          <div class="p-4 rounded-xl bg-[rgba(255,255,255,0.02)] border border-white/5">
-            <div class="flex justify-between items-center">
-              <div class="font-semibold">Messages</div>
-              <div class="text-xs text-slate-400">Chat with admin & clients</div>
-            </div>
-            <div id="messageList" class="h-40 overflow-auto mt-3 space-y-2 p-2 bg-black/20 rounded-md"></div>
-            <div class="flex gap-2 mt-3">
-              <input id="msgInput" placeholder="Message to admin or client" class="flex-1 rounded-lg p-2 bg-transparent border border-white/6">
-              <button id="sendMsgBtn" class="px-4 py-2 rounded-lg bg-gradient-to-r from-[#7b61ff] to-[#42b3ff]">Send</button>
-            </div>
-          </div>
-
-          <!-- Reviews manager -->
-          <div class="p-4 rounded-xl bg-[rgba(255,255,255,0.02)] border border-white/5">
-            <div class="flex justify-between items-center">
-              <div class="font-semibold">Upload Review (Free: 1 image)</div>
-              <div class="text-xs text-slate-400">Premium: multiple images & edit</div>
-            </div>
-
-            <form id="reviewForm" class="mt-3 grid grid-cols-2 gap-3">
-              <input name="reviewer" placeholder="Reviewer name" class="p-2 bg-transparent border rounded-md col-span-1">
-              <select name="stars" class="p-2 bg-transparent border rounded-md col-span-1">
-                <option value="5">⭐⭐⭐⭐⭐</option>
-                <option value="4">⭐⭐⭐⭐</option>
-                <option value="3">⭐⭐⭐</option>
-                <option value="2">⭐⭐</option>
-                <option value="1">⭐</option>
-              </select>
-
-              <textarea name="comment" placeholder="Comment" class="p-2 bg-transparent border rounded-md col-span-2"></textarea>
-
-              <div class="col-span-2 flex items-center gap-3">
-                <input id="reviewFiles" type="file" accept="image/*" multiple class="text-sm" />
-                <button id="uploadReviewBtn" type="button" class="ml-auto bg-white/5 px-4 py-2 rounded-md">Upload Review</button>
-              </div>
-            </form>
-
-            <div id="reviewsList" class="mt-4 grid grid-cols-3 gap-3"></div>
-          </div>
-
-        </section>
-
-        <!-- Right column (Premium + Tools)  - this area is large and is the main premium push -->
-        <aside class="col-span-4 space-y-6">
-          <!-- PREMIUM BLOCK (occupies majority visually) -->
-          <div class="p-6 rounded-2xl bg-gradient-to-b from-[#3b1a5f] to-[#0d1630] border border-white/6 relative" style="min-height:460px;">
-            <div class="absolute right-5 top-5 px-3 py-1 rounded-full bg-amber-400/10 text-amber-300 text-xs">Premium Highlight</div>
-
-            <div class="flex items-start gap-4">
-              <img src="/data/uploads/assets/ChatGPT_Image_Nov_13_2025_05_08_40_AM.png" alt="logo" class="w-20 h-20 rounded-lg object-cover" />
-              <div>
-                <div class="text-xl font-extrabold">Upgrade to Premium</div>
-                <div class="text-sm text-slate-300 mt-1">Unlimited leads, advanced analytics, ad boosts & more</div>
-                <div class="text-sm text-amber-300 font-semibold mt-3">R 500 / month</div>
-              </div>
-            </div>
-
-            <ul class="mt-6 space-y-2 text-sm text-slate-300">
-              <li>• Unlimited Leads (priority routing)</li>
-              <li>• Multi-image review gallery + edit</li>
-              <li>• Theme & color customiser (multi-colour slider)</li>
-              <li>• Ad creator + 3 social post templates</li>
-              <li>• Highlighted in Top Contractors list</li>
-            </ul>
-
-            <div class="mt-6 flex gap-3">
-              <button id="purchasePremiumBtn" class="flex-1 bg-gradient-to-r from-[#ffb86b] to-[#ff6b9a] text-black font-bold py-3 rounded-xl">Get Premium</button>
-              <button id="learnMoreBtn" class="flex-1 border border-white/6 py-3 rounded-xl">Learn More</button>
-            </div>
-
-            <!-- Multi-colour slider (premium) -->
-            <div id="themeTools" class="mt-6 p-3 rounded-lg bg-[rgba(255,255,255,0.02)] hidden">
-              <div class="text-sm text-slate-300 font-semibold">Colour Theme (Premium)</div>
-              <div class="mt-3 grid grid-cols-2 gap-2">
-                <label class="text-xs text-slate-400">Accent Start</label>
-                <input id="accentStart" type="color" value="#7b61ff">
-                <label class="text-xs text-slate-400">Accent End</label>
-                <input id="accentEnd" type="color" value="#42b3ff">
-                <label class="text-xs text-slate-400">Text Color</label>
-                <input id="textColor" type="color" value="#efeaf8">
-                <button id="applyThemeBtn" class="col-span-2 mt-2 bg-white/5 py-2 rounded-md">Apply Theme</button>
-              </div>
-            </div>
-
-            <div class="mt-6 text-xs text-slate-400">Note: Premium features can be enabled/disabled from Admin controls.</div>
-          </div>
-
-          <!-- Telegram settings -->
-          <div class="p-4 rounded-xl bg-[rgba(255,255,255,0.02)] border border-white/5">
-            <div class="font-semibold">Telegram Integration</div>
-            <div class="text-sm text-slate-400 mt-2">Link your contractor Telegram bot to receive leads directly.</div>
-            <input id="telegramToken" placeholder="Bot token (bot:123...)" class="mt-3 p-2 bg-transparent border rounded-md w-full">
-            <input id="telegramChatId" placeholder="Chat ID (numeric)" class="mt-2 p-2 bg-transparent border rounded-md w-full">
-            <div class="flex gap-2 mt-3">
-              <button id="saveTelegramBtn" class="flex-1 bg-gradient-to-r from-[#7b61ff] to-[#42b3ff] py-2 rounded-md">Save & Test</button>
-              <button id="openBotBtn" class="flex-1 border border-white/6 py-2 rounded-md">Open Bot</button>
-            </div>
-            <div id="tgStatus" class="mt-2 text-xs text-slate-400">Status: <span id="tgStatusTxt">Unknown</span></div>
-          </div>
-
-          <!-- Small tools: ad creator -->
-          <div class="p-4 rounded-xl bg-[rgba(255,255,255,0.02)] border border-white/5">
-            <div class="flex justify-between items-center">
-              <div class="font-semibold">Ad / Post Creator</div>
-              <div class="text-xs text-slate-400">Quick social posts</div>
-            </div>
-
-            <input id="adTitle" placeholder="Ad title" class="mt-3 p-2 bg-transparent border rounded-md w-full" />
-            <textarea id="adDesc" placeholder="Short description" class="mt-2 p-2 bg-transparent border rounded-md w-full"></textarea>
-
-            <div class="flex gap-2 mt-3">
-              <button id="genAdBtn" class="flex-1 bg-gradient-to-r from-[#7b61ff] to-[#42b3ff] py-2 rounded-md">Generate Link</button>
-              <button id="shareAdBtn" class="flex-1 border border-white/6 py-2 rounded-md">Share</button>
-            </div>
-
-            <div id="adResult" class="mt-3 text-sm text-emerald-300 hidden"></div>
-          </div>
-
-          <!-- quick links -->
-          <div class="p-4 rounded-xl bg-[rgba(255,255,255,0.02)] border border-white/5 space-y-2">
-            <div class="font-semibold">Quick Links</div>
-            <a id="viewProfileLink" class="block text-sm text-slate-300 hover:underline">View public profile</a>
-            <a id="analyticsLink" class="block text-sm text-slate-300 hover:underline">Full analytics</a>
-            <a id="billingLink" class="block text-sm text-slate-300 hover:underline">Billing & subscription</a>
-          </div>
-        </aside>
-
-      </div>
-    </main>
-
-  </div>
-
-  <!-- Small inline modal for ad link preview -->
-  <div id="adModal" class="fixed inset-0 flex items-center justify-center bg-black/60 hidden z-50">
-    <div class="bg-[#081126] p-6 rounded-xl w-[640px] border border-white/6">
-      <div class="flex justify-between items-start">
-        <div>
-          <div class="font-bold text-lg" id="adPreviewTitle"></div>
-          <div class="text-sm text-slate-400 mt-1" id="adPreviewDesc"></div>
-          <div class="text-xs text-slate-400 mt-2" id="adPreviewLink"></div>
         </div>
-        <button id="closeAdModal" class="text-slate-400">✕</button>
-      </div>
+
+      </aside>
     </div>
   </div>
 
+  <!-- admin-only small badge visible just to you -->
+  <div id="adminBadge" class="admin-badge hidden">Admin</div>
 </body>
 </html>
