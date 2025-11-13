@@ -1,180 +1,194 @@
-// main.js - main UI glue for homepage
-// Assumes services.js is loaded and window.SERVICES is available.
-// Sends leads to /api/lead (server) and optionally to Telegram directly (disabled by default).
-// Replace ADMIN_VISIBLE = true to show Admin button (be cautious).
-// TELEGRAM direct-send is disabled by default (recommended).
+// main.js — homepage logic: loads /api/services and /api/contractors, handles chatbot modal and lead submit
 
-const ADMIN_VISIBLE = false; // set true only if you want Admin button visible (or server.api-admin-secret)
-const TELEGRAM_DIRECT_SEND = false; // DANGEROUS - don't enable unless you understand token will be public
-const TELEGRAM_BOT_TOKEN = ""; // leave blank; if you set TELEGRAM_DIRECT_SEND=true, set token here
-const TELEGRAM_CHAT_ID = "8187670531"; // admin/chat id (as provided)
+const categoriesListEl = document.getElementById('categoriesList');
+const servicesGrid = document.getElementById('servicesGrid');
+const bubbleList = document.getElementById('bubbleList');
+const topContractorsEl = document.getElementById('topContractors');
+const testimonialsEl = document.getElementById('reviewsCarousel');
+const siteLeadsCount = document.getElementById('siteLeadsCount');
+const siteContractorsCount = document.getElementById('siteContractorsCount');
 
-/* ---- UTILS ---- */
-function el(q,root=document) { return root.querySelector(q) }
-function elAll(q,root=document){ return Array.from(root.querySelectorAll(q)) }
+const leadModal = document.getElementById('leadModal');
+const closeLeadModal = document.getElementById('closeLeadModal');
+const leadForm = document.getElementById('leadForm');
+const leadResult = document.getElementById('leadResult');
 
-/* ---- Sidebar ----- */
-(function buildSidebar(){
-  const container = document.getElementById('categoriesRoot');
-  // group by cat
-  const map = {};
-  (window.SERVICES||[]).forEach(s => {
-    if (!map[s.cat]) map[s.cat] = [];
-    map[s.cat].push(s);
-  });
-  Object.keys(map).forEach(cat => {
-    const group = document.createElement('div'); group.className='cat-group';
-    const head = document.createElement('div'); head.className='cat-head'; head.innerHTML = `<span>${cat}</span><span class="chev">▸</span>`;
-    const items = document.createElement('div'); items.className='cat-items';
-    map[cat].forEach(s=>{
-      const b = document.createElement('div'); b.className='cat-item'; b.textContent = s.name; b.dataset.sid = s.id;
-      b.addEventListener('click', ()=> { openService(s); });
-      items.appendChild(b);
-    });
-    head.addEventListener('click', ()=> {
-      const open = items.style.display === 'flex';
-      items.style.display = open ? 'none' : 'flex';
-      head.querySelector('.chev').textContent = open ? '▸' : '▾';
-    });
-    group.appendChild(head);
-    group.appendChild(items);
-    container.appendChild(group);
-  });
+let SERVICES = [];
+let CONTRACTORS = [];
+let REVIEWS = [];
 
-  // admin visibility
-  if (ADMIN_VISIBLE) {
-    el('#btnAdmin').style.display = "inline-block";
+/* basic fetch wrapper */
+async function api(path, opts={}) {
+  try {
+    const r = await fetch(path, opts);
+    if (!r.ok) throw new Error('api error');
+    return await r.json();
+  } catch (e) {
+    console.warn('api failed', path, e);
+    return null;
   }
-})();
-
-/* ---- Popular services grid ---- */
-(function buildPopularGrid(){
-  const grid = el('#popularGrid');
-  const top = (window.SERVICES||[]).slice(0, 36);
-  top.forEach(s => {
-    const tile = document.createElement('div'); tile.className='service-tile';
-    tile.innerHTML = `<div class="service-name">${s.name}</div><div class="service-meta">${s.cat}</div><div style="flex:1"></div><button class="choose-btn">Choose</button>`;
-    tile.querySelector('.choose-btn').addEventListener('click', ()=> openService(s));
-    grid.appendChild(tile);
-  });
-})();
-
-/* ---- Top contractors (dummy data) ---- */
-(function buildTopContractors(){
-  const wrap = el('#topContractorsRow');
-  const sample = [
-    { id:'c1', company:'Premier Plumbing', phone:'072 555 111', rating:4.9, badge:'platinum' },
-    { id:'c2', company:'Shield Security', phone:'072 555 222', rating:4.8, badge:'gold' },
-    { id:'c3', company:'Fresh Cleaners', phone:'072 555 333', rating:4.7, badge:'silver' },
-  ];
-  sample.forEach(c=>{
-    const card = document.createElement('div'); card.className='contractor-card';
-    card.innerHTML = `<img class="logo" src="/data/uploads/assets/ChatGPT_Image_Nov_13_2025_05_08_40_AM.png" alt="logo"><div class="contractor-info"><div class="contractor-name">${c.company}</div><div class="contractor-meta">${c.phone} • ⭐ ${c.rating}</div></div><div><img class="badge-img" style="width:44px;height:44px" src="/data/uploads/assets/badges/${c.badge}.png" alt="${c.badge}"></div>`;
-    card.addEventListener('click', ()=> openService({ id:'', cat:'Top Contractors', name: c.company }));
-    wrap.appendChild(card);
-  });
-})();
-
-/* ---- Testimonials ---- */
-(function buildTestimonials(){
-  const wrap = el('#testimonialsRow');
-  const t = [
-    { name:'Janine P', text:'Quick, professional and affordable.' },
-    { name:'Sipho M', text:'Amazing response and punctual.' },
-    { name:'Daniela R', text:'Very happy with the job done. Highly recommended.' }
-  ];
-  t.forEach(x=>{
-    const c = document.createElement('div'); c.className='test-card';
-    c.innerHTML = `<div style="font-weight:800">${x.name}</div><div class="small-muted">${x.text}</div>`;
-    wrap.appendChild(c);
-  });
-})();
-
-/* ---- Service open / modal / chat flow ---- */
-function openService(s){
-  // set chosen service for chat
-  el('#chosenService').textContent = s.name + " — " + s.cat;
-  // find contractors matching
-  const contractors = (window.CONTRACTORS || [
-    { id:'c1', company:'Premier Plumbing', phone:'072555111', rating:4.9, badge:'platinum' },
-    { id:'c4', company:'Quick Fix', phone:'072555777', rating:4.6, badge:'silver' }
-  ]);
-  const matched = contractors.filter(c => (c.company && c.company.toLowerCase().includes(s.cat.split(' ')[0].toLowerCase())) || true ).slice(0,6);
-  const top3 = matched.sort((a,b)=> (b.rating||0)-(a.rating||0)).slice(0,3);
-  const topWrap = el('#chatTop3'); topWrap.innerHTML='';
-  top3.forEach(c=>{
-    const d = document.createElement('div'); d.className='mini-panel'; d.innerHTML = `<strong>${c.company}</strong><div class="small-muted">⭐ ${c.rating} • ${c.phone}</div>`;
-    topWrap.appendChild(d);
-  });
-
-  // show chat modal
-  el('#chatModal').style.display = 'block';
-  el('#chatModal').setAttribute('aria-hidden','false');
-  el('#chatStepService').style.display = 'block';
-  el('#leadForm').style.display = 'none';
-  el('#chatResult').style.display = 'none';
 }
 
-/* chat btns */
-el('#chatToggle').addEventListener('click', ()=> {
-  const vis = el('#chatModal').style.display === 'block';
-  el('#chatModal').style.display = vis ? 'none' : 'block';
-});
-el('#chatClose').addEventListener('click', ()=> el('#chatModal').style.display = 'none');
+/* load initial content */
+async function loadAll(){
+  const s = await api('/api/services');
+  if (s && s.services) SERVICES = s.services;
+  const c = await api('/api/contractors');
+  if (c && c.contractors) CONTRACTORS = c.contractors;
+  const reviewsRaw = await api('/api/logs/reviews') || {};
+  REVIEWS = Array.isArray(reviewsRaw) ? reviewsRaw : [];
 
-el('#btnProceed').addEventListener('click', ()=> {
-  el('#chatStepService').style.display = 'none';
-  el('#leadForm').style.display = 'block';
-});
+  renderCategories();
+  renderServices(SERVICES.slice(0, 36));
+  renderBubbles();
+  renderTopContractors();
+  renderTestimonials();
+  siteLeadsCount.textContent = (await api('/api/logs/leads')) ? (await api('/api/logs/leads')).length : '—';
+  siteContractorsCount.textContent = CONTRACTORS.length || 0;
+}
+loadAll();
 
-/* back from lead form */
-el('#btnBack').addEventListener('click', ()=> {
-  el('#leadForm').style.display = 'none';
-  el('#chatStepService').style.display = 'block';
-});
+/* categories extraction */
+function getCategories(){
+  const cats = {};
+  SERVICES.forEach(s => {
+    if (!cats[s.cat]) cats[s.cat] = [];
+    cats[s.cat].push(s);
+  });
+  return cats;
+}
 
-/* submit lead */
-el('#leadForm').addEventListener('submit', async (e)=> {
+function renderCategories(){
+  const cats = getCategories();
+  categoriesListEl.innerHTML = '';
+  Object.entries(cats).forEach(([name, items])=>{
+    const el = document.createElement('div');
+    el.className = 'cat';
+    el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div>${name}</div><div class="muted">${items.length}</div></div>`;
+    el.addEventListener('click', ()=> {
+      renderServices(items);
+      // scroll main to top
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+    categoriesListEl.appendChild(el);
+  });
+}
+
+/* services rendering */
+function renderServices(list){
+  servicesGrid.innerHTML = '';
+  (list || []).forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'service-card';
+    card.innerHTML = `<div><div class="title">${s.name}</div><div class="desc muted">${s.cat}</div></div><div class="service-actions"><button class="btn-choose">Chat</button><button class="btn-quick">Details</button></div>`;
+    card.querySelector('.btn-choose').addEventListener('click', ()=> openLeadModal(s.name));
+    servicesGrid.appendChild(card);
+  });
+}
+
+/* bubbles: show highlighted contractors or promotions on right */
+function renderBubbles(){
+  bubbleList.innerHTML = '';
+  const top = CONTRACTORS.slice(0,8);
+  top.forEach(c => {
+    const b = document.createElement('div'); b.className='bubble';
+    b.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${c.company||c.name}</strong><div class="muted">${c.category||''}</div></div><div class="muted">⭐ ${c.rating||4.6}</div></div>`;
+    b.addEventListener('click', ()=> {
+      // go to contractor public page
+      window.location.href = `/c/${c.id}`;
+    });
+    bubbleList.appendChild(b);
+  });
+}
+
+/* top contractors */
+function renderTopContractors(){
+  topContractorsEl.innerHTML = '';
+  const top = CONTRACTORS.slice(0,6);
+  top.forEach(c=>{
+    const el = document.createElement('div'); el.style.marginBottom='6px';
+    el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${c.company||c.name}</strong><div class="muted">${c.category}</div></div><div><a href="/c/${c.id}" class="btn-quick">View</a></div></div>`;
+    topContractorsEl.appendChild(el);
+  });
+}
+
+/* testimonials */
+function renderTestimonials(){
+  testimonialsEl.innerHTML = '';
+  const reviews = REVIEWS.slice(0,6);
+  if (!reviews.length) { testimonialsEl.innerHTML='<div class="muted">No reviews yet</div>'; return; }
+  reviews.forEach(r=>{
+    const el = document.createElement('div'); el.style.marginBottom='8px';
+    el.innerHTML = `<div><strong>${r.reviewer||'Customer'}</strong> <span class="muted">• ${new Date(r.ts||r.created||Date.now()).toLocaleDateString()}</span><div class="muted">${r.comment||r.text}</div></div>`;
+    testimonialsEl.appendChild(el);
+  });
+}
+
+/* lead modal handlers */
+function openLeadModal(serviceName){
+  document.getElementById('leadService').value = serviceName;
+  leadResult.textContent = '';
+  leadModal.classList.remove('hidden');
+}
+closeLeadModal.addEventListener('click', ()=> leadModal.classList.add('hidden'));
+document.getElementById('leadCancel').addEventListener('click', ()=> leadModal.classList.add('hidden'));
+
+leadForm.addEventListener('submit', async (e)=>{
   e.preventDefault();
-  const fd = new FormData(e.target);
+  leadResult.textContent = 'Sending...';
+  const form = new FormData(leadForm);
   const payload = {
-    name: fd.get('name'),
-    phone: fd.get('phone'),
-    email: fd.get('email'),
-    address: fd.get('address'),
-    when: fd.get('when'),
-    details: fd.get('details'),
-    service: el('#chosenService').textContent,
-    source: 'web'
+    name: form.get('name'),
+    phone: form.get('phone'),
+    email: form.get('email'),
+    service: form.get('service'),
+    details: form.get('details'),
+    contractorId: null
   };
 
-  // POST to server API (recommended)
+  // Attempt server POST
   try {
-    const res = await fetch('/api/lead', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
-    const j = await res.json();
-    if (j && j.ok) {
-      showChatResult(true);
-      // optionally send directly to telegram if enabled (dangerous)
-      if (TELEGRAM_DIRECT_SEND && TELEGRAM_BOT_TOKEN) {
-        const text = `<b>New lead</b>\n${payload.name}\n${payload.phone}\nService: ${payload.service}\n${payload.details}`;
-        fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text, parse_mode:'HTML' })});
-      }
+    const res = await fetch('/api/lead', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    if (res.ok) {
+      leadResult.textContent = 'Request sent — contractor will be notified. You will also receive confirmation.';
+      leadForm.reset();
+      // increment locally
+      siteLeadsCount.textContent = (parseInt(siteLeadsCount.textContent) || 0) + 1;
+      setTimeout(()=> leadModal.classList.add('hidden'), 1400);
+      return;
     } else {
-      showChatResult(false);
+      throw new Error('server error');
     }
   } catch (err) {
-    console.error(err);
-    showChatResult(false);
+    console.warn('lead send failed', err);
+    // fallback: if contractor email exist open mailto; otherwise copy to clipboard
+    leadResult.textContent = 'Server unreachable — attempting email fallback...';
+    const contractors = CONTRACTORS;
+    const contractor = contractors.find(c => (c.category||'').toLowerCase() === (payload.service||'').toLowerCase()) || contractors[0];
+    if (contractor && contractor.email) {
+      const subj = encodeURIComponent(`Lead: ${payload.name} — ${payload.service}`);
+      const body = encodeURIComponent(`${payload.details}\n\nContact: ${payload.name}\nPhone: ${payload.phone}\nEmail: ${payload.email}`);
+      window.location.href = `mailto:${contractor.email}?subject=${subj}&body=${body}`;
+      leadResult.textContent = 'Opened mail app for fallback. If nothing happened, the message copied to clipboard.';
+      try { await navigator.clipboard.writeText(JSON.stringify(payload)); } catch(e){}
+    } else {
+      try { await navigator.clipboard.writeText(JSON.stringify(payload)); leadResult.textContent = 'No server or email available — lead copied to clipboard.'; } catch(e){ leadResult.textContent = 'Failed to send lead — contact support.'; }
+    }
+    setTimeout(()=> leadModal.classList.add('hidden'), 1800);
   }
 });
 
-function showChatResult(ok){
-  el('#leadForm').style.display = 'none';
-  el('#chatStepService').style.display = 'none';
-  const r = el('#chatResult'); r.style.display = 'block';
-  if (ok) r.innerHTML = `<div class="mini-panel"><strong>✅ Request sent</strong><div class="small-muted">Contractors will contact you shortly.</div></div>`;
-  else r.innerHTML = `<div class="mini-panel"><strong>❌ Failed to send</strong><div class="small-muted">Try again later.</div></div>`;
-}
+/* admin quick access (floating) */
+document.getElementById('adminBtn').addEventListener('click', ()=> {
+  // reveal floating admin button and navigate
+  window.location.href = '/admin-dashboard.html';
+});
+document.getElementById('floatingAdmin').addEventListener('click', ()=> window.location.href = '/admin-dashboard.html');
 
-/* small helpers for service modal (if used) */
-el('#closeServiceModal')?.addEventListener('click', ()=> { el('#serviceModal').style.display = 'none'; });
+/* small search */
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  const q = e.target.value.trim().toLowerCase();
+  if (!q) return renderServices(SERVICES.slice(0,36));
+  const filtered = SERVICES.filter(s => s.name.toLowerCase().includes(q) || s.cat.toLowerCase().includes(q));
+  renderServices(filtered);
+});
