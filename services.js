@@ -77,4 +77,3 @@ window.SERVICES = [
     window.SERVICES.push({ id: "s" + (1000+i), cat, name: `${cat.split(" ")[0]} Specialist ${i}` });
   }
 })();
-
