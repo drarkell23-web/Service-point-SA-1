@@ -1,7 +1,7 @@
 {
   "name": "omnilink-solutions",
-  "version": "3.0.0",
-  "description": "OmniLink Solutions - site + Telegram lead routing",
+  "version": "1.0.0",
+  "description": "OmniLink Solutions site + lead routing",
   "main": "server.js",
   "type": "module",
   "scripts": {
