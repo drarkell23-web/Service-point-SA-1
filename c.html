@@ -1,56 +1,36 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Contractor Profile</title>
-  <link rel="stylesheet" href="assets/main.css" />
-  <script type="module" src="public/supabase-client.js"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Contractor profile</title>
+<link rel="stylesheet" href="/assets/main.css">
+</head>
+<body>
+  <div id="profileRoot" style="padding:20px;color:#fff"></div>
   <script>
-    // c.html simple client-side display
-    import { supabase } from './public/supabase-client.js';
-    document.addEventListener('DOMContentLoaded', async () => {
-      const qp = new URLSearchParams(location.search);
-      const id = qp.get('id');
-      if(!id) { document.body.innerHTML = '<div style="padding:40px;color:#fff">No contractor id provided.</div>'; return; }
-
-      const el = document.createElement('div');
-      el.className = 'panel';
-      el.style.margin = '20px';
-      el.innerHTML = '<div>Loading contractor...</div>';
-      document.body.appendChild(el);
-
-      const { data, error } = await supabase.from('contractors').select('*').eq('id', id).maybeSingle();
-      if(error || !data) {
-        el.innerHTML = '<div style="color:#fff;padding:20px">Contractor not found.</div>';
-        return;
-      }
-
-      el.innerHTML = `
-        <div style="display:flex;gap:20px;align-items:center">
-          <img src="${data.logo_url||'assets/anon.png'}" style="width:96px;height:96px;border-radius:12px;object-fit:cover" />
-          <div>
-            <h1 style="margin-bottom:6px">${data.company||data.name}</h1>
-            <div style="color:var(--muted)">${data.main_service || data.service || ''}</div>
-            <div style="margin-top:8px"><strong>Phone:</strong> ${data.phone||'-'}</div>
-            <div style="margin-top:4px"><strong>Email:</strong> ${data.email||'-'}</div>
-            <div style="margin-top:8px"><strong>Telegram:</strong> ${data.telegram_chat_id || '-'}</div>
-          </div>
-        </div>
-
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:14px 0" />
-
-        <div>
-          <h3>About</h3>
-          <p style="color:var(--muted)">${data.bio || ''}</p>
-        </div>
-
+    async function loadProfile(){
+      const path = location.pathname;
+      const id = path.split('/c/')[1] || new URLSearchParams(location.search).get('id');
+      if(!id) return document.getElementById('profileRoot').innerText = 'Missing id';
+      const r = await fetch('/api/contractor?id=' + encodeURIComponent(id));
+      const j = await r.json();
+      if(!j.ok) return document.getElementById('profileRoot').innerText = 'Not found';
+      const c = j.contractor;
+      document.getElementById('profileRoot').innerHTML = `
+        <a href="/">← Back to home</a>
+        <h1>${c.company||c.name}</h1>
+        <div style="color:#9aa3b2">${c.service||''}</div>
+        <p>${c.about||c.description||''}</p>
         <div style="margin-top:12px">
-          <a href="/index.html" class="btn">Back to Services</a>
+          <button onclick="openChatPrefill('${c.service||''}')" class="btn primary">Request Service</button>
         </div>
       `;
-    });
+    }
+    function openChatPrefill(service){
+      window.location.href = '/?openChat=1&service=' + encodeURIComponent(service);
+    }
+    loadProfile();
   </script>
-</head>
-<body style="background:var(--bg);color:var(--text)"></body>
+</body>
 </html>
