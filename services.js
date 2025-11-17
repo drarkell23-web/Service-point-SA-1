@@ -19,7 +19,7 @@ app.use(fileUpload());
 // env
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SERVICE_ROLE = process.env.SUPABASE_SERVICE_KEY;
-const ADMIN_PORTAL_KEY = process.env.ADMIN_PORTAL_KEY || "NO_ADMIN_KEY_SET";
+const ADMIN_PORTAL_KEY = process.env.ADMIN_PORTAL_KEY || "101010303030101010";
 
 if(!SUPABASE_URL || !SERVICE_ROLE){
   console.error("Missing SUPABASE_URL or SUPABASE_SERVICE_KEY in env");
