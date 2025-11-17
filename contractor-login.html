@@ -1,41 +1,44 @@
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Contractor Login — OmniLead</title>
-<link rel="stylesheet" href="/ui.css">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Contractor Login — OmniLead</title>
+  <link rel="stylesheet" href="/assets/main.css">
+  <style>
+    .container{ display:flex; align-items:center; justify-content:center; min-height:70vh; }
+    .card{ background:#101010; padding:18px; border-radius:8px; width:320px; }
+    .input{ width:100%; padding:10px; margin:8px 0; border-radius:6px; border:1px solid #222; background:#0f0f0f; color:#fff; }
+  </style>
 </head>
 <body>
-<div class="container" style="min-height:100vh;display:flex;align-items:center;justify-content:center">
-  <div class="card" style="width:360px;padding:22px;border-radius:12px;background:#111;color:#fff">
-    <h2 style="margin-top:0">Contractor Login</h2>
-    <input id="phone" class="input" placeholder="Phone (e.g. 067...)" style="width:100%;padding:12px;margin-top:10px;border-radius:8px;border:none;">
-    <input id="password" class="input" placeholder="Password" type="password" style="width:100%;padding:12px;margin-top:10px;border-radius:8px;border:none;">
-    <button id="loginBtn" style="width:100%;padding:12px;margin-top:12px;background:#00aaff;border:none;border-radius:8px;color:#fff;cursor:pointer">Log in</button>
-    <div style="margin-top:10px;text-align:center;color:#bbb;font-size:13px">Use the phone & password provided by admin.</div>
+  <div class="container">
+    <div class="card">
+      <h2>Contractor Login</h2>
+      <input id="email" class="input" placeholder="Email or phone">
+      <input id="password" class="input" placeholder="Password" type="password">
+      <button id="loginBtn" class="btn">Log in</button>
+      <p id="msg" style="color:#f88"></p>
+    </div>
   </div>
-</div>
 
-<script>
-  document.getElementById("loginBtn").addEventListener("click", async () => {
-    const phone = document.getElementById("phone").value.trim();
-    const password = document.getElementById("password").value;
-    if (!phone || !password) return alert("Enter phone and password");
-
-    const res = await fetch("/api/contractor/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone, password })
-    });
-    const j = await res.json();
-    if (!j.ok) return alert("Login failed: " + (j.error || "Unknown"));
-
-    // Save contractor info locally (simple session)
-    localStorage.setItem("omni_contractor", JSON.stringify(j.contractor));
-    // Redirect to contractor dashboard
-    window.location.href = "/contractor-dashboard.html";
-  });
-</script>
+  <script>
+    async function login(){
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const msg = document.getElementById('msg');
+      if(!email||!password){ msg.innerText = 'Enter both fields'; return; }
+      // call server-side contractor login (phone+password)
+      try{
+        const res = await fetch('/api/contractor/login',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ phone: email, password }) });
+        const j = await res.json();
+        if (!j.ok) { msg.innerText = j.error || 'Login failed'; return; }
+        // store simple session in localStorage (minimal)
+        localStorage.setItem('contractor_auth', JSON.stringify(j.contractor));
+        window.location.href = '/contractor-dashboard.html';
+      }catch(e){ msg.innerText = 'Network error'; }
+    }
+    document.getElementById('loginBtn').addEventListener('click', login);
+  </script>
 </body>
 </html>
