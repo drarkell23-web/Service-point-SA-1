@@ -3,106 +3,95 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Service Point SA — Find Services</title>
+  <title>Service Point SA — All Services</title>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Styles -->
   <link rel="stylesheet" href="assets/main.css" />
-  <link rel="stylesheet" href="assets/chatbot.css" />
-
-  <!-- Scripts -->
-  <script defer src="assets/main.js"></script>
-  <script defer src="assets/chatbot.js"></script>
+  <script src="assets/main.js" defer></script>
+  <script src="assets/chatbot.js" defer></script>
+  <script type="module" src="public/supabase-client.js" defer></script>
 </head>
 <body>
-  <div id="app" class="app-root">
-    <!-- Sidebar -->
+  <div id="app">
     <aside class="sidebar">
-      <div class="brand">
-        <div class="logo">Service Point SA</div>
-      </div>
+      <div class="brand">Service Point SA</div>
 
-      <div class="sidebar-section">
-        <div class="sidebar-title">Categories</div>
-        <div id="categoriesList" class="categories-list">
-          <!-- populated by JS -->
-        </div>
-      </div>
+      <nav class="sidebar-cats" id="sidebarCats">
+        <!-- categories inserted here -->
+      </nav>
 
-      <div class="sidebar-footer">
-        <button class="btn ghost" id="openSignup">Contractor Signup</button>
-        <div class="small muted">© 2025 Service Point SA</div>
+      <div class="sidebar-bottom">
+        <a href="mailto:apply@servicepointsa.example" class="apply-link">Apply to become a contractor</a>
+        <div class="copyright">© 2025 Service Point SA</div>
       </div>
     </aside>
 
-    <!-- Main content -->
-    <main class="main">
+    <main class="main-area">
       <header class="topbar">
         <div class="search-wrap">
-          <input id="searchInput" class="search" placeholder="Search for services or contractors..." />
-          <button id="searchBtn" class="btn primary">Search</button>
-        </div>
-        <div class="top-right">
-          <button id="topContractorsBtn" class="btn ghost">Top Contractors</button>
-          <button id="btnAdmin" class="btn ghost">Admin</button>
+          <input id="searchInput" placeholder="Search services (e.g. plumbing)" />
+          <button id="searchBtn">Search</button>
         </div>
       </header>
 
       <section class="content">
-        <div class="left-column">
+        <div class="left-col">
           <div class="panel">
             <h3>All Services</h3>
-            <div id="servicesGrid" class="services-grid">
-              <!-- services listed here -->
-            </div>
+            <div id="servicesGrid" class="services-grid"></div>
+
+            <div class="pagination" id="pagination"></div>
           </div>
         </div>
 
-        <div class="right-column">
-          <div class="panel compact">
-            <h3>Top Rated Contractors</h3>
-            <div id="topList" class="top-list"></div>
+        <aside class="right-col">
+          <div class="panel small" id="topContractorsPanel">
+            <h4>Top Rated Contractors</h4>
+            <div id="topContractors"></div>
           </div>
 
-          <div class="panel compact">
-            <h3>Customer Testimonials</h3>
-            <div id="testimonials" class="testimonials"></div>
+          <div class="panel small" id="testimonialsPanel">
+            <h4>Customer Testimonials</h4>
+            <div id="testimonials"></div>
           </div>
-
-          <div class="panel compact">
-            <h3>Need help?</h3>
-            <button id="chatOpen" class="btn gradient">Open Chatbot</button>
-          </div>
-        </div>
+        </aside>
       </section>
     </main>
-  </div>
 
-  <!-- Chat canvas -->
-  <canvas id="graffitiCanvas" class="graffiti"></canvas>
+    <!-- Chatbot Button -->
+    <button id="chatOpen" class="chat-open-btn">Need Help?</button>
 
-  <!-- Chat modal (chatbot.js will enable) -->
-  <div id="chatModal" class="chat-modal hidden">
-    <div class="chat-box">
-      <div class="chat-header">
-        Omni Assistant
-        <button id="chatClose" class="close">×</button>
-      </div>
-      <div id="chatFlow" class="chat-flow"></div>
-
-      <form id="leadForm" class="chat-form">
-        <input id="leadName" placeholder="Full name" />
-        <input id="leadPhone" placeholder="Phone" />
-        <input id="leadEmail" placeholder="Email (optional)" />
-        <input id="leadService" placeholder="Service (choose or type)" />
-        <textarea id="leadMessage" placeholder="Message"></textarea>
-        <div class="row">
-          <button type="submit" id="chatSend" class="btn primary">Send Request</button>
+    <!-- Chat Modal -->
+    <div id="chatModal" class="chat-modal hidden">
+      <div class="chat-box">
+        <div class="chat-header">
+          Omni Assistant
+          <button id="chatClose" class="close-x">×</button>
         </div>
-      </form>
+
+        <div class="chat-body">
+          <div id="chatFlow" class="chat-flow"></div>
+
+          <form id="leadForm" class="lead-form">
+            <input id="leadName" placeholder="Full name" required />
+            <input id="leadPhone" placeholder="Phone" required />
+            <input id="leadEmail" placeholder="Email (optional)" />
+            <select id="leadService" placeholder="Service">
+              <option value="">Select service</option>
+            </select>
+
+            <div id="contractorOptions" class="contractor-options"></div>
+
+            <textarea id="leadMessage" placeholder="Describe the job..."></textarea>
+            <input type="hidden" id="contractorIdHidden" />
+
+            <button id="chatSend" type="submit" class="btn">Send Request</button>
+          </form>
+        </div>
+      </div>
     </div>
+
+    <!-- contractor profile template (page) -->
+    <!-- clickable links open /c.html?id=<uuid> which is provided below in c.html file -->
   </div>
 </body>
 </html>
