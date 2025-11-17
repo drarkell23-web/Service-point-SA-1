@@ -1,39 +1,51 @@
+<!-- contractor-dashboard.html (paste to project root) -->
 <!doctype html>
 <html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Contractor Dashboard — Service Point Solutions</title>
-<link rel="stylesheet" href="/ui.css">
+<title>Contractor Dashboard — Service Point SA</title>
+<link rel="stylesheet" href="assets/main.css">
 </head>
 <body>
-<div class="container">
-<div class="card" style="width:760px;max-width:100%">
-<div class="card-header">
-<div>
-<h2 id="title">Dashboard</h2>
-<div class="subtle" id="companyLine">Loading…</div>
-</div>
-<div>
-<button id="logoutBtn" class="small">Logout</button>
-</div>
-</div>
+  <div style="max-width:1100px;margin:22px auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h2>Contractor Dashboard</h2>
+      <button id="logoutBtn" class="btn">Logout</button>
+    </div>
 
+    <div style="display:grid;grid-template-columns:320px 1fr;gap:14px">
+      <aside style="background:var(--panel);padding:14px;border-radius:10px">
+        <div id="profilePreview"><strong id="cName">Contractor</strong><div id="cService" class="muted"></div></div>
+        <div style="margin-top:12px">
+          <label>Telegram Chat ID</label>
+          <input id="fieldTelegramChatId" />
+          <label>Telegram Token</label>
+          <input id="fieldTelegramToken" />
+          <button id="saveProfileBtn" class="btn primary" style="width:100%;margin-top:10px">Save Profile</button>
+        </div>
+        <hr />
+        <div>
+          <h4>Premium</h4>
+          <p class="muted">Upgrade to the premium block to unlock advanced features (placeholder)</p>
+        </div>
+      </aside>
 
-<div style="display:flex;gap:18px;margin-top:18px;flex-wrap:wrap">
-<button class="small" onclick="location.href='/contractor-profile.html'">Profile</button>
-</div>
+      <section style="background:var(--panel);padding:14px;border-radius:10px">
+        <h3>Messages</h3>
+        <div id="chatBox" style="height:240px;overflow:auto;background:rgba(255,255,255,0.01);padding:8px;border-radius:8px"></div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input id="msgInput" placeholder="Write a message to admin" style="flex:1;padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,0.02)" />
+          <button id="msgSend" class="btn">Send</button>
+        </div>
 
+        <hr />
+        <h3>Reviews</h3>
+        <div id="reviewsList"></div>
+      </section>
+    </div>
+  </div>
 
-<section style="margin-top:20px">
-<h3 style="margin-bottom:8px">Quick Actions</h3>
-<div class="review">Leads will arrive via Telegram. Use this dashboard to manage reviews & profile.</div>
-</section>
-
-
-</div>
-</div>
-
-
-<script type="module">
+  <script type="module" src="public/contractor-dashboard-auth.js"></script>
+</body>
 </html>
