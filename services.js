@@ -1,79 +1,149 @@
-/* services.js
-   - Exports global SERVICES array of objects { id, cat, name }
-   - This file contains many services across categories to seed the main page.
-*/
+// server.js (paste to project root)
+// Full Express server wired to Supabase service role. Requires .env with SUPABASE_URL and SUPABASE_SERVICE_KEY and ADMIN_PORTAL_KEY
 
-window.SERVICES = [
-  // Property & Maintenance (sample, extendable)
-  { id: "s1", cat: "Property & Maintenance", name: "Plumbing - Repairs & Install" },
-  { id: "s2", cat: "Property & Maintenance", name: "Roof Repairs" },
-  { id: "s3", cat: "Property & Maintenance", name: "Gutter Cleaning & Repair" },
-  { id: "s4", cat: "Property & Maintenance", name: "Interior Painting" },
-  { id: "s5", cat: "Property & Maintenance", name: "Exterior Painting" },
-  { id: "s6", cat: "Property & Maintenance", name: "Tiling & Floor Repair" },
-  { id: "s7", cat: "Property & Maintenance", name: "Carpentry & Joinery" },
-  { id: "s8", cat: "Property & Maintenance", name: "Locksmith / Door Repairs" },
-  { id: "s9", cat: "Property & Maintenance", name: "Waterproofing" },
-  { id: "s10", cat: "Property & Maintenance", name: "Geyser / Hot Water Service" },
-  { id: "s11", cat: "Property & Maintenance", name: "Electrical Fault Finding" },
-  { id: "s12", cat: "Property & Maintenance", name: "Generator Service & Install" },
-  { id: "s13", cat: "Property & Maintenance", name: "Fence & Gate Repair" },
-  { id: "s14", cat: "Property & Maintenance", name: "Drain & Sewage Unblock" },
-  { id: "s15", cat: "Property & Maintenance", name: "Pest Control (Property)" },
+import express from "express";
+import fileUpload from "express-fileupload";
+import { createClient } from "@supabase/supabase-js";
+import cors from "cors";
+import fs from "fs";
+import dotenv from "dotenv";
+import bcrypt from "bcryptjs";
 
-  // Cleaning & Hygiene
-  { id: "s20", cat: "Cleaning & Hygiene", name: "House Clean - Standard" },
-  { id: "s21", cat: "Cleaning & Hygiene", name: "Deep Clean - Home" },
-  { id: "s22", cat: "Cleaning & Hygiene", name: "End of Lease Cleaning" },
-  { id: "s23", cat: "Cleaning & Hygiene", name: "Carpet Steam Cleaning" },
-  { id: "s24", cat: "Cleaning & Hygiene", name: "Office Cleaning (Daily/Weekly)" },
-  { id: "s25", cat: "Cleaning & Hygiene", name: "Window Cleaning - Inside/Out" },
+dotenv.config();
 
-  // Security & Energy
-  { id: "s30", cat: "Security & Energy", name: "CCTV Install & Service" },
-  { id: "s31", cat: "Security & Energy", name: "Alarm System Install" },
-  { id: "s32", cat: "Security & Energy", name: "Electric Fence Install / Repair" },
-  { id: "s33", cat: "Security & Energy", name: "Solar Panel Installers" },
-  { id: "s34", cat: "Security & Energy", name: "Generator Maintenance" },
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(fileUpload());
 
-  // Outdoor & Garden
-  { id: "s40", cat: "Outdoor & Garden", name: "Lawn Mowing & Care" },
-  { id: "s41", cat: "Outdoor & Garden", name: "Tree Pruning & Felling" },
-  { id: "s42", cat: "Outdoor & Garden", name: "Irrigation System Install" },
-  { id: "s43", cat: "Outdoor & Garden", name: "Landscape Design" },
-  { id: "s44", cat: "Outdoor & Garden", name: "Pool Cleaning & Repair" },
+// env
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SERVICE_ROLE = process.env.SUPABASE_SERVICE_KEY;
+const ADMIN_PORTAL_KEY = process.env.ADMIN_PORTAL_KEY || "NO_ADMIN_KEY_SET";
 
-  // Appliances & Repairs
-  { id: "s50", cat: "Appliances & Repairs", name: "Fridge Repair" },
-  { id: "s51", cat: "Appliances & Repairs", name: "Washing Machine Repair" },
-  { id: "s52", cat: "Appliances & Repairs", name: "Oven & Stove Repair" },
+if(!SUPABASE_URL || !SERVICE_ROLE){
+  console.error("Missing SUPABASE_URL or SUPABASE_SERVICE_KEY in env");
+  process.exit(1);
+}
 
-  // Electrical & Lighting
-  { id: "s60", cat: "Electrical", name: "Light Fitting Install" },
-  { id: "s61", cat: "Electrical", name: "Electrician - General" },
+const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
 
-  // Plumbing (detailed)
-  { id: "s70", cat: "Plumbing", name: "Toilet Install / Replace" },
-  { id: "s71", cat: "Plumbing", name: "Tap / Mixer Replacement" },
-  { id: "s72", cat: "Plumbing", name: "Burst Pipe Emergency Repair" },
+// static
+app.use(express.static("public"));
+app.use(express.static("./"));
+app.use(express.static("assets"));
 
-  // Handyman & Odd Jobs
-  { id: "s80", cat: "Handyman", name: "Flat Pack Assembly" },
-  { id: "s81", cat: "Handyman", name: "Odd Jobs & General Maintenance" },
+// admin-create page injection
+app.get("/admin-create-contractor.html", (req,res)=>{
+  try{
+    const html = fs.readFileSync("admin-create-contractor.html","utf8");
+    res.send(html.replace("{{ADMIN_PORTAL_KEY}}", ADMIN_PORTAL_KEY));
+  }catch(e){ res.status(500).send("Admin page missing"); }
+});
 
-  // Renovation & Building
-  { id: "s90", cat: "Renovation", name: "Bathroom Renovation" },
-  { id: "s91", cat: "Renovation", name: "Kitchen Renovation" },
+// ADMIN: create contractor (server-side hashing) — protected by key in JSON body or referer query
+app.post("/api/admin/create-contractor", async (req,res)=>{
+  try{
+    const { key, company, phone, password, telegram } = req.body;
+    if(key !== ADMIN_PORTAL_KEY) return res.json({ ok:false, error: "Invalid admin key" });
+    if(!company || !phone || !password) return res.json({ ok:false, error: "Missing fields" });
 
-  // Add more filler services so the grid is large (auto-generated)
-];
+    const password_hash = await bcrypt.hash(password, 10);
+    const { data, error } = await supabase
+      .from("contractors")
+      .insert([{ company, phone, password_hash, telegram_chat_id: telegram || null, created_at: new Date().toISOString() }])
+      .select();
 
-(function extendLargeSet(){
-  // produce more sample services to reach 220 total if not present
-  const cats = ["Property & Maintenance","Cleaning & Hygiene","Security & Energy","Outdoor & Garden","Appliances & Repairs","Electrical","Plumbing","Handyman","Renovation","IT & Networking","Health & Wellness"];
-  const start = window.SERVICES.length + 1;
-  for(let i=start;i<=220;i++){
-    const cat = cats[i % cats.length];
-    window.SERVICES.push({ id: "s" + (1000+i), cat, name: `${cat.split(" ")[0]} Specialist ${i}` });
-  }
-})();
+    if(error) return res.json({ ok:false, error: error.message });
+    res.json({ ok:true, contractor: data });
+  }catch(e){ res.json({ ok:false, error: e.message }); }
+});
+
+// CONTRACTOR LOGIN (phone + password)
+app.post("/api/contractor/login", async (req,res)=>{
+  try{
+    const { phone, password } = req.body;
+    const { data: contractor, error } = await supabase.from("contractors").select('*').eq('phone', phone).maybeSingle();
+    if(error || !contractor) return res.json({ ok:false, error: "Contractor not found" });
+    const match = await bcrypt.compare(password, contractor.password_hash || contractor.password || "");
+    if(!match) return res.json({ ok:false, error: "Invalid password" });
+    res.json({ ok:true, contractor });
+  }catch(e){ res.json({ ok:false, error: e.message }); }
+});
+
+// GET contractors (public)
+app.get("/api/contractors", async (req,res)=>{
+  try{
+    const { data, error } = await supabase.from("contractors").select("*").order('created_at',{ascending:false}).limit(1000);
+    if(error) return res.status(400).json({ ok:false, error: error.message });
+    res.json({ ok:true, contractors: data });
+  }catch(e){ res.status(500).json({ ok:false, error: e.message }) }
+});
+
+// GET services
+app.get("/api/services", async (req,res)=>{
+  try{
+    const { data, error } = await supabase.from("services").select("*").order('name',{ascending:true}).limit(2000);
+    if(error) return res.status(400).json({ ok:false, error: error.message });
+    res.json({ ok:true, services: data });
+  }catch(e){ res.status(500).json({ ok:false, error: e.message }) }
+});
+
+// GET reviews
+app.get("/api/reviews", async (req,res)=>{
+  try{
+    const { data, error } = await supabase.from("reviews").select("*").order('created_at',{ascending:false}).limit(500);
+    if(error) return res.status(400).json({ ok:false, error: error.message });
+    res.json({ ok:true, reviews: data });
+  }catch(e){ res.status(500).json({ ok:false, error: e.message }) }
+});
+
+// POST lead
+app.post("/api/lead", async (req,res)=>{
+  try{
+    const { name, phone, email, service, message, contractor_id } = req.body;
+    const payload = { name, phone, email, service, message, contractor_id: contractor_id || null, created_at: new Date().toISOString() };
+    const { data, error } = await supabase.from("leads").insert([payload]).select();
+    if(error) return res.json({ ok:false, error: error.message });
+    // TODO: notify contractor via Telegram server-side if telegram_chat_id present (you can add later)
+    res.json({ ok:true, lead: data });
+  }catch(e){ res.json({ ok:false, error: e.message }) }
+});
+
+// POST review (multipart allowed)
+app.post("/api/review", async (req,res)=>{
+  try{
+    const contractorId = req.body.contractor || req.body.contractor_id;
+    const name = req.body.name || "Customer";
+    const rating = Number(req.body.rating || 5);
+    const comment = req.body.comment || "";
+    const images = [];
+    if(req.files){
+      for(const k of Object.keys(req.files)){
+        const f = req.files[k];
+        const filePath = `reviews/${Date.now()}-${f.name.replace(/\s/g,'_')}`;
+        const upload = await supabase.storage.from('contractor-assets').upload(filePath, f.data, { upsert:true, contentType: f.mimetype });
+        if(!upload.error){
+          const url = supabase.storage.from('contractor-assets').getPublicUrl(filePath).data.publicUrl;
+          images.push(url);
+        }
+      }
+    }
+    const { data, error } = await supabase.from('reviews').insert([{ contractor_id: contractorId, reviewer_name: name, rating, comment, images, created_at: new Date().toISOString() }]).select();
+    if(error) return res.json({ ok:false, error: error.message });
+    res.json({ ok:true, review: data });
+  }catch(e){ res.json({ ok:false, error: e.message }) }
+});
+
+// POST message from contractor to admin (stored)
+app.post("/api/message", async (req,res)=>{
+  try{
+    const { contractorId, message } = req.body;
+    const { data, error } = await supabase.from('messages').insert([{ contractor_id: contractorId, message, created_at: new Date().toISOString() }]).select();
+    if(error) return res.json({ ok:false, error: error.message });
+    res.json({ ok:true, message: data });
+  }catch(e){ res.json({ ok:false, error: e.message }) }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, ()=> console.log("OmniLead API running on port " + PORT));
