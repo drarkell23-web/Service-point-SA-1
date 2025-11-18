@@ -1,46 +1,49 @@
-<!-- admin-create-contractor.html (paste to project root) -->
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Admin — Create Contractor</title>
-<link rel="stylesheet" href="assets/main.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — Create Contractor</title>
+  <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
-  <div style="max-width:520px;margin:36px auto;padding:18px;background:#0c0d0e;border-radius:12px">
+<body class="centered">
+  <div class="card">
     <h2>Create Contractor (Admin)</h2>
-    <p class="muted">This page is protected by a key in the URL</p>
+    <p class="muted small">Open this page with ?key=YOUR_ADMIN_KEY or leave blank if server injects key.</p>
 
-    <label>Admin Key (from URL)</label>
-    <input id="adminKey" placeholder="admin key (auto filled from URL)" />
+    <input id="company" placeholder="Company name" />
+    <input id="phone" placeholder="Phone number" />
+    <input id="password" placeholder="Password" />
+    <input id="telegram" placeholder="Telegram chat id (optional)" />
+    <input id="admingivenkey" placeholder="Admin key (if not injected)" />
 
-    <label>Company</label><input id="company" />
-    <label>Phone</label><input id="phone" />
-    <label>Password</label><input id="password" type="password" />
-    <label>Telegram Chat ID (optional)</label><input id="telegram" />
-
-    <div class="row">
-      <button id="createBtn" class="btn primary">Create Contractor</button>
-    </div>
-    <div id="result" style="margin-top:12px"></div>
+    <button id="createBtn" class="btn primary">Create Contractor</button>
+    <p id="msg" class="muted small"></p>
   </div>
 
   <script>
-    // inject key from URL into field for convenience
-    const urlKey = new URLSearchParams(location.search).get('key') || '';
-    document.getElementById('adminKey').value = urlKey;
+    async function postJSON(url, body){
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(body)
+      });
+      return res.json();
+    }
 
-    document.getElementById('createBtn').addEventListener('click', async ()=>{
-      const key = document.getElementById('adminKey').value.trim();
-      const company = document.getElementById('company').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const telegram = document.getElementById('telegram').value.trim();
-      if(!key || !company || !phone || !password){ alert('Please provide admin key, company, phone and password'); return; }
-      const res = await fetch('/api/admin/create-contractor', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ key, company, phone, password, telegram }) });
-      const j = await res.json();
-      document.getElementById('result').textContent = j.ok ? 'Created contractor: ' + (j.contractor?.[0]?.id || 'OK') : 'Error: ' + (j.error || 'unknown');
+    document.getElementById("createBtn").addEventListener("click", async ()=>{
+      const company = document.getElementById("company").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const password = document.getElementById("password").value;
+      const telegram = document.getElementById("telegram").value.trim();
+      const keyFromUrl = new URLSearchParams(location.search).get("key");
+      const provided = keyFromUrl || document.getElementById("admingivenkey").value.trim();
+      const msg = document.getElementById("msg");
+      msg.textContent = "";
+      if(!company||!phone||!password){ msg.textContent = "Company, phone and password required"; return; }
+      const j = await postJSON("/api/admin/create-contractor", { company, phone, password, telegram, key: provided });
+      if(!j.ok){ msg.textContent = "Error: " + (j.error || "unknown"); return; }
+      msg.textContent = "Contractor created ✔ ID: " + (j.contractor?.id || j.contractor?.[0]?.id || "");
     });
   </script>
 </body>
