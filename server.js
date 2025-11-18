@@ -1,4 +1,4 @@
-// server.js — OmniLead API Server (admin + contractor login + contractor upsert + simple messages)
+// server.js — OmniLead API Server (Express + Supabase)
 import express from "express";
 import fileUpload from "express-fileupload";
 import { createClient } from "@supabase/supabase-js";
@@ -7,6 +7,7 @@ import path from "path";
 import fs from "fs";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
+import fetch from "node-fetch";
 
 dotenv.config();
 
@@ -14,176 +15,153 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(fileUpload());
+app.use(express.static("public"));
+app.use(express.static("./public"));
 
-// env
+// ENV
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SERVICE_ROLE = process.env.SUPABASE_SERVICE_KEY;
-const ADMIN_PORTAL_KEY = process.env.ADMIN_PORTAL_KEY || "";
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID_ADMIN = process.env.TELEGRAM_CHAT_ID_ADMIN;
+
+// validate
 if (!SUPABASE_URL || !SERVICE_ROLE) {
-  console.error("Missing Supabase env vars. Set SUPABASE_URL and SUPABASE_SERVICE_KEY.");
+  console.error("Missing SUPABASE_URL or SUPABASE_SERVICE_KEY in env");
   process.exit(1);
 }
+
+// supabase client (service role)
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
 
-// serve static
-app.use(express.static("public"));
-app.use(express.static("./"));
-
-// --- admin page injector (optional)
+// ADMIN PAGE INJECTION (optional)
 app.get("/admin-create-contractor.html", (req, res) => {
   try {
-    const html = fs.readFileSync("admin-create-contractor.html", "utf8");
-    const injected = html.replace("{{ADMIN_PORTAL_KEY}}", ADMIN_PORTAL_KEY || "NO_ADMIN_KEY_SET");
-    res.send(injected);
+    const html = fs.readFileSync("public/admin-create-contractor.html", "utf8");
+    res.send(html);
   } catch (err) {
     res.status(500).send("Admin page missing.");
   }
 });
 
-// -------------------------
-// Admin: create contractor
-// -------------------------
-// Body: { company, phone, password, telegram, key }
-// key must match ADMIN_PORTAL_KEY (or x-admin-key header)
-app.post("/api/admin/create-contractor", async (req, res) => {
+// GET services (proxy)
+app.get("/api/services", async (req, res) => {
   try {
-    const { company, phone, password, telegram, key } = req.body;
-    const headerKey = req.headers["x-admin-key"];
-    const provided = key || headerKey;
-    if (provided !== ADMIN_PORTAL_KEY) return res.status(403).json({ ok: false, error: "Invalid admin key" });
-    if (!company || !phone || !password) return res.json({ ok: false, error: "company/phone/password required" });
-
-    const password_hash = await bcrypt.hash(password, 10);
-    const payload = {
-      company,
-      phone,
-      password_hash,
-      telegram_chat_id: telegram || null,
-      created_at: new Date().toISOString()
-    };
-
-    const { data, error } = await supabase.from("contractors").insert([payload]).select().maybeSingle();
-    if (error) return res.json({ ok: false, error: error.message });
-    res.json({ ok: true, contractor: data });
+    const { data, error } = await supabase.from("services").select("*").order("name", { ascending: true });
+    if (error) return res.status(500).json({ ok: false, error: error.message });
+    res.json({ ok: true, services: data });
   } catch (err) {
-    res.json({ ok: false, error: String(err) });
+    res.status(500).json({ ok: false, error: String(err) });
   }
 });
 
-// -------------------------
-// Contractor login (phone + password)
-// // POST /api/contractor/login { phone, password }
-// -------------------------
+// GET contractors (proxy)
+app.get("/api/contractors", async (req, res) => {
+  try {
+    const { data, error } = await supabase.from("contractors").select("*").order("created_at", { ascending: false }).limit(1000);
+    if (error) return res.status(500).json({ ok: false, error: error.message });
+    res.json({ ok: true, contractors: data });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: String(err) });
+  }
+});
+
+// POST create contractor (admin page)
+app.post("/api/admin/create-contractor", async (req, res) => {
+  try {
+    const { company, phone, password, telegram } = req.body;
+    if (!company || !phone || !password) return res.status(400).json({ ok: false, error: "Missing fields" });
+
+    const password_hash = await bcrypt.hash(password, 10);
+
+    const { data, error } = await supabase
+      .from("contractors")
+      .insert([{ company, phone, password_hash, telegram_chat_id: telegram || null, created_at: new Date().toISOString() }])
+      .select()
+      .maybeSingle();
+
+    if (error) return res.status(500).json({ ok: false, error: error.message });
+    res.json({ ok: true, contractor: data });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: String(err) });
+  }
+});
+
+// POST contractor login (phone + password)
 app.post("/api/contractor/login", async (req, res) => {
   try {
     const { phone, password } = req.body;
-    if (!phone || !password) return res.json({ ok: false, error: "phone/password required" });
+    if (!phone || !password) return res.status(400).json({ ok: false, error: "Missing" });
 
-    const { data: contractor, error } = await supabase
-      .from("contractors")
-      .select("*")
-      .eq("phone", phone)
-      .maybeSingle();
+    const { data, error } = await supabase.from("contractors").select("*").eq("phone", phone).maybeSingle();
+    if (error) return res.status(500).json({ ok: false, error: error.message });
+    if (!data) return res.status(404).json({ ok: false, error: "Not found" });
 
-    if (error) return res.json({ ok: false, error: error.message });
-    if (!contractor) return res.json({ ok: false, error: "Contractor not found" });
+    const match = await bcrypt.compare(password, data.password_hash || "");
+    if (!match) return res.status(401).json({ ok: false, error: "Invalid password" });
 
-    const ok = await bcrypt.compare(password, contractor.password_hash || "");
-    if (!ok) return res.json({ ok: false, error: "Invalid password" });
-
-    // successful — return contractor row (no session handling here)
-    return res.json({ ok: true, contractor });
+    // hide hash
+    delete data.password_hash;
+    res.json({ ok: true, contractor: data });
   } catch (err) {
-    res.json({ ok: false, error: String(err) });
+    res.status(500).json({ ok: false, error: String(err) });
   }
 });
 
-// -------------------------
-// Contractor upsert (server-side)
-// POST /api/contractor  -> body contains contractor fields (id or auth_id allowed)
-// -------------------------
-app.post("/api/contractor", async (req, res) => {
+// POST /api/lead — save lead and (optionally) notify telegram
+app.post("/api/lead", async (req, res) => {
   try {
     const body = req.body || {};
-    const insertObj = {
-      id: body.id || undefined,
-      auth_id: body.auth_id || undefined,
-      company: body.company || body.name || null,
+    const payload = {
+      name: body.name || null,
       phone: body.phone || null,
-      password_hash: body.password_hash || null,
-      telegram_chat_id: body.telegram_chat_id || body.telegram || null,
-      logo_url: body.logo_url || null,
-      service: body.service || body.main_service || null,
-      updated_at: new Date().toISOString()
+      email: body.email || null,
+      service: body.service || body.service_needed || null,
+      message: body.message || body.description || null,
+      contractor_id: body.contractor_id || body.contractorId || null,
+      source: body.source || "web",
+      created_at: new Date().toISOString(),
     };
 
-    // basic validation: require id|auth_id or (company & phone)
-    if (!insertObj.id && !insertObj.auth_id && (!insertObj.company || !insertObj.phone)) {
-      return res.json({ ok: false, error: "id/auth_id or (company & phone) required" });
+    if (!payload.name || !payload.phone || !payload.service) {
+      return res.status(400).json({ ok: false, error: "name, phone and service are required" });
     }
 
-    const onConflict = insertObj.auth_id ? ["auth_id"] : ["id"];
-    if (!insertObj.id) delete insertObj.id;
+    const { data, error } = await supabase.from("leads").insert([payload]).select().maybeSingle();
+    if (error) return res.status(500).json({ ok: false, error: error.message });
 
-    const { data, error } = await supabase.from("contractors").upsert(insertObj, { onConflict }).select().maybeSingle();
-    if (error) return res.json({ ok: false, error: error.message });
-    res.json({ ok: true, contractor: data });
+    // send telegram notification if configured
+    if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID_ADMIN) {
+      try {
+        const textParts = [
+          `New Lead Received`,
+          `Name: ${payload.name}`,
+          `Phone: ${payload.phone}`,
+          payload.email ? `Email: ${payload.email}` : null,
+          `Service: ${payload.service}`,
+          payload.contractor_id ? `Contractor: ${payload.contractor_id}` : `No contractor assigned`,
+          payload.message ? `Message: ${payload.message}` : null,
+          `Source: ${payload.source}`,
+        ].filter(Boolean);
+
+        const text = textParts.join("\n");
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID_ADMIN, text }),
+        });
+      } catch (tgErr) {
+        console.warn("Telegram notify failed:", tgErr);
+      }
+    }
+
+    res.status(201).json({ ok: true, lead: data });
   } catch (err) {
-    res.json({ ok: false, error: String(err) });
+    res.status(500).json({ ok: false, error: String(err) });
   }
 });
 
-// -------------------------
-// GET contractor by id
-// GET /api/contractor?id=<id>
-// -------------------------
-app.get("/api/contractor", async (req, res) => {
-  try {
-    const id = req.query.id;
-    if (!id) return res.json({ ok: false, error: "missing id" });
-    const { data, error } = await supabase.from("contractors").select("*").eq("id", id).maybeSingle();
-    if (error) return res.json({ ok: false, error: error.message });
-    res.json({ ok: true, contractor: data });
-  } catch (err) {
-    res.json({ ok: false, error: String(err) });
-  }
-});
+// catch-all for simple health
+app.get("/health", (req, res) => res.json({ ok: true }));
 
-// -------------------------
-// Messages for contractor (admin side or contractor fetching their messages)
-// GET /api/messages?contractorId=<id>
-// POST /api/messages { contractorId, message }
-// -------------------------
-app.get("/api/messages", async (req, res) => {
-  try {
-    const contractorId = req.query.contractorId;
-    if (!contractorId) return res.json({ ok: false, error: "missing contractorId" });
-    const { data, error } = await supabase.from("messages").select("*").eq("contractor_id", contractorId).order("created_at", { ascending: false }).limit(200);
-    if (error) return res.json({ ok: false, error: error.message });
-    res.json({ ok: true, messages: data });
-  } catch (err) {
-    res.json({ ok: false, error: String(err) });
-  }
-});
-
-app.post("/api/messages", async (req, res) => {
-  try {
-    const { contractorId, message } = req.body;
-    if (!contractorId || !message) return res.json({ ok: false, error: "contractorId and message required" });
-    const { data, error } = await supabase.from("messages").insert([{ contractor_id: contractorId, message, created_at: new Date().toISOString() }]).select();
-    if (error) return res.json({ ok: false, error: error.message });
-    res.json({ ok: true, message: data });
-  } catch (err) {
-    res.json({ ok: false, error: String(err) });
-  }
-});
-
-// catchall
-app.get("*", (req, res) => {
-  // let static middleware serve files; this is fallback
-  res.sendFile(path.resolve("public/index.html"));
-});
-
-// start
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Server running on port", PORT));
+app.listen(PORT, () => console.log(`OmniLead API running on port ${PORT}`));
