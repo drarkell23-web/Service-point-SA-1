@@ -1,36 +1,123 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Admin — Create Contractor</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <title>Create Contractor — Admin</title>
+
   <style>
-    body { background:#0f1720; color:#e6eef8; font-family:Inter,Arial; padding:28px; }
-    .card { max-width:520px; margin:auto; background:#0b1220; padding:22px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,.6); }
-    input,textarea { width:100%; padding:10px; margin-top:10px; border-radius:8px; border:1px solid #273241; background:#07101a; color:#fff; }
-    button { width:100%; padding:12px; margin-top:14px; background:#00aaff; border:none; color:#042; font-weight:600; border-radius:10px; cursor:pointer; }
-    .note { font-size:13px; color:#98a0b0; margin-top:8px; }
+    body {
+      background: #0a0a0a;
+      color: white;
+      font-family: Arial;
+      padding: 30px;
+    }
+    .wrap {
+      max-width: 450px;
+      margin: auto;
+      background: #111;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+    }
+    input {
+      width: 100%;
+      margin: 8px 0;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: white;
+    }
+    button {
+      width: 100%;
+      background: #4a90e2;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    #msg {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      display: none;
+    }
   </style>
 </head>
+
 <body>
-  <div class="card">
-    <h2>Create Contractor (admin)</h2>
-    <div class="note">This page is protected. Provide the admin key in the query string or the code will hide the form.</div>
 
-    <div id="locked" style="display:none; margin-top:18px;">
-      <p style="color:#ffb4b4">Admin key missing or invalid. Provide the key in the URL: <code>?key=YOUR_KEY</code></p>
-    </div>
+<div class="wrap">
+  <h2>Create Contractor</h2>
 
-    <div id="formWrap" style="display:none;">
-      <input id="company" placeholder="Company name" />
-      <input id="phone" placeholder="Phone (e.g. 0674099143)" />
-      <input id="password" placeholder="Password for contractor" />
-      <input id="telegram" placeholder="Telegram chat id (optional)" />
-      <button id="createBtn">Create Contractor</button>
-      <div id="msg" style="margin-top:10px"></div>
-    </div>
-  </div>
+  <input type="text" id="company" placeholder="Company Name" />
+  <input type="text" id="phone" placeholder="Phone Example 0812345678" />
+  <input type="password" id="password" placeholder="Password" />
+  <input type="text" id="telegram" placeholder="Telegram Chat ID (optional)" />
 
-  <script src="/public/admin-create-contractor.js"></script>
+  <button onclick="createContractor()">Create Contractor</button>
+
+  <div id="msg"></div>
+</div>
+
+<script>
+async function createContractor() {
+  const company = document.getElementById("company").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const telegram = document.getElementById("telegram").value.trim();
+
+  const msgBox = document.getElementById("msg");
+
+  msgBox.style.display = "none";
+
+  if (!company || !phone || !password) {
+    msgBox.innerHTML = "❌ All required fields must be filled";
+    msgBox.style.background = "#800";
+    msgBox.style.display = "block";
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/admin/create-contractor", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        company,
+        phone,
+        password,
+        telegram
+      })
+    });
+
+    const data = await res.json();
+
+    if (!data.ok) {
+      msgBox.innerHTML = "❌ " + data.error;
+      msgBox.style.background = "#800";
+      msgBox.style.display = "block";
+      return;
+    }
+
+    msgBox.innerHTML = "✅ Contractor created successfully!";
+    msgBox.style.background = "#060";
+    msgBox.style.display = "block";
+
+    document.getElementById("company").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("password").value = "";
+    document.getElementById("telegram").value = "";
+
+  } catch (e) {
+    msgBox.innerHTML = "❌ Server error: " + e.message;
+    msgBox.style.background = "#800";
+    msgBox.style.display = "block";
+  }
+}
+</script>
+
 </body>
 </html>
