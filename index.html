@@ -3,108 +3,126 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Service Point SA — Find Trusted Contractors</title>
+  <title>Service Point SA — Find trusted local services</title>
 
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
   <link rel="stylesheet" href="assets/main.css" />
   <link rel="stylesheet" href="assets/chatbot.css" />
 
+  <!-- Client scripts -->
   <script src="assets/main.js" defer></script>
   <script src="assets/chatbot.js" defer></script>
 </head>
 <body>
-
-  <div id="app">
-    <aside id="sidebar">
+  <div class="app">
+    <aside class="sidebar">
       <div class="brand">
-        <img src="assets/logo.png" alt="Service Point SA" />
-        <h1>Service Point SA</h1>
+        <div class="logo">Service Point SA</div>
       </div>
 
-      <div class="search-wrap">
-        <input id="searchInput" placeholder="Search services or contractors..." />
-      </div>
+      <nav class="left-nav">
+        <div class="left-section-title">Categories</div>
+        <div id="categoriesList" class="categories-list">
+          <!-- categories injected here -->
+        </div>
 
-      <nav id="categoriesWrap">
-        <h3>Categories</h3>
-        <div id="categories" class="categories"></div>
+        <div class="left-section small">
+          <a id="wantContractor" href="mailto:renurture.solutions@gmail.com">Want to be a contractor? apply@servicepointsa.co.za</a>
+        </div>
+
+        <div class="left-footer">© <span id="year"></span> Service Point SA</div>
       </nav>
-
-      <div class="left-footer">
-        <div class="want">Want to be a contractor?</div>
-        <a href="mailto:renurture.solutions@gmail.com" class="apply">Email renurture.solutions@gmail.com</a>
-      </div>
     </aside>
 
-    <main id="main">
+    <main class="main-area">
       <header class="topbar">
-        <div class="top-left">
-          <h2 id="pageTitle">All Services</h2>
-        </div>
+        <h1>Service Point SA — Find trusted local services</h1>
+
         <div class="top-right">
-          <button id="chatOpen" class="btn-ghost">💬 Service Assistant</button>
+          <div class="stat-block">
+            <div class="stat-number" id="stat-leads">0</div>
+            <div class="stat-label">Passed leads</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-number" id="stat-contractors">0</div>
+            <div class="stat-label">Contractors</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-number" id="stat-satisfied">0</div>
+            <div class="stat-label">Happy clients</div>
+          </div>
+          <div class="search-wrap">
+            <input id="searchInput" placeholder="Search services or contractors..." />
+            <button id="searchBtn" class="btn-ghost">Search</button>
+          </div>
         </div>
       </header>
 
-      <section class="content">
-        <section class="services-section">
-          <h3>All Services</h3>
-          <div id="servicesGrid" class="services-grid"></div>
+      <section class="content-grid">
+        <section class="panel services-panel">
+          <div class="panel-title">All Services</div>
+          <div id="servicePills" class="service-pills">
+            <!-- service pills injected here (compact) -->
+          </div>
         </section>
 
-        <aside class="right-column">
-          <section class="top-contractors">
-            <h4>Top Contractors</h4>
-            <div id="topList"></div>
-          </section>
+        <aside class="right-panel">
+          <div class="card">
+            <div class="card-title">Top Rated Contractors</div>
+            <div id="topContractors"></div>
+          </div>
 
-          <section class="reviews">
-            <h4>Recent Reviews</h4>
+          <div class="card">
+            <div class="card-title">Why choose Service Point SA</div>
+            <div class="why">
+              <div>✅ Fast lead matching</div>
+              <div>✅ Vetted contractors</div>
+              <div>✅ Local & trusted</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Customer Testimonials</div>
             <div id="testimonials"></div>
-          </section>
+          </div>
         </aside>
       </section>
     </main>
   </div>
 
-  <!-- CHATBOT / LEAD FORM -->
-  <div id="chatModal" class="chat-modal hidden" aria-hidden="true">
-    <div class="chat-card">
-      <div class="chat-header">
-        <div>
-          <strong>Service Assistant</strong>
-          <div class="muted small">Tell us what you need — we'll match a contractor.</div>
+  <!-- Chat / Lead modal (Service Assistant) -->
+  <div id="chatWidget" class="chat-widget">
+    <div class="chat-header">
+      <div class="chat-title">Service Assistant</div>
+      <button id="chatClose" class="small-x" title="Close">✕</button>
+    </div>
+
+    <div class="chat-body">
+      <div id="chatFlow" class="chat-flow"></div>
+
+      <form id="leadForm" class="lead-form">
+        <input id="leadName" name="name" placeholder="Full name" autocomplete="name" />
+        <input id="leadPhone" name="phone" placeholder="Phone (e.g. 0674099143)" autocomplete="tel" />
+        <input id="leadEmail" name="email" placeholder="Email (optional)" autocomplete="email" />
+        <select id="leadService" name="service"><option value="">Choose service or type...</option></select>
+
+        <div id="contractorPick" class="contractor-pick" style="display:none;">
+          <div class="small">Choose a contractor (optional)</div>
+          <div id="contractorOptions" class="contractor-options"></div>
         </div>
-        <button id="chatClose" class="close">×</button>
-      </div>
 
-      <div class="chat-body">
-        <div id="chatFlow" class="chat-flow"></div>
-
-        <form id="leadForm" class="lead-form">
-          <input id="leadName" placeholder="Your full name" />
-          <input id="leadPhone" placeholder="Phone number" />
-          <input id="leadEmail" placeholder="Email (optional)" />
-          <input id="leadService" placeholder="Service needed (choose from left)" readonly />
-          <textarea id="leadMessage" placeholder="Describe job / details"></textarea>
-
-          <div id="contractorPick" class="contractor-pick" style="display:none;">
-            <div class="muted small">Choose a contractor (optional)</div>
-            <div id="contractorOptions" class="contractor-options"></div>
-          </div>
-
-          <div class="form-row">
-            <button id="chatSend" class="btn-primary" type="button">Send Request</button>
-            <button id="clearBtn" class="btn-ghost" type="button">Clear</button>
-          </div>
-        </form>
-      </div>
-
+        <textarea id="leadMessage" name="message" placeholder="Describe the job (optional)"></textarea>
+        <div class="form-row">
+          <button id="chatSend" type="submit" class="btn-primary">Send Request</button>
+          <button id="chatCancel" type="button" class="btn-ghost">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <footer class="site-footer">
-    © <span id="year"></span> Service Point SA — renurture.solutions@gmail.com
-  </footer>
-
+  <button id="chatOpen" class="chat-open-btn">💬 Service Assistant</button>
 </body>
 </html>
