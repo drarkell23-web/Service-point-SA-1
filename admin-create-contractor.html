@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Admin — Create Contractor</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { background:#0f1720; color:#e6eef8; font-family:Inter,Arial; padding:28px; }
+    .card { max-width:520px; margin:auto; background:#0b1220; padding:22px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,.6); }
+    input,textarea { width:100%; padding:10px; margin-top:10px; border-radius:8px; border:1px solid #273241; background:#07101a; color:#fff; }
+    button { width:100%; padding:12px; margin-top:14px; background:#00aaff; border:none; color:#042; font-weight:600; border-radius:10px; cursor:pointer; }
+    .note { font-size:13px; color:#98a0b0; margin-top:8px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Create Contractor (admin)</h2>
+    <div class="note">This page is protected. Provide the admin key in the query string or the code will hide the form.</div>
+
+    <div id="locked" style="display:none; margin-top:18px;">
+      <p style="color:#ffb4b4">Admin key missing or invalid. Provide the key in the URL: <code>?key=YOUR_KEY</code></p>
+    </div>
+
+    <div id="formWrap" style="display:none;">
+      <input id="company" placeholder="Company name" />
+      <input id="phone" placeholder="Phone (e.g. 0674099143)" />
+      <input id="password" placeholder="Password for contractor" />
+      <input id="telegram" placeholder="Telegram chat id (optional)" />
+      <button id="createBtn">Create Contractor</button>
+      <div id="msg" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <script src="/public/admin-create-contractor.js"></script>
+</body>
+</html>
