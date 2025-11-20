@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Contractor Dashboard — OmniLead</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/public/ui.css" />
+  <style>
+    :root{
+      --bg:#071018; --card:#0f1720; --muted:#98a0b0; --accent:#00b0ff;
+    }
+    body{margin:0;background:var(--bg);color:#fff;font-family:Inter,Arial}
+    .layout{display:flex;min-height:100vh}
+    aside{width:260px;background:var(--card);padding:20px;border-right:1px solid #0b2432}
+    main{flex:1;padding:20px}
+    .logo{font-weight:700;font-size:18px;margin-bottom:12px}
+    .profile{background:#08131a;padding:12px;border-radius:10px}
+    .section{margin-top:18px}
+    .btn{background:var(--accent);border:none;color:#001;padding:10px 12px;border-radius:8px;cursor:pointer}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .card{background:#07121a;padding:12px;border-radius:12px;border:1px solid #06222d}
+    .muted{color:var(--muted);font-size:13px}
+    .lead-row{display:flex;justify-content:space-between;padding:10px;border-bottom:1px dashed #0b2b36}
+    .scroll{max-height:420px;overflow:auto;padding-right:8px}
+    .premium{background:linear-gradient(90deg,#0b2b3a,#062e3f);padding:12px;border-radius:12px;color:#fff}
+    .telegram-panel{height:260px;overflow:auto;background:#05131a;padding:10px;border-radius:8px;border:1px solid #07262f}
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <div class="logo">Service Point SA — Contractor Panel</div>
+      <div id="profileBlock" class="profile">
+        <div><strong id="cName">Contractor</strong></div>
+        <div id="cService" class="muted">Service</div>
+        <div style="margin-top:8px"><button id="logoutBtn" class="btn">Logout</button></div>
+      </div>
+
+      <div class="section">
+        <div style="margin-bottom:8px" class="muted">Quick links</div>
+        <div style="display:flex;gap:8px;flex-direction:column">
+          <button id="btnLeads" class="btn">My Leads</button>
+          <button id="btnMessages" class="btn">Messages</button>
+          <button id="btnProfile" class="btn">Profile</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="muted">Premium</div>
+        <div style="margin-top:10px" class="premium">
+          <div style="font-weight:700">Go Premium</div>
+          <div class="muted" style="font-size:13px;margin-top:6px">Featured placement, priority leads, analytics and Telegram automation</div>
+          <button id="upgradeBtn" class="btn" style="margin-top:10px">Upgrade</button>
+        </div>
+      </div>
+
+      <div class="section" style="margin-top:18px">
+        <div class="muted">Want to customise?</div>
+        <div style="margin-top:8px">
+          <label class="muted">Dashboard colour</label>
+          <input id="accentInput" type="color" value="#00b0ff" style="width:100%;height:36px;border-radius:8px;border:none;margin-top:6px"/>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <div style="display:flex;gap:12px;align-items:center">
+        <h1 id="title">Dashboard</h1>
+        <div id="subtitle" class="muted">Overview</div>
+      </div>
+
+      <div class="section grid" id="overviewGrid" style="margin-top:12px">
+        <div class="card">
+          <div class="muted">Total Leads</div>
+          <div id="totalLeads" style="font-size:22px;font-weight:700">0</div>
+        </div>
+        <div class="card">
+          <div class="muted">Unread Messages</div>
+          <div id="totalMsgs" style="font-size:22px;font-weight:700">0</div>
+        </div>
+        <div class="card">
+          <div class="muted">Rating</div>
+          <div id="rating" style="font-size:22px;font-weight:700">—</div>
+        </div>
+      </div>
+
+      <div class="section" style="margin-top:18px">
+        <h3>Recent Leads</h3>
+        <div class="card scroll" id="leadsList">
+          <!-- leads inserted here -->
+        </div>
+      </div>
+
+      <div class="section" style="margin-top:18px;display:flex;gap:12px">
+        <div style="flex:1">
+          <h3>Messages (Telegram panel)</h3>
+          <div class="telegram-panel" id="telegramPanel"></div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <input id="msgInput" placeholder="Message to admin" style="flex:1;padding:8px;border-radius:8px;border:1px solid #123;background:#03141a;color:#fff"/>
+            <button id="sendMsgBtn" class="btn">Send</button>
+          </div>
+        </div>
+
+        <div style="width:360px">
+          <h3>Profile</h3>
+          <div class="card">
+            <div><strong>Company</strong></div>
+            <div id="pCompany" class="muted"></div>
+            <div style="margin-top:8px"><strong>Phone</strong></div>
+            <div id="pPhone" class="muted"></div>
+            <div style="margin-top:8px"><strong>Telegram</strong></div>
+            <div id="pTelegram" class="muted"></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+<script src="/public/contractor-dashboard.js"></script>
+</body>
+</html>
