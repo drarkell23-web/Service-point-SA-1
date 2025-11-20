@@ -1,8 +1,7 @@
-// public/supabase-client.js — frontend safe client (uses anon key)
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// public/supabase-client.js — browser Supabase helper (use anon key)
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-export const SUPABASE_URL = "https://YOUR_SUPABASE_URL.supabase.co"; // replace via templating if you want
-export const SUPABASE_ANON_KEY = "sb_publishable_key_here";
+export const SUPABASE_URL = "https://obmbklanktevawuymkbq.supabase.co";
+export const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ibWJrbGFua3RldmF3dXlta2JxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwMTA5MTIsImV4cCI6MjA3ODU4NjkxMn0.Rwou0LAS4SITuJfWPTFzWnxUZTYlwVqLA0s-l4Qen_k";
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-export async function getCurrentUser(){ const { data } = await supabase.auth.getUser(); return data?.user || null; }
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
