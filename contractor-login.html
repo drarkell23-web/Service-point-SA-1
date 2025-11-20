@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Contractor Login — OmniLead</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/public/ui.css" />
+  <style>
+    body{background:#0f1720;color:#fff;font-family:Inter,Arial;padding:30px}
+    .card{max-width:420px;margin:auto;background:#091219;padding:24px;border-radius:12px}
+    .input{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:1px solid #223; background:#07101a;color:#fff}
+    .btn{width:100%;padding:12px;margin-top:14px;background:#00aaff;border:none;border-radius:10px;color:#012;font-weight:700;cursor:pointer}
+    .small{margin-top:8px;color:#98a0b0;font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Contractor Login</h2>
+    <input id="phone" class="input" placeholder="Phone e.g. 0674099143" />
+    <input id="password" class="input" placeholder="Password" type="password" />
+    <button id="loginBtn" class="btn">Log in</button>
+    <p class="small">Use credentials provided by admin. After login you'll be redirected to your contractor dashboard.</p>
+    <div id="msg" style="margin-top:10px;color:#ffb4b4"></div>
+  </div>
+
+<script>
+document.getElementById('loginBtn').addEventListener('click', async ()=>{
+  const phone = document.getElementById('phone').value.trim();
+  const password = document.getElementById('password').value;
+  const msg = (t)=> document.getElementById('msg').innerText = t;
+
+  if (!phone || !password) return msg('Enter phone & password');
+  try {
+    const res = await fetch('/api/contractor/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ phone, password }) });
+    const j = await res.json();
+    if (!j.ok) return msg('Login failed: ' + (j.error || 'unknown'));
+    // store contractor in localStorage
+    localStorage.setItem('contractor', JSON.stringify(j.contractor));
+    window.location.href = '/contractor-dashboard.html';
+  } catch (e) {
+    msg('Network error');
+  }
+});
+</script>
+</body>
+</html>
