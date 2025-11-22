@@ -1,12 +1,178 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Dyllon's Service Point</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <title>ServicePoint SA – Find Trusted Contractors</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="logo-circle">S</div>
+      <div class="logo-text">
+        <div class="logo-title">ServicePoint SA</div>
+        <div class="logo-sub">Home & Business Service Network</div>
+      </div>
+    </div>
+    <nav class="topbar-right">
+      <button class="btn ghost">Sign in</button>
+      <button class="btn primary">Admin</button>
+    </nav>
+  </header>
+
+  <!-- Main layout -->
+  <main class="page">
+    <!-- Sidebar: Categories & services -->
+    <aside class="sidebar">
+      <h2 class="sidebar-title">Categories</h2>
+      <p class="sidebar-sub">
+        Tap a category to see all services we cover.
+      </p>
+      <div id="category-list" class="category-list">
+        <!-- JS will inject categories + dropdown services here -->
+      </div>
+      <div class="sidebar-footer">
+        Serving <strong>Durban</strong>, <strong>Johannesburg</strong> &amp; <strong>Cape Town</strong> –
+        with rollout to the rest of SA.
+      </div>
+    </aside>
+
+    <!-- Right side: Hero + stats + extra content -->
+    <section class="content">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-left">
+          <h3 class="eyebrow">Why Choose ServicePoint SA</h3>
+          <h1 class="hero-title">
+            One network for every contractor you’ll ever need.
+          </h1>
+          <ul class="hero-list">
+            <li>
+              Nationwide marketplace with dedicated coverage in
+              <strong>Durban, Johannesburg &amp; Cape Town</strong>.
+            </li>
+            <li>
+              <strong>Smart lead routing</strong> sends work to the best-scored,
+              closest contractor – no more message spam.
+            </li>
+            <li>
+              <strong>Verified identity &amp; compliance checks</strong> on every
+              contractor before they go live.
+            </li>
+            <li>
+              <strong>Single chat &amp; payments layer</strong> between you and
+              the contractor – we handle the admin, you track the job.
+            </li>
+            <li>
+              <strong>Service DNA™ scoring</strong> (response time, ratings,
+              comeback rate) so you see who’s actually performing in your area.
+            </li>
+          </ul>
+        </div>
+        <div class="hero-right">
+          <p class="badge">Built for South African homes & businesses</p>
+          <h2 class="hero-heading">
+            Quality contractors in KZN, Gauteng &amp; the Cape – in one place.
+          </h2>
+          <p class="hero-copy">
+            Answer a few questions, and we’ll match you to a screened contractor
+            with the right skills, availability and price range. No more hunting
+            through WhatsApp groups.
+          </p>
+          <div class="hero-actions">
+            <button class="btn primary lg">Get matched now</button>
+            <button class="btn ghost lg">How it works</button>
+          </div>
+          <div class="hero-footnote">
+            Average response time: <strong>&lt; 15 minutes</strong> during office hours.
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats row -->
+      <section class="stats-row">
+        <article class="stat-card">
+          <div class="stat-label">Leads Successfully Fed</div>
+          <div class="stat-value" id="lead-count">168</div>
+          <div class="stat-sub">
+            Real jobs connected to vetted contractors across SA.
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-label">Contractors Live on Network</div>
+          <div class="stat-value" id="contractor-count">210</div>
+          <div class="stat-sub">
+            Trade-tested teams, from solo specialists to enterprise crews.
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-label">Average Rating</div>
+          <div class="stat-value">4.8★</div>
+          <div class="stat-sub">
+            Driven by post-job reviews and comeback tracking.
+          </div>
+        </article>
+      </section>
+
+      <!-- How it works -->
+      <section class="how-it-works">
+        <h2>How ServicePoint SA works</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Tell us what you need</h3>
+            <p>
+              Choose a category and describe the job – leaks, rewires, painting,
+              full renovations, you name it.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>We match you instantly</h3>
+            <p>
+              Our engine finds the best-scored local contractors, checks
+              availability and routes your lead.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>You approve &amp; track the job</h3>
+            <p>
+              Chat, share photos, accept quotes and track job status from one
+              simple dashboard.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Trust strip -->
+      <section class="trust-strip">
+        <p>
+          Every contractor is screened for:
+          <span>ID &amp; business verification</span>
+          <span>Public liability cover</span>
+          <span>Reference checks</span>
+          <span>Ongoing quality scoring</span>
+        </p>
+      </section>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div>© 2025 ServicePoint SA. All rights reserved.</div>
+    <div class="foot-right">
+      Built in South Africa • <span class="heart">❤</span>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
 </html>
