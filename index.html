@@ -1,178 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>ServicePoint SA – Find Trusted Contractors</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ServicePoint SA — Home Services Network</title>
+
+<!-- GOOGLE FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: "Inter", sans-serif;
+        background:#f0f0f0;  /* GREY BACKGROUND */
+        margin:0;
+        padding:0;
+    }
+
+    /* NAV */
+    .nav {
+        display:flex;
+        align-items:center;
+        padding:18px 30px;
+        background:white;
+        border-bottom:1px solid #ddd;
+    }
+    .nav h2 { margin-left:12px; font-weight:700; color:#222; font-size:20px; }
+
+    /* MAIN LAYOUT */
+    .container {
+        display:flex;
+        padding:30px;
+        gap:25px;
+    }
+
+    /* LEFT CATEGORY PANEL */
+    .left-panel {
+        width:260px;
+        background:#fff;
+        padding:20px;
+        border-radius:10px;
+        height: calc(100vh - 120px);
+        overflow-y:auto;
+        border:1px solid #e1e1e1;
+    }
+
+    .left-panel h3 {
+        margin-bottom:10px;
+        font-size:18px;
+        font-weight:700;
+    }
+
+    .category {
+        font-size:15px;
+        margin:6px 0;
+        padding:6px;
+        border-radius:5px;
+        cursor:pointer;
+        display:flex;
+        justify-content:space-between;
+    }
+    .category:hover {
+        background:#f3f3f3;
+    }
+
+    /* MAIN CONTENT */
+    .content {
+        flex:1;
+        display:flex;
+        flex-direction:column;
+        gap:20px;
+    }
+
+    .hero-box {
+        background:white;
+        padding:25px;
+        border-radius:12px;
+        border:1px solid #e1e1e1;
+    }
+
+    .hero-row {
+        display:flex;
+        justify-content:space-between;
+        flex-wrap:wrap;
+        gap:20px;
+    }
+
+    .why,
+    .headline-box {
+        flex:1;
+        min-width:300px;
+    }
+
+    .why ul { margin-top:10px; }
+    .why li { margin:8px 0; }
+
+    .stats-row {
+        display:flex;
+        gap:20px;
+        flex-wrap:wrap;
+    }
+
+    .stat-box {
+        flex:1;
+        background:white;
+        padding:20px;
+        border-radius:10px;
+        border:1px solid #ddd;
+        min-width:250px;
+    }
+
+    .stat-box h1 {
+        font-size:32px;
+        margin:0;
+    }
+
+    /* FOOTER */
+    footer {
+        text-align:center;
+        padding:20px;
+        font-size:14px;
+        color:#555;
+    }
+
+</style>
 </head>
 <body>
-  <!-- Top bar -->
-  <header class="topbar">
-    <div class="topbar-left">
-      <div class="logo-circle">S</div>
-      <div class="logo-text">
-        <div class="logo-title">ServicePoint SA</div>
-        <div class="logo-sub">Home & Business Service Network</div>
-      </div>
+
+<!-- NAV -->
+<div class="nav">
+    <img src="https://via.placeholder.com/40" style="border-radius:50%;">
+    <h2>ServicePoint SA</h2>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+    <!-- LEFT CATEGORIES -->
+    <div class="left-panel">
+        <h3>Categories</h3>
+
+        <!-- AUTOMATED LIST OF MANY SERVICES -->
+        <div id="categoryList"></div>
     </div>
-    <nav class="topbar-right">
-      <button class="btn ghost">Sign in</button>
-      <button class="btn primary">Admin</button>
-    </nav>
-  </header>
 
-  <!-- Main layout -->
-  <main class="page">
-    <!-- Sidebar: Categories & services -->
-    <aside class="sidebar">
-      <h2 class="sidebar-title">Categories</h2>
-      <p class="sidebar-sub">
-        Tap a category to see all services we cover.
-      </p>
-      <div id="category-list" class="category-list">
-        <!-- JS will inject categories + dropdown services here -->
-      </div>
-      <div class="sidebar-footer">
-        Serving <strong>Durban</strong>, <strong>Johannesburg</strong> &amp; <strong>Cape Town</strong> –
-        with rollout to the rest of SA.
-      </div>
-    </aside>
+    <!-- MAIN CONTENT -->
+    <div class="content">
 
-    <!-- Right side: Hero + stats + extra content -->
-    <section class="content">
-      <!-- Hero -->
-      <section class="hero">
-        <div class="hero-left">
-          <h3 class="eyebrow">Why Choose ServicePoint SA</h3>
-          <h1 class="hero-title">
-            One network for every contractor you’ll ever need.
-          </h1>
-          <ul class="hero-list">
-            <li>
-              Nationwide marketplace with dedicated coverage in
-              <strong>Durban, Johannesburg &amp; Cape Town</strong>.
-            </li>
-            <li>
-              <strong>Smart lead routing</strong> sends work to the best-scored,
-              closest contractor – no more message spam.
-            </li>
-            <li>
-              <strong>Verified identity &amp; compliance checks</strong> on every
-              contractor before they go live.
-            </li>
-            <li>
-              <strong>Single chat &amp; payments layer</strong> between you and
-              the contractor – we handle the admin, you track the job.
-            </li>
-            <li>
-              <strong>Service DNA™ scoring</strong> (response time, ratings,
-              comeback rate) so you see who’s actually performing in your area.
-            </li>
-          </ul>
+        <!-- HERO -->
+        <div class="hero-box">
+            <div class="hero-row">
+                <!-- WHY CHOOSE -->
+                <div class="why">
+                    <h3>Why Choose ServicePoint SA</h3>
+                    <h2>South Africa’s most advanced contractor network.</h2>
+
+                    <ul>
+                        <li>Coverage in Durban, Johannesburg & Cape Town.</li>
+                        <li>Instant smart-routing to best-scored contractors.</li>
+                        <li>Identity verification & compliance screening.</li>
+                        <li>In-platform messaging & automated admin layer.</li>
+                        <li>ServiceDNA™ scoring: response, ratings, comeback rate.</li>
+                        <li>Built for real SA homes & business needs.</li>
+                    </ul>
+                </div>
+
+                <!-- HEADLINE -->
+                <div class="headline-box">
+                    <h2>
+                        Quality contractors in<br>
+                        <b>KZN, Gauteng & Cape Town.</b>
+                    </h2>
+                    <p>
+                        Answer a few questions, and we’ll match you to verified professionals
+                        with the right skills, availability, and pricing.
+                    </p>
+
+                    <button style="
+                        background:#2ecc71;
+                        border:none;
+                        color:white;
+                        font-size:16px;
+                        padding:12px 20px;
+                        border-radius:8px;
+                        cursor:pointer;
+                        margin-top:10px;">
+                        Get Matched Now
+                    </button>
+
+                </div>
+            </div>
         </div>
-        <div class="hero-right">
-          <p class="badge">Built for South African homes & businesses</p>
-          <h2 class="hero-heading">
-            Quality contractors in KZN, Gauteng &amp; the Cape – in one place.
-          </h2>
-          <p class="hero-copy">
-            Answer a few questions, and we’ll match you to a screened contractor
-            with the right skills, availability and price range. No more hunting
-            through WhatsApp groups.
-          </p>
-          <div class="hero-actions">
-            <button class="btn primary lg">Get matched now</button>
-            <button class="btn ghost lg">How it works</button>
-          </div>
-          <div class="hero-footnote">
-            Average response time: <strong>&lt; 15 minutes</strong> during office hours.
-          </div>
+
+        <!-- STATS -->
+        <div class="stats-row">
+            <div class="stat-box">
+                <h1>168</h1>
+                Leads Successfully Fed  
+                <p>Real customers matched to vetted contractors.</p>
+            </div>
+
+            <div class="stat-box">
+                <h1>210</h1>
+                Contractors Available  
+                <p>Across KZN, JHB & CPT — more onboarding daily.</p>
+            </div>
+
+            <div class="stat-box">
+                <h1>4.8★</h1>
+                Average Rating  
+                <p>Based on comeback rate & verified reviews.</p>
+            </div>
         </div>
-      </section>
 
-      <!-- Stats row -->
-      <section class="stats-row">
-        <article class="stat-card">
-          <div class="stat-label">Leads Successfully Fed</div>
-          <div class="stat-value" id="lead-count">168</div>
-          <div class="stat-sub">
-            Real jobs connected to vetted contractors across SA.
-          </div>
-        </article>
-
-        <article class="stat-card">
-          <div class="stat-label">Contractors Live on Network</div>
-          <div class="stat-value" id="contractor-count">210</div>
-          <div class="stat-sub">
-            Trade-tested teams, from solo specialists to enterprise crews.
-          </div>
-        </article>
-
-        <article class="stat-card">
-          <div class="stat-label">Average Rating</div>
-          <div class="stat-value">4.8★</div>
-          <div class="stat-sub">
-            Driven by post-job reviews and comeback tracking.
-          </div>
-        </article>
-      </section>
-
-      <!-- How it works -->
-      <section class="how-it-works">
-        <h2>How ServicePoint SA works</h2>
-        <div class="steps">
-          <div class="step">
-            <div class="step-number">1</div>
-            <h3>Tell us what you need</h3>
-            <p>
-              Choose a category and describe the job – leaks, rewires, painting,
-              full renovations, you name it.
-            </p>
-          </div>
-          <div class="step">
-            <div class="step-number">2</div>
-            <h3>We match you instantly</h3>
-            <p>
-              Our engine finds the best-scored local contractors, checks
-              availability and routes your lead.
-            </p>
-          </div>
-          <div class="step">
-            <div class="step-number">3</div>
-            <h3>You approve &amp; track the job</h3>
-            <p>
-              Chat, share photos, accept quotes and track job status from one
-              simple dashboard.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Trust strip -->
-      <section class="trust-strip">
-        <p>
-          Every contractor is screened for:
-          <span>ID &amp; business verification</span>
-          <span>Public liability cover</span>
-          <span>Reference checks</span>
-          <span>Ongoing quality scoring</span>
-        </p>
-      </section>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div>© 2025 ServicePoint SA. All rights reserved.</div>
-    <div class="foot-right">
-      Built in South Africa • <span class="heart">❤</span>
     </div>
-  </footer>
+</div>
 
-  <script src="main.js"></script>
+<footer>
+    © 2025 ServicePoint SA — Built with ❤️ for South Africa
+</footer>
+
+<script>
+/* Generate 200+ SERVICES */
+let services = [
+    "General Construction","Electrical","Plumbing","HVAC","Roofing","Painting",
+    "Flooring","Tile & Stone","Carpentry","Landscaping","Windows & Doors",
+    "Masonry","Insulation","Cleaning","Pest Control","Security Systems",
+    "Welding","Borehole Drilling","Solar Installation","Generators",
+];
+
+// Add filler to reach 200+
+while (services.length < 200) {
+    services.push("Service " + (services.length + 1));
+}
+
+let list = "";
+services.forEach((srv, i) => {
+    list += `
+        <div class="category">
+            <span>${srv}</span>
+            <span>(${Math.floor(Math.random()*25)+5})</span>
+        </div>
+    `;
+});
+
+document.getElementById("categoryList").innerHTML = list;
+</script>
+
 </body>
 </html>
