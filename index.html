@@ -1,285 +1,578 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ServicePoint SA</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ServicePoint SA</title>
 
-<!-- STYLES -->
-<style>
+  <style>
+    /* GLOBAL */
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-        margin: 0;
-        padding: 0;
-        background: #e5e5e5;
-        font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #e5e5e5; /* grey background */
+      font-family: Arial, sans-serif;
+      color: #222;
     }
 
     /* TOP HEADER */
     header {
-        width: 100%;
-        background: white;
-        padding: 20px 0;
-        text-align: center;
-        font-size: 26px;
-        font-weight: 700;
-        border-bottom: 1px solid #ccc;
+      width: 100%;
+      background: #ffffff;
+      padding: 20px 0;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 700;
+      border-bottom: 1px solid #ccc;
+      letter-spacing: 0.5px;
     }
 
-    /* LAYOUT */
+    header span {
+      color: #0aa06e;
+    }
+
+    /* MAIN LAYOUT */
     .container {
-        display: flex;
-        padding: 20px;
-        gap: 25px;
+      display: flex;
+      padding: 20px;
+      gap: 25px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     /* LEFT SIDEBAR */
     .sidebar {
-        width: 280px;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        height: fit-content;
+      width: 280px;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      height: fit-content;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
     }
 
     .sidebar h2 {
-        font-size: 20px;
-        margin-bottom: 15px;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .sidebar small {
+      display: block;
+      color: #777;
+      margin-bottom: 15px;
+      font-size: 11px;
     }
 
     .category {
-        padding: 10px 0;
-        font-weight: bold;
-        cursor: pointer;
-        border-bottom: 1px solid #eee;
+      padding: 10px 0;
+      font-weight: bold;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .category span.label {
+      flex: 1;
+    }
+
+    .category span.chevron {
+      font-size: 12px;
+      color: #999;
     }
 
     .service-list {
-        padding-left: 15px;
-        display: none;
+      padding-left: 10px;
+      display: none;
+      padding-bottom: 6px;
     }
 
     .service {
-        padding: 6px 0;
-        cursor: pointer;
-        color: #007bff;
+      padding: 6px 0;
+      cursor: pointer;
+      color: #007bff;
+      font-size: 13px;
     }
 
     .service:hover {
-        text-decoration: underline;
+      text-decoration: underline;
     }
 
     /* RIGHT MAIN CONTENT */
     .main-box {
-        flex: 1;
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
+      flex: 1;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
     }
 
+    .badge-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      background: #f0f0f0;
+      color: #555;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+    }
+
+    .main-box h2 {
+      margin: 0 0 8px 0;
+      font-size: 22px;
+    }
+
+    .main-box p.subtitle {
+      margin: 0 0 18px 0;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .region-strip {
+      margin: 12px 0 18px 0;
+      font-size: 12px;
+      color: #444;
+    }
+
+    .region-pill {
+      display: inline-block;
+      padding: 4px 8px;
+      margin-right: 6px;
+      border-radius: 999px;
+      background: #f5f5f5;
+      font-size: 11px;
+    }
+
+    .region-pill strong {
+      color: #0aa06e;
+    }
+
+    /* WHY CHOOSE US */
+    .why-box {
+      background: #fafafa;
+      border-radius: 10px;
+      padding: 16px;
+      border: 1px solid #e0e0e0;
+      margin-top: 5px;
+    }
+
+    .why-box h3 {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+    }
+
+    .why-box ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .why-box li + li {
+      margin-top: 4px;
+    }
+
+    /* STATS */
     .stats-boxes {
-        display: flex;
-        gap: 20px;
-        margin-top: 20px;
+      display: flex;
+      gap: 20px;
+      margin-top: 22px;
+      flex-wrap: wrap;
     }
 
     .stat {
-        flex: 1;
-        background: #fafafa;
-        padding: 20px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        text-align: center;
+      flex: 1;
+      min-width: 180px;
+      background: #fafafa;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .stat .label {
+      font-size: 11px;
+      color: #777;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .stat .num {
-        font-size: 28px;
-        font-weight: bold;
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      color: #222;
+    }
+
+    .stat .hint {
+      font-size: 11px;
+      color: #0aa06e;
+    }
+
+    /* CTA */
+    .cta-row {
+      margin-top: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .cta-left {
+      font-size: 13px;
+      color: #555;
     }
 
     .cta-btn {
-        margin-top: 20px;
-        padding: 12px 25px;
-        background: #0aa06e;
-        color: white;
-        border-radius: 6px;
-        cursor: pointer;
-        display: inline-block;
+      padding: 12px 20px;
+      background: #0aa06e;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-block;
+      font-size: 14px;
+      border: none;
     }
 
-    /* TELEGRAM POPUP */
+    .cta-btn:hover {
+      background: #078557;
+    }
+
+    /* POPUP */
     .popup-bg {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.5);
-        display: none;
-        justify-content: center;
-        align-items: center;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
     }
 
     .popup-box {
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        width: 350px;
-        text-align: center;
+      background: white;
+      padding: 25px 20px;
+      border-radius: 10px;
+      width: 340px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .popup-box h3 {
+      margin-top: 0;
+      margin-bottom: 4px;
+      font-size: 18px;
+    }
+
+    .popup-box p#selectedService {
+      font-size: 13px;
+      color: #0aa06e;
+      margin-bottom: 10px;
     }
 
     .popup-box input {
-        width: 90%;
-        padding: 12px;
-        margin-top: 15px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
+      width: 94%;
+      padding: 10px;
+      margin-top: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 13px;
     }
 
     .popup-box button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background: #007bff;
-        color: white;
-        border-radius: 6px;
-        cursor: pointer;
+      margin-top: 16px;
+      padding: 10px 18px;
+      background: #007bff;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      font-size: 14px;
     }
 
-</style>
+    .popup-close {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #777;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 880px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<header>ServicePoint SA</header>
+  <!-- HEADER -->
+  <header>
+    <span>ServicePoint SA</span>
+  </header>
 
-<div class="container">
+  <!-- MAIN WRAPPER -->
+  <div class="container">
     <!-- SIDEBAR -->
-    <div class="sidebar">
-        <h2>Categories</h2>
+    <aside class="sidebar">
+      <h2>Categories</h2>
+      <small>Tap a category to see services · tap a service to request via our bot.</small>
 
-        <!-- Auto-expand categories -->
-        <div id="categories"></div>
-    </div>
+      <div id="categories"></div>
+    </aside>
 
     <!-- MAIN CONTENT -->
-    <div class="main-box">
-        <h2>Why Choose ServicePoint SA</h2>
-        <p>South Africa’s most advanced contractor network, covering Durban, Johannesburg & Cape Town.</p>
+    <main class="main-box">
+      <div class="badge-row">
+        <div class="badge">Smart contractor matching</div>
+        <div class="badge">Built for South African homes</div>
+        <div class="badge">WhatsApp & Telegram friendly</div>
+      </div>
 
+      <h2>Connect with trusted contractors in KZN, JHB & CPT</h2>
+      <p class="subtitle">
+        One request. Verified contractors compete to give you the best service.
+        You stay in control – we handle the heavy admin.
+      </p>
+
+      <div class="region-strip">
+        <span class="region-pill"><strong>KZN</strong> · Durban & surrounds</span>
+        <span class="region-pill"><strong>JHB</strong> · Johannesburg & East/West Rand</span>
+        <span class="region-pill"><strong>CPT</strong> · Cape Town & Winelands</span>
+      </div>
+
+      <!-- WHY CHOOSE US -->
+      <section class="why-box">
+        <h3>Why choose ServicePoint SA?</h3>
         <ul>
-            <li>Smart scoring system for best contractors.</li>
-            <li>Verified identity & compliance checks.</li>
-            <li>Instant match + automated admin layer.</li>
-            <li>Built for real South African homes & businesses.</li>
+          <li>We pre-vet contractors for documents, reviews and workmanship history.</li>
+          <li>Smart lead routing hides your number until you accept a contractor.</li>
+          <li>We track jobs, quotes and follow-ups so nothing slips through the cracks.</li>
+          <li>Support team on standby if something goes wrong on-site.</li>
         </ul>
+      </section>
 
-        <div class="stats-boxes">
-            <div class="stat">
-                <div class="num">168</div>
-                Leads Successfully Fed
-            </div>
-            <div class="stat">
-                <div class="num">210</div>
-                Contractors Available
-            </div>
-            <div class="stat">
-                <div class="num">4.8⭐</div>
-                Average Rating
-            </div>
+      <!-- STATS -->
+      <section class="stats-boxes">
+        <div class="stat">
+          <div class="label">Leads successfully fed</div>
+          <div class="num">168</div>
+          <div class="hint">Real SA homeowners & SMEs</div>
         </div>
-    </div>
-</div>
+        <div class="stat">
+          <div class="label">Active contractors</div>
+          <div class="num">210</div>
+          <div class="hint">Screened across multiple trades</div>
+        </div>
+        <div class="stat">
+          <div class="label">Average rating</div>
+          <div class="num">4.8⭐</div>
+          <div class="hint">Based on user feedback</div>
+        </div>
+      </section>
 
-<!-- POPUP -->
-<div class="popup-bg" id="popup">
+      <!-- CTA -->
+      <section class="cta-row">
+        <div class="cta-left">
+          Choose a category on the left, pick a service, and our Telegram bot will collect your details
+          and send it straight to the right contractors.
+        </div>
+        <button class="cta-btn" onclick="scrollToCategories()">
+          Browse all services
+        </button>
+      </section>
+    </main>
+  </div>
+
+  <!-- POPUP -->
+  <div class="popup-bg" id="popup">
     <div class="popup-box">
-        <h3>Request This Service</h3>
-        <p id="selectedService"></p>
+      <h3>Request this service</h3>
+      <p id="selectedService"></p>
 
-        <input type="text" id="clientName" placeholder="Your name" />
-        <input type="text" id="clientPhone" placeholder="Your phone number" />
+      <input type="text" id="clientName" placeholder="Your name" />
+      <input type="text" id="clientPhone" placeholder="Your phone number" />
 
-        <button onclick="sendLead()">Send Request</button>
+      <button onclick="sendLead()">Send Request</button>
+      <div class="popup-close" onclick="closePopup()">Cancel</div>
     </div>
-</div>
+  </div>
 
-<script>
-/* ===========================
-   CATEGORY + SERVICE DATA
-=========================== */
-const data = {
-    "General Construction": ["Brickwork", "Renovations", "Foundations", "Retaining Walls", "Boundary Walls"],
-    "Electrical": ["New wiring", "Fault finding", "DB board upgrades", "Certificate of Compliance"],
-    "Plumbing": ["Geyser installation", "Leak detection", "Drain unblocking", "Bathroom fitting"],
-    "HVAC": ["AC installation", "AC servicing", "Duct cleaning"],
-    "Roofing": ["Roof repairs", "Waterproofing", "Gutter installation"],
-    "Painting": ["Interior painting", "Exterior painting", "Roof painting"],
-    "Flooring": ["Tiling", "Laminate flooring", "Carpets", "Vinyl flooring"],
-    "Carpentry": ["Kitchen cabinets", "Wardrobes", "Custom furniture"],
-    "Landscaping": ["Garden design", "Tree felling", "Irrigation"],
-    "Cleaning": ["Deep cleaning", "Post-construction cleaning", "Office cleaning"],
-};
+  <script>
+    /* ===========================
+       CATEGORY + SERVICE DATA
+    =========================== */
+    const data = {
+      "General Construction": [
+        "Brickwork",
+        "Renovations",
+        "Foundations",
+        "Retaining Walls",
+        "Boundary Walls"
+      ],
+      "Electrical": [
+        "New wiring",
+        "Fault finding",
+        "DB board upgrades",
+        "Certificate of Compliance",
+        "Generator hook-up"
+      ],
+      "Plumbing": [
+        "Geyser installation",
+        "Leak detection",
+        "Drain unblocking",
+        "Bathroom fitting",
+        "Kitchen plumbing"
+      ],
+      "HVAC": [
+        "AC installation",
+        "AC servicing",
+        "Duct cleaning",
+        "Commercial HVAC design"
+      ],
+      "Roofing": [
+        "Roof repairs",
+        "Waterproofing",
+        "Gutter installation",
+        "Roof inspections"
+      ],
+      "Painting": [
+        "Interior painting",
+        "Exterior painting",
+        "Roof painting",
+        "Damp sealing"
+      ],
+      "Flooring": [
+        "Tiling",
+        "Laminate flooring",
+        "Carpets",
+        "Vinyl flooring",
+        "Floor screed"
+      ],
+      "Carpentry": [
+        "Kitchen cabinets",
+        "Wardrobes",
+        "Custom furniture",
+        "Decking"
+      ],
+      "Landscaping": [
+        "Garden design",
+        "Tree felling",
+        "Irrigation",
+        "Lawn installation"
+      ],
+      "Cleaning": [
+        "Deep cleaning",
+        "Post-construction cleaning",
+        "Office cleaning",
+        "High-pressure washing"
+      ]
+    };
 
-/* Generate sidebar */
-const catContainer = document.getElementById("categories");
+    /* Generate sidebar categories + services */
+    const catContainer = document.getElementById("categories");
 
-Object.keys(data).forEach(cat => {
-    const div = document.createElement("div");
-    div.className = "category";
-    div.textContent = cat;
+    Object.keys(data).forEach((cat) => {
+      const div = document.createElement("div");
+      div.className = "category";
 
-    const serviceList = document.createElement("div");
-    serviceList.className = "service-list";
+      const labelSpan = document.createElement("span");
+      labelSpan.className = "label";
+      labelSpan.textContent = cat;
 
-    data[cat].forEach(service => {
+      const chevron = document.createElement("span");
+      chevron.className = "chevron";
+      chevron.textContent = "▾";
+
+      div.appendChild(labelSpan);
+      div.appendChild(chevron);
+
+      const serviceList = document.createElement("div");
+      serviceList.className = "service-list";
+
+      data[cat].forEach((service) => {
         const item = document.createElement("div");
         item.className = "service";
         item.textContent = service;
-
         item.onclick = () => openPopup(service);
-
         serviceList.appendChild(item);
+      });
+
+      // Toggle dropdown
+      div.onclick = () => {
+        const isOpen = serviceList.style.display === "block";
+        serviceList.style.display = isOpen ? "none" : "block";
+        chevron.textContent = isOpen ? "▾" : "▴";
+      };
+
+      catContainer.appendChild(div);
+      catContainer.appendChild(serviceList);
     });
 
-    div.onclick = () => {
-        serviceList.style.display =
-            serviceList.style.display === "block" ? "none" : "block";
-    };
-
-    catContainer.appendChild(div);
-    catContainer.appendChild(serviceList);
-});
-
-/* ===========================
-   POPUP + TELEGRAM BOT
-=========================== */
-function openPopup(service) {
-    document.getElementById("selectedService").innerText = service;
-    document.getElementById("popup").style.display = "flex";
-}
-
-function sendLead() {
-    const name = document.getElementById("clientName").value;
-    const phone = document.getElementById("clientPhone").value;
-    const service = document.getElementById("selectedService").innerText;
-
-    if (!name || !phone) {
-        alert("Please fill in your details");
-        return;
+    function scrollToCategories() {
+      document.querySelector(".sidebar").scrollIntoView({ behavior: "smooth" });
     }
 
-    const botToken = "8526401033:AAFrG8IH8xqQL_RTD7s7JLyxZpc8e8GOyyg";
-    const chatId = "8187670531";
+    /* ===========================
+       POPUP + TELEGRAM BOT
+    =========================== */
+    function openPopup(service) {
+      document.getElementById("selectedService").innerText = service;
+      document.getElementById("popup").style.display = "flex";
+    }
 
-    const msg =
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+
+    function sendLead() {
+      const name = document.getElementById("clientName").value.trim();
+      const phone = document.getElementById("clientPhone").value.trim();
+      const service = document.getElementById("selectedService").innerText;
+
+      if (!name || !phone) {
+        alert("Please fill in your details");
+        return;
+      }
+
+      const botToken = "8526401033:AAFrG8IH8xqQL_RTD7s7JLyxZpc8e8GOyyg";
+      const chatId = "8187670531";
+
+      const msg =
 `🔥 *New Service Lead*
 📌 Service: ${service}
 👤 Name: ${name}
 📱 Phone: ${phone}`;
 
-    fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
-    
-    alert("Your request has been sent!");
-    document.getElementById("popup").style.display = "none";
-}
+      fetch(
+        `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(
+          msg
+        )}&parse_mode=Markdown`
+      );
 
-</script>
-
+      alert("Your request has been sent!");
+      document.getElementById("popup").style.display = "none";
+      document.getElementById("clientName").value = "";
+      document.getElementById("clientPhone").value = "";
+    }
+  </script>
 </body>
 </html>
