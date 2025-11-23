@@ -1,250 +1,1011 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ServicePoint SA — Home Services Network</title>
+  <meta charset="UTF-8" />
+  <title>ServicePoint SA – Home & Business Service Network</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<!-- GOOGLE FONT -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ====== Base ====== */
+    :root {
+      --bg-main: #f1f2f4;
+      --bg-card: #ffffff;
+      --bg-sidebar: #f5f6f8;
+      --accent: #10b981;
+      --accent-soft: #d1fae5;
+      --accent-dark: #059669;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border-soft: #e5e7eb;
+      --shadow-soft: 0 8px 20px rgba(15, 23, 42, 0.08);
+      --radius-card: 16px;
+      --radius-pill: 999px;
+      --transition-fast: 0.18s ease;
+    }
 
-<style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-        font-family: "Inter", sans-serif;
-        background:#f0f0f0;  /* GREY BACKGROUND */
-        margin:0;
-        padding:0;
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
     }
 
-    /* NAV */
-    .nav {
-        display:flex;
-        align-items:center;
-        padding:18px 30px;
-        background:white;
-        border-bottom:1px solid #ddd;
-    }
-    .nav h2 { margin-left:12px; font-weight:700; color:#222; font-size:20px; }
-
-    /* MAIN LAYOUT */
-    .container {
-        display:flex;
-        padding:30px;
-        gap:25px;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    /* LEFT CATEGORY PANEL */
-    .left-panel {
-        width:260px;
-        background:#fff;
-        padding:20px;
-        border-radius:10px;
-        height: calc(100vh - 120px);
-        overflow-y:auto;
-        border:1px solid #e1e1e1;
+    button {
+      font-family: inherit;
     }
 
-    .left-panel h3 {
-        margin-bottom:10px;
-        font-size:18px;
-        font-weight:700;
+    /* ====== Layout ====== */
+
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-inner {
+      flex: 1;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    /* ====== Header ====== */
+
+    .header {
+      background: var(--bg-main);
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .header-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 14px 16px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center; /* <-- centre the branding */
+      gap: 10px;
+    }
+
+    .logo-circle {
+      height: 34px;
+      width: 34px;
+      border-radius: 50%;
+      background: #111827;
+      color: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.35);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      font-size: 18px;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ====== Main grid ====== */
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 20px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .main-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .sidebar {
+        order: -1;
+      }
+    }
+
+    /* ====== Sidebar (categories) ====== */
+
+    .sidebar {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius-card);
+      padding: 18px 16px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      max-height: 560px;
+    }
+
+    .sidebar-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .sidebar-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .category-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      overflow-y: auto;
+      scrollbar-width: thin;
     }
 
     .category {
-        font-size:15px;
-        margin:6px 0;
-        padding:6px;
-        border-radius:5px;
-        cursor:pointer;
-        display:flex;
-        justify-content:space-between;
-    }
-    .category:hover {
-        background:#f3f3f3;
+      border-radius: 12px;
+      margin-bottom: 4px;
+      background: transparent;
+      transition: background var(--transition-fast), box-shadow var(--transition-fast);
     }
 
-    /* MAIN CONTENT */
-    .content {
-        flex:1;
-        display:flex;
-        flex-direction:column;
-        gap:20px;
+    .category-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      cursor: pointer;
     }
 
-    .hero-box {
-        background:white;
-        padding:25px;
-        border-radius:12px;
-        border:1px solid #e1e1e1;
+    .category-header:hover {
+      background: #e5e7eb;
     }
 
-    .hero-row {
-        display:flex;
-        justify-content:space-between;
-        flex-wrap:wrap;
-        gap:20px;
+    .category-name {
+      font-size: 14px;
+      font-weight: 500;
     }
 
-    .why,
-    .headline-box {
-        flex:1;
-        min-width:300px;
+    .category-count {
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e5e7eb;
     }
 
-    .why ul { margin-top:10px; }
-    .why li { margin:8px 0; }
-
-    .stats-row {
-        display:flex;
-        gap:20px;
-        flex-wrap:wrap;
+    .category-arrow {
+      margin-left: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+      transition: transform var(--transition-fast);
     }
 
-    .stat-box {
-        flex:1;
-        background:white;
-        padding:20px;
-        border-radius:10px;
-        border:1px solid #ddd;
-        min-width:250px;
+    .category.open .category-arrow {
+      transform: rotate(90deg);
     }
 
-    .stat-box h1 {
-        font-size:32px;
-        margin:0;
+    .services {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.22s ease;
     }
 
-    /* FOOTER */
-    footer {
-        text-align:center;
-        padding:20px;
-        font-size:14px;
-        color:#555;
+    .services-inner {
+      padding: 0 10px 8px 18px;
     }
 
-</style>
+    .services ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .services li {
+      font-size: 12px;
+      padding: 3px 0;
+      color: var(--text-muted);
+    }
+
+    .category.open .services {
+      max-height: 260px; /* enough for a bunch of services */
+    }
+
+    /* ====== Hero cards ====== */
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-soft);
+    }
+
+    .card-padding {
+      padding: 20px 22px;
+    }
+
+    .card-heading-kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .card-body {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .why-list {
+      margin-top: 10px;
+      padding-left: 18px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .why-list li + li {
+      margin-top: 4px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .primary-btn {
+      border: none;
+      border-radius: var(--radius-pill);
+      background: var(--accent);
+      color: #ffffff;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 12px;
+      box-shadow: 0 10px 20px rgba(5, 150, 105, 0.35);
+      transition: background var(--transition-fast), transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .primary-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 25px rgba(5, 150, 105, 0.4);
+    }
+
+    .secondary-btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid #d1d5db;
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      background: #ffffff;
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .secondary-btn:hover {
+      background: #f3f4f6;
+      border-color: #9ca3af;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .hero-footnote {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ====== Stats row ====== */
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .stats-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-soft);
+      padding: 14px 20px 16px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .stat-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* ====== Lead form + How it works ====== */
+
+    .lower-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .lower-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      padding: 8px 10px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      background: #f9fafb;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent-dark);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+      background: #ffffff;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .how-list {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .how-step {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .how-badge {
+      min-width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #111827;
+      color: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* ====== Telegram bubble ====== */
+
+    .telegram-fab {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      border-radius: 999px;
+      padding: 9px 15px;
+      background: #0ea5e9;
+      color: #ecfeff;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 16px 30px rgba(8, 47, 73, 0.5);
+      cursor: pointer;
+      border: none;
+      z-index: 40;
+    }
+
+    .telegram-fab span.icon {
+      font-size: 16px;
+    }
+
+    .fab-sub {
+      font-size: 10px;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    /* ====== Footer ====== */
+
+    .footer {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 14px;
+    }
+  </style>
 </head>
+
 <body>
+  <div class="page-shell">
+    <!-- ===== Header ===== -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo-circle">S</div>
+        <div class="brand-text">
+          <div class="brand-title">ServicePoint SA</div>
+          <div class="brand-subtitle">Home &amp; Business Service Network</div>
+        </div>
+      </div>
+    </header>
 
-<!-- NAV -->
-<div class="nav">
-    <img src="https://via.placeholder.com/40" style="border-radius:50%;">
-    <h2>ServicePoint SA</h2>
-</div>
+    <!-- ===== Main ===== -->
+    <main class="page-inner">
+      <div class="main-grid">
+        <!-- === Sidebar: categories + services === -->
+        <aside class="sidebar">
+          <div class="sidebar-title">Categories</div>
+          <div class="sidebar-subtitle">
+            Tap a category to see popular services we route leads for.
+          </div>
 
-<!-- MAIN -->
-<div class="container">
+          <ul class="category-list">
+            <!-- Each category item -->
+            <li class="category">
+              <div class="category-header">
+                <div>
+                  <div class="category-name">General Construction</div>
+                  <div class="category-count">24 services</div>
+                </div>
+                <div class="category-arrow">&rsaquo;</div>
+              </div>
+              <div class="services">
+                <div class="services-inner">
+                  <ul>
+                    <li>Home renovations</li>
+                    <li>Room additions</li>
+                    <li>Garage conversions</li>
+                    <li>Boundary walls</li>
+                    <li>Carports &amp; awnings</li>
+                    <li>Granny flat builds</li>
+                    <li>Office &amp; retail fit-outs</li>
+                    <li>Insurance reinstatements</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
 
-    <!-- LEFT CATEGORIES -->
-    <div class="left-panel">
-        <h3>Categories</h3>
+            <li class="category">
+              <div class="category-header">
+                <div>
+                  <div class="category-name">Electrical</div>
+                  <div class="category-count">18 services</div>
+                </div>
+                <div class="category-arrow">&rsaquo;</div>
+              </div>
+              <div class="services">
+                <div class="services-inner">
+                  <ul>
+                    <li>COC / compliance certificates</li>
+                    <li>DB board upgrades</li>
+                    <li>New plug &amp; light points</li>
+                    <li>Geyser electrical repairs</li>
+                    <li>Smart home &amp; automation</li>
+                    <li>Backup inverters &amp; UPS</li>
+                    <li>Solar PV installations</li>
+                    <li>Fault finding &amp; tripping</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
 
-        <!-- AUTOMATED LIST OF MANY SERVICES -->
-        <div id="categoryList"></div>
-    </div>
+            <li class="category">
+              <div class="category-header">
+                <div>
+                  <div class="category-name">Plumbing</div>
+                  <div class="category-count">20 services</div>
+                </div>
+                <div class="category-arrow">&rsaquo;</div>
+              </div>
+              <div class="services">
+                <div class="services-inner">
+                  <ul>
+                    <li>Burst pipes &amp; leaks</li>
+                    <li>Blocked drains</li>
+                    <li>Geyser replacements</li>
+                    <li>Bathroom renovations</li>
+                    <li>Kitchen plumbing</li>
+                    <li>Water pressure issues</li>
+                    <li>Stormwater management</li>
+                    <li>New build plumbing</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
 
-    <!-- MAIN CONTENT -->
-    <div class="content">
+            <li class="category">
+              <div class="category-header">
+                <div>
+                  <div class="category-name">HVAC &amp; Cooling</div>
+                  <div class="category-count">12 services</div>
+                </div>
+                <div class="category-arrow">&rsaquo;</div>
+              </div>
+              <div class="services">
+                <div class="services-inner">
+                  <ul>
+                    <li>Aircon installation</li>
+                    <li>Aircon servicing</li>
+                    <li>Ducted systems</li>
+                    <li>Commercial HVAC</li>
+                    <li>Evaporative cooling</li>
+                    <li>Heat pump installs</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
 
-        <!-- HERO -->
-        <div class="hero-box">
-            <div class="hero-row">
-                <!-- WHY CHOOSE -->
-                <div class="why">
-                    <h3>Why Choose ServicePoint SA</h3>
-                    <h2>South Africa’s most advanced contractor network.</h2>
+            <li class="category">
+              <div class="category-header">
+                <div>
+                  <div class="category-name">Roofing &amp; Waterproofing</div>
+                  <div class="category-count">14 services</div>
+                </div>
+                <div class="category-arrow">&rsaquo;</div>
+              </div>
+              <div class="services">
+                <div class="services-inner">
+                  <ul>
+                    <li>Leak detection</li>
+                    <li>Roof repairs</li>
+                    <li>New roof installations</li>
+                    <li>Waterproofing torch-on</li>
+                    <li>Gutter installs &amp; cleaning</li>
+                    <li>Timber roof structures</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
 
-                    <ul>
-                        <li>Coverage in Durban, Johannesburg & Cape Town.</li>
-                        <li>Instant smart-routing to best-scored contractors.</li>
-                        <li>Identity verification & compliance screening.</li>
-                        <li>In-platform messaging & automated admin layer.</li>
-                        <li>ServiceDNA™ scoring: response, ratings, comeback rate.</li>
-                        <li>Built for real SA homes & business needs.</li>
-                    </ul>
+            <li class="category">
+              <div class="category-header">
+                <div>
+                  <div class="category-name">Painting &amp; Finishes</div>
+                  <div class="category-count">16 services</div>
+                </div>
+                <div class="category-arrow">&rsaquo;</div>
+              </div>
+              <div class="services">
+                <div class="services-inner">
+                  <ul>
+                    <li>Interior painting</li>
+                    <li>Exterior painting</li>
+                    <li>Roof painting</li>
+                    <li>Epoxy floors</li>
+                    <li>Water-based sealers</li>
+                    <li>Damp proofing</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+
+            <li class="category">
+              <div class="category-header">
+                <div>
+                  <div class="category-name">Flooring &amp; Tiling</div>
+                  <div class="category-count">15 services</div>
+                </div>
+                <div class="category-arrow">&rsaquo;</div>
+              </div>
+              <div class="services">
+                <div class="services-inner">
+                  <ul>
+                    <li>Porcelain &amp; ceramic tiling</li>
+                    <li>Laminate flooring</li>
+                    <li>Vinyl planks</li>
+                    <li>Carpet installation</li>
+                    <li>Screeding &amp; levelling</li>
+                    <li>Bathroom re-tiling</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+
+            <li class="category">
+              <div class="category-header">
+                <div>
+                  <div class="category-name">Security &amp; Automation</div>
+                  <div class="category-count">17 services</div>
+                </div>
+                <div class="category-arrow">&rsaquo;</div>
+              </div>
+              <div class="services">
+                <div class="services-inner">
+                  <ul>
+                    <li>CCTV systems</li>
+                    <li>Alarm systems</li>
+                    <li>Electric fencing</li>
+                    <li>Access control</li>
+                    <li>Gate &amp; garage motors</li>
+                    <li>Intercoms</li>
+                    <li>Perimeter beams</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+
+            <!-- You can keep adding more categories in the same pattern -->
+          </ul>
+
+          <div style="margin-top:auto;font-size:11px;color:var(--text-muted);padding-top:6px;">
+            Serving Durban, Johannesburg &amp; Cape Town – with rollout to the rest of SA.
+          </div>
+        </aside>
+
+        <!-- === Right column: hero + stats + lead form === -->
+        <section>
+          <!-- Hero area -->
+          <div class="hero-grid">
+            <!-- Why choose us -->
+            <div class="card card-padding">
+              <div class="card-heading-kicker">Why choose ServicePoint SA</div>
+              <div class="card-title">
+                One network for every contractor you’ll ever need.
+              </div>
+              <div class="card-body">
+                <ul class="why-list">
+                  <li>Coverage in Durban, Johannesburg &amp; Cape Town with rollout to the rest of SA.</li>
+                  <li>Smart lead routing sends work to the best-scored, closest contractor – no more WhatsApp spam.</li>
+                  <li>Verified identity &amp; compliance checks on every contractor before they go live.</li>
+                  <li>Single chat &amp; payments layer between you and the contractor – we handle the admin, you track the job.</li>
+                  <li>ServiceDNA™ scoring (response time, ratings, comeback rate) so you see who’s actually performing.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Big CTA -->
+            <div class="card card-padding">
+              <div class="pill">Built for South African homes &amp; businesses</div>
+              <div class="card-title">
+                Quality contractors in KZN, Gauteng &amp; the Cape – in one place.
+              </div>
+              <div class="card-body">
+                Answer a few questions and we’ll match you to a screened contractor
+                with the right skills, availability and price range.
+              </div>
+              <div class="hero-actions">
+                <button class="primary-btn" id="leadFormScrollBtn">
+                  Get matched now
+                </button>
+                <button class="secondary-btn" id="howItWorksScrollBtn">
+                  How it works
+                </button>
+              </div>
+              <div class="hero-footnote">
+                Average response time: &lt; 15 minutes during office hours.
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Leads Successfully Fed</div>
+              <div class="stat-value">168</div>
+              <div class="stat-caption">
+                Real jobs connected to vetted contractors across SA.
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Contractors Live on Network</div>
+              <div class="stat-value">210</div>
+              <div class="stat-caption">
+                Trade-tested teams, from solo specialists to full enterprise crews.
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Average Rating</div>
+              <div class="stat-value">4.8★</div>
+              <div class="stat-caption">
+                Based on comeback rate &amp; verified post-job reviews.
+              </div>
+            </div>
+          </div>
+
+          <!-- Lead form + How it works -->
+          <div class="lower-grid" id="leadSection">
+            <!-- Lead form -->
+            <div class="card card-padding">
+              <div class="card-heading-kicker">Tell us what you need</div>
+              <div class="card-title" style="font-size:18px;margin-bottom:6px;">
+                One request, multiple matching contractors.
+              </div>
+              <form id="leadForm">
+                <div class="form-group">
+                  <label for="name">Your name</label>
+                  <input id="name" name="name" type="text" required />
+                </div>
+                <div class="form-group">
+                  <label for="phone">Mobile / WhatsApp</label>
+                  <input id="phone" name="phone" type="tel" required />
+                </div>
+                <div class="form-group">
+                  <label for="city">City</label>
+                  <select id="city" name="city" required>
+                    <option value="">Select city</option>
+                    <option>Durban</option>
+                    <option>Johannesburg</option>
+                    <option>Cape Town</option>
+                    <option>Other / Nearby</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="category-select">Category</label>
+                  <select id="category-select" name="category">
+                    <option value="">Select a category</option>
+                    <option>General Construction</option>
+                    <option>Electrical</option>
+                    <option>Plumbing</option>
+                    <option>HVAC &amp; Cooling</option>
+                    <option>Roofing &amp; Waterproofing</option>
+                    <option>Painting &amp; Finishes</option>
+                    <option>Flooring &amp; Tiling</option>
+                    <option>Security &amp; Automation</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="description">Describe the job</label>
+                  <textarea id="description" name="description" required
+                    placeholder="Example: 3-bedroom home in Durban North needs full interior repaint and some minor plaster repairs."></textarea>
                 </div>
 
-                <!-- HEADLINE -->
-                <div class="headline-box">
-                    <h2>
-                        Quality contractors in<br>
-                        <b>KZN, Gauteng & Cape Town.</b>
-                    </h2>
-                    <p>
-                        Answer a few questions, and we’ll match you to verified professionals
-                        with the right skills, availability, and pricing.
-                    </p>
-
-                    <button style="
-                        background:#2ecc71;
-                        border:none;
-                        color:white;
-                        font-size:16px;
-                        padding:12px 20px;
-                        border-radius:8px;
-                        cursor:pointer;
-                        margin-top:10px;">
-                        Get Matched Now
-                    </button>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- STATS -->
-        <div class="stats-row">
-            <div class="stat-box">
-                <h1>168</h1>
-                Leads Successfully Fed  
-                <p>Real customers matched to vetted contractors.</p>
+                <button type="submit" class="primary-btn" style="margin-top:4px;">
+                  Submit &amp; send to ServicePoint SA
+                </button>
+                <div id="leadStatus" style="margin-top:6px;font-size:12px;color:var(--text-muted);"></div>
+              </form>
             </div>
 
-            <div class="stat-box">
-                <h1>210</h1>
-                Contractors Available  
-                <p>Across KZN, JHB & CPT — more onboarding daily.</p>
+            <!-- How it works -->
+            <div class="card card-padding" id="howSection">
+              <div class="card-heading-kicker">How ServicePoint SA works</div>
+              <div class="card-title" style="font-size:18px;margin-bottom:8px;">
+                We manage the noise so you don’t have to.
+              </div>
+              <ul class="how-list">
+                <li class="how-step">
+                  <div class="how-badge">1</div>
+                  <div>
+                    <strong>You tell us what you need.</strong><br />
+                    Share your job, budget and timing – once. No 12 different WhatsApp
+                    groups.
+                  </div>
+                </li>
+                <li class="how-step">
+                  <div class="how-badge">2</div>
+                  <div>
+                    <strong>We route it through ServiceDNA™ scoring.</strong><br />
+                    Our system checks region, skill, response history and ratings
+                    before sending leads out.
+                  </div>
+                </li>
+                <li class="how-step">
+                  <div class="how-badge">3</div>
+                  <div>
+                    <strong>You chat &amp; approve inside one thread.</strong><br />
+                    Our Telegram bot keeps the conversation tidy and allows you to
+                    pin photos, quotes and approvals.
+                  </div>
+                </li>
+                <li class="how-step">
+                  <div class="how-badge">4</div>
+                  <div>
+                    <strong>We track quality over time.</strong><br />
+                    Jobs, comeback visits and ratings all feed into the contractor’s
+                    score so the best teams rise to the top.
+                  </div>
+                </li>
+              </ul>
             </div>
+          </div>
+        </section>
+      </div>
+    </main>
 
-            <div class="stat-box">
-                <h1>4.8★</h1>
-                Average Rating  
-                <p>Based on comeback rate & verified reviews.</p>
-            </div>
-        </div>
+    <footer class="footer">
+      © 2025 ServicePoint SA • Built with ❤️ in South Africa
+    </footer>
+  </div>
 
+  <!-- Floating Telegram button -->
+  <button class="telegram-fab" id="telegramFab">
+    <span class="icon">💬</span>
+    <div>
+      Chat on Telegram
+      <div class="fab-sub">Questions? Talk to our bot.</div>
     </div>
-</div>
+  </button>
 
-<footer>
-    © 2025 ServicePoint SA — Built with ❤️ for South Africa
-</footer>
+  <script>
+    // ===== Category dropdowns =====
+    document.querySelectorAll(".category-header").forEach((header) => {
+      header.addEventListener("click", () => {
+        const category = header.parentElement;
+        const currentlyOpen = document.querySelector(".category.open");
+        if (currentlyOpen && currentlyOpen !== category) {
+          currentlyOpen.classList.remove("open");
+        }
+        category.classList.toggle("open");
+      });
+    });
 
-<script>
-/* Generate 200+ SERVICES */
-let services = [
-    "General Construction","Electrical","Plumbing","HVAC","Roofing","Painting",
-    "Flooring","Tile & Stone","Carpentry","Landscaping","Windows & Doors",
-    "Masonry","Insulation","Cleaning","Pest Control","Security Systems",
-    "Welding","Borehole Drilling","Solar Installation","Generators",
-];
+    // ===== Smooth scroll buttons =====
+    document.getElementById("leadFormScrollBtn").addEventListener("click", () => {
+      document.getElementById("leadSection").scrollIntoView({
+        behavior: "smooth",
+      });
+    });
 
-// Add filler to reach 200+
-while (services.length < 200) {
-    services.push("Service " + (services.length + 1));
-}
+    document.getElementById("howItWorksScrollBtn").addEventListener("click", () => {
+      document.getElementById("howSection").scrollIntoView({
+        behavior: "smooth",
+      });
+    });
 
-let list = "";
-services.forEach((srv, i) => {
-    list += `
-        <div class="category">
-            <span>${srv}</span>
-            <span>(${Math.floor(Math.random()*25)+5})</span>
-        </div>
-    `;
-});
+    // ===== Telegram FAB (opens your bot chat) =====
+    document.getElementById("telegramFab").addEventListener("click", () => {
+      // Replace with your actual bot username:
+      const botUsername = "YOUR_BOT_USERNAME_HERE";
+      window.open("https://t.me/" + botUsername, "_blank");
+    });
 
-document.getElementById("categoryList").innerHTML = list;
-</script>
+    // ===== Lead form -> Telegram bot =====
+    const leadForm = document.getElementById("leadForm");
+    const statusEl = document.getElementById("leadStatus");
 
+    leadForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusEl.style.color = "var(--text-muted)";
+      statusEl.textContent = "Sending your request to ServicePoint SA…";
+
+      const formData = new FormData(leadForm);
+      const name = formData.get("name");
+      const phone = formData.get("phone");
+      const city = formData.get("city");
+      const category = formData.get("category");
+      const description = formData.get("description");
+
+      const message =
+        "📥 *New ServicePoint SA lead*\n\n" +
+        "👤 Name: " + name + "\n" +
+        "📱 Phone: " + phone + "\n" +
+        "📍 City: " + city + "\n" +
+        "📂 Category: " + (category || "Not specified") + "\n" +
+        "📝 Description:\n" + description;
+
+      // TODO: replace these with your real Telegram bot details
+      const BOT_TOKEN = "8526401033:AAFrG8IH8xqQL_RTD7s7JLyxZpc8e8GOyyg"; // e.g. 123456789:ABCDEF...
+      const CHAT_ID = "8187670531"; // your admin / group chat id
+
+      if (BOT_TOKEN === "8526401033:AAFrG8IH8xqQL_RTD7s7JLyxZpc8e8GOyyg") {
+        statusEl.style.color = "#b91c1c";
+        statusEl.textContent =
+          "Telegram not configured yet. Add your BOT_TOKEN and CHAT_ID in the code.";
+        return;
+      }
+
+      try {
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: message,
+            parse_mode: "Markdown",
+          }),
+        });
+
+        if (!res.ok) throw new Error("Telegram API error");
+
+        statusEl.style.color = "var(--accent-dark)";
+        statusEl.textContent =
+          "Thanks! Your request has been sent to our team. Expect a WhatsApp or call shortly.";
+        leadForm.reset();
+      } catch (err) {
+        console.error(err);
+        statusEl.style.color = "#b91c1c";
+        statusEl.textContent =
+          "Something went wrong sending to Telegram. Please try again or message us directly on the bot.";
+      }
+    });
+  </script>
 </body>
 </html>
