@@ -6,402 +6,1096 @@
 <title>ServicePoint SA</title>
 
 <style>
-:root {
-    --bg-page: #031b10;
-    --bg-shell: #052618;
-    --bg-hero: #054527;
-    --bg-sidebar: #06331f;
-    --bg-card: #073320;
-    --bg-card-soft: #0a3d26;
-    --accent: #28d17c;
-    --accent-soft: rgba(40, 209, 124, 0.1);
-    --text-main: #f5fff8;
-    --text-muted: #a7c9b3;
-    --border-soft: rgba(255, 255, 255, 0.06);
-    --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.65);
-    --radius-lg: 18px;
-    --radius-md: 12px;
-    --radius-pill: 999px;
-}
+    :root {
+        --bg-page: #031b10;
+        --bg-shell: #052618;
+        --bg-hero: #054527;
+        --bg-sidebar: #06331f;
+        --bg-card: #073320;
+        --bg-card-soft: #0a3d26;
+        --accent: #28d17c;
+        --accent-soft: rgba(40, 209, 124, 0.1);
+        --text-main: #f5fff8;
+        --text-muted: #a7c9b3;
+        --border-soft: rgba(255, 255, 255, 0.06);
+        --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.65);
+        --radius-lg: 18px;
+        --radius-md: 12px;
+        --radius-pill: 999px;
+    }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-body {
-    margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: radial-gradient(circle at top, #06311f 0, #020f09 55%, #000 100%);
-    color: var(--text-main);
-}
+    body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+            sans-serif;
+        background: radial-gradient(circle at top, #06311f 0, #020f09 55%, #000 100%);
+        color: var(--text-main);
+    }
 
-/* TOP BAR */
-.topbar {
-    max-width: 1200px;
-    margin: 18px auto 10px auto;
-    padding: 14px 18px;
-    border-radius: var(--radius-lg);
-    background: rgba(3, 25, 16, 0.9);
-    border: 1px solid var(--border-soft);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-    box-shadow: 0 10px 35px rgba(0,0,0,0.7);
-}
+    /* ========= TOP BAR ========= */
+    .topbar {
+        max-width: 1200px;
+        margin: 18px auto 10px auto;
+        padding: 14px 18px;
+        border-radius: var(--radius-lg);
+        background: rgba(3, 25, 16, 0.9);
+        border: 1px solid var(--border-soft);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
+    }
 
-.brand-wrap { display: flex; align-items: center; gap: 10px; }
-.brand-logo {
-    width: 34px; height: 34px; border-radius: 50%;
-    display:flex; align-items:center; justify-content:center;
-    background: radial-gradient(circle at 20% 0, #28d17c, #0a7d46);
-    color:#02140b; font-weight:800; font-size:18px;
-}
-.brand-text-main { font-weight:700; font-size:18px; }
-.brand-text-sub { font-size:12px; color:var(--text-muted); }
+    .brand-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-.top-pills { display:flex; gap:10px; flex-wrap:wrap; }
-.pill {
-    padding:8px 14px; border-radius:var(--radius-pill);
-    font-size:12px; border:1px solid rgba(255,255,255,0.12);
-    color:var(--text-muted); display:flex; align-items:center; gap:6px;
-    background:rgba(7,46,30,0.85); backdrop-filter:blur(14px);
-}
-.pill-dot { width:6px;height:6px;border-radius:50%;background:var(--accent); }
-.pill-accent { background:var(--accent-soft); color:#d9ffe8; border-color:transparent; }
+    .brand-logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at 20% 0, #28d17c, #0a7d46);
+        color: #02140b;
+        font-weight: 800;
+        font-size: 18px;
+    }
 
-/* LAYOUT */
-.layout {
-    max-width:1200px;
-    margin:0 auto 40px auto;
-    display:grid;
-    grid-template-columns:260px minmax(0,1fr);
-    gap:18px;
-}
+    .brand-text-main {
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        font-size: 18px;
+    }
 
-/* SIDEBAR — FIX INCLUDED */
-.sidebar {
-    background:var(--bg-sidebar);
-    border-radius:var(--radius-lg);
-    padding:18px 14px;
-    border:1px solid var(--border-soft);
-    box-shadow:var(--shadow-soft);
-    display:flex;
-    flex-direction:column;
+    .brand-text-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+    }
 
-    height: calc(100vh - 160px); /* FIX */
-    overflow: hidden;            /* FIX */
-}
+    .top-pills {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
 
-.sidebar-header {
-    font-size:13px; color:var(--text-muted);
-    margin-bottom:14px; line-height:1.5;
-}
+    .pill {
+        padding: 8px 14px;
+        border-radius: var(--radius-pill);
+        font-size: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--text-muted);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(7, 46, 30, 0.85);
+        backdrop-filter: blur(14px);
+    }
 
-.scroll-area {
-    flex:1;
-    overflow-y:auto; /* FIX */
-    padding-right:4px;
-}
+    .pill-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+    }
 
-.scroll-area::-webkit-scrollbar { width:5px; }
-.scroll-area::-webkit-scrollbar-thumb {
-    background:rgba(255,255,255,0.2);
-    border-radius:999px;
-}
+    .pill-accent {
+        background: var(--accent-soft);
+        color: #d9ffe8;
+        border-color: transparent;
+    }
 
-.category { margin-bottom:6px; border-radius:10px; overflow:hidden; }
-.category-header {
-    cursor:pointer; padding:9px;
-    display:flex; align-items:center; justify-content:space-between;
-    background:rgba(255,255,255,0.02);
-    border-radius:10px;
-    transition:background .18s, transform .12s;
-}
-.category-header:hover { background:rgba(255,255,255,0.06); transform:translateY(-1px); }
+    /* ========= LAYOUT ========= */
+    .layout {
+        max-width: 1200px;
+        margin: 0 auto 40px auto;
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        gap: 18px;
+    }
 
-.category-title { font-size:13px; display:flex; align-items:center; gap:8px; }
-.category-count { font-size:11px; color:var(--text-muted); }
-.category-arrow { font-size:11px; color:var(--text-muted); }
+    /* ========= SIDEBAR ========= */
+    .sidebar {
+        background: var(--bg-sidebar);
+        border-radius: var(--radius-lg);
+        padding: 18px 14px;
+        border: 1px solid var(--border-soft);
+        box-shadow: var(--shadow-soft);
+        display: flex;
+        flex-direction: column;
+        min-height: 480px;
+    }
 
-.service-list {
-    display:none;
-    padding:6px 7px 8px 10px;
-    background:rgba(255,255,255,0.02);
-    border-radius:10px;
-    margin-top:4px;
-}
-.service-item {
-    font-size:11px; color:#d3ffe7;
-    padding:5px 8px;
-    border-radius:999px;
-    cursor:pointer;
-    margin-bottom:4px;
-    border:1px solid transparent;
-    background:transparent;
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    transition:all .18s;
-}
-.service-dot { width:6px;height:6px;border-radius:50%;background:rgba(40,209,124,0.7); }
-.service-item:hover {
-    background:rgba(6,110,63,0.8);
-    border-color:rgba(40,209,124,0.4);
-    transform:translateY(-1px);
-}
+    .sidebar-header {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+        line-height: 1.5;
+    }
 
-.sidebar-footer { font-size:11px; margin-top:10px; color:var(--text-muted); }
+    .scroll-area {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
 
-/* CONTENT AREA */
-.content { display:flex; flex-direction:column; gap:14px; }
+    .scroll-area::-webkit-scrollbar {
+        width: 5px;
+    }
+    .scroll-area::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 999px;
+    }
 
-/* HERO CARD */
-.hero-card {
-    background:var(--bg-hero);
-    border-radius:var(--radius-lg);
-    border:1px solid var(--border-soft);
-    padding:24px;
-    display:grid;
-    grid-template-columns:minmax(0,1.3fr) minmax(0,1.1fr);
-    gap:20px;
-    box-shadow:var(--shadow-soft);
-}
+    .category {
+        margin-bottom: 6px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
 
-.hero-eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-bottom:6px; }
-.hero-title { font-size:26px; font-weight:700; margin-bottom:8px; }
-.hero-sub { font-size:13px; color:var(--text-muted); max-width:480px; margin-bottom:18px; }
+    .category-header {
+        cursor: pointer;
+        padding: 9px 9px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 10px;
+        transition: background 0.18s ease, transform 0.12s ease;
+    }
 
-.region-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
-.chip {
-    padding:8px 12px;
-    border-radius:var(--radius-pill);
-    border:1px solid rgba(255,255,255,0.16);
-    font-size:11px;
-    background:rgba(7,58,36,0.9);
-    display:flex; align-items:center; gap:6px;
-}
-.chip-dot { width:7px;height:7px;border-radius:50%;background:var(--accent); }
+    .category-header:hover {
+        background: rgba(255, 255, 255, 0.06);
+        transform: translateY(-1px);
+    }
 
-.hero-meta { font-size:11px; color:var(--text-muted); display:flex; gap:18px; flex-wrap:wrap; }
+    .category-title {
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-.hero-right { display:flex; flex-direction:column; gap:16px; }
-.hero-right-text { font-size:13px; color:var(--text-muted); }
+    .category-count {
+        font-size: 11px;
+        color: var(--text-muted);
+    }
 
-.hero-right-cta { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-.btn-primary {
-    padding:10px 20px;
-    border-radius:var(--radius-pill);
-    background:linear-gradient(135deg,#28d17c,#19a35c);
-    color:#02140b;
-    border:none;
-    font-weight:600;
-    cursor:pointer;
-    box-shadow:0 14px 30px rgba(24,199,107,0.6);
-}
-.btn-primary:hover { transform:translateY(-1px); }
+    .category-arrow {
+        font-size: 11px;
+        color: var(--text-muted);
+    }
 
-.btn-ghost {
-    padding:9px 16px;
-    border-radius:var(--radius-pill);
-    border:1px dashed rgba(255,255,255,0.3);
-    background:transparent;
-    font-size:12px;
-}
+    .service-list {
+        display: none;
+        padding: 6px 7px 8px 10px;
+        border-radius: 10px;
+        margin-top: 4px;
+        background: rgba(255, 255, 255, 0.02);
+    }
 
-/* POPUP */
-.popup-bg {
-    position:fixed;
-    inset:0;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    background:rgba(0,0,0,0.75);
-    z-index:50;
-}
-.popup-box {
-    width:360px;
-    background:#041e13;
-    border:1px solid rgba(255,255,255,0.15);
-    padding:18px;
-    border-radius:18px;
-}
-.popup-title { font-size:15px; margin-bottom:4px; }
-.popup-sub { font-size:11px; color:var(--text-muted); margin-bottom:10px; }
+    .service-item {
+        font-size: 11px;
+        color: #d3ffe7;
+        padding: 5px 8px;
+        border-radius: 999px;
+        cursor: pointer;
+        margin-bottom: 4px;
+        border: 1px solid transparent;
+        background: transparent;
+        transition: background 0.18s ease, transform 0.12s ease,
+            border-color 0.18s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
 
-.popup-selected {
-    font-size:12px; padding:6px 10px;
-    border-radius:999px;
-    background:rgba(40,209,124,0.1);
-    display:inline-flex; gap:8px; margin-bottom:10px;
-}
-.popup-selected .tag {
-    width:8px;height:8px;border-radius:50%;background:var(--accent);
-}
+    .service-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(40, 209, 124, 0.7);
+    }
 
-.popup-input {
-    width:100%;
-    padding:10px;
-    margin-bottom:8px;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,0.18);
-    background:rgba(5,31,19,0.9);
-    color:var(--text-main);
-}
+    .service-item:hover {
+        background: rgba(6, 110, 63, 0.8);
+        border-color: rgba(40, 209, 124, 0.4);
+        transform: translateY(-1px);
+    }
 
-.popup-row { display:flex; justify-content:flex-end; gap:8px; }
+    .sidebar-footer {
+        margin-top: 10px;
+        font-size: 11px;
+        color: var(--text-muted);
+    }
 
-.btn-secondary {
-    padding:8px 14px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,0.25);
-    background:transparent;
-}
+    /* ========= MAIN CONTENT ========= */
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
 
-/* Responsive */
-@media(max-width:980px){
-    .layout { grid-template-columns:1fr; }
-    .sidebar { order:2; height:auto; }
-}
-@media(max-width:780px){
-    .hero-card { grid-template-columns:1fr; }
-}
+    .hero-card {
+        background: var(--bg-hero);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-soft);
+        padding: 24px 24px 20px 24px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.1fr);
+        gap: 20px;
+        box-shadow: var(--shadow-soft);
+    }
+
+    .hero-eyebrow {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+    }
+
+    .hero-title {
+        font-size: 26px;
+        line-height: 1.3;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .hero-sub {
+        font-size: 13px;
+        color: var(--text-muted);
+        max-width: 480px;
+        margin-bottom: 18px;
+    }
+
+    .region-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 18px;
+    }
+
+    .chip {
+        padding: 8px 12px;
+        border-radius: var(--radius-pill);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        font-size: 11px;
+        color: var(--text-main);
+        background: rgba(7, 58, 36, 0.9);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: default;
+    }
+
+    .chip-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+    }
+
+    .hero-meta {
+        font-size: 11px;
+        color: var(--text-muted);
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+
+    .hero-right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+    .hero-right-text {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.5;
+    }
+
+    .hero-right-cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .btn-primary {
+        padding: 10px 20px;
+        border-radius: var(--radius-pill);
+        border: none;
+        outline: none;
+        background: linear-gradient(135deg, #28d17c, #19a35c);
+        color: #02140b;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 14px 30px rgba(24, 199, 107, 0.6);
+        transition: transform 0.12s ease, box-shadow 0.12s ease,
+            filter 0.12s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.06);
+        box-shadow: 0 18px 40px rgba(24, 199, 107, 0.8);
+    }
+
+    .btn-ghost {
+        padding: 9px 16px;
+        border-radius: var(--radius-pill);
+        border: 1px dashed rgba(255, 255, 255, 0.3);
+        background: transparent;
+        color: var(--text-main);
+        font-size: 12px;
+        cursor: pointer;
+        transition: background 0.18s ease, border-color 0.18s ease,
+            color 0.18s ease;
+    }
+
+    .btn-ghost:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(40, 209, 124, 0.7);
+    }
+
+    .assistant-tag {
+        font-size: 11px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .assistant-avatar {
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        background: radial-gradient(circle at 0 0, #fed7aa, #fb7185);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* ========= STATS ========= */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .stat-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-md);
+        padding: 14px 14px 12px 14px;
+        border: 1px solid var(--border-soft);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7);
+    }
+
+    .stat-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+    }
+
+    .stat-value {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .stat-foot {
+        font-size: 11px;
+        color: var(--text-muted);
+    }
+
+    /* ========= WHY CHOOSE ========= */
+    .why-card {
+        margin-top: 10px;
+        background: var(--bg-card-soft);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-soft);
+        padding: 18px 18px 16px 18px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr);
+        gap: 18px;
+    }
+
+    .why-title {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+
+    .why-list {
+        font-size: 12px;
+        color: var(--text-muted);
+        list-style: none;
+    }
+
+    .why-list li {
+        margin-bottom: 6px;
+        display: flex;
+        gap: 6px;
+    }
+
+    .why-bullet {
+        color: var(--accent);
+        font-size: 14px;
+        margin-top: -2px;
+    }
+
+    .why-foot {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 10px;
+    }
+
+    /* ========= POPUP ========= */
+    .popup-bg {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 50;
+    }
+
+    .popup-box {
+        width: 360px;
+        max-width: 92vw;
+        background: #041e13;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 18px 18px 16px 18px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+    }
+
+    .popup-title {
+        font-size: 15px;
+        margin-bottom: 4px;
+    }
+
+    .popup-sub {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+    }
+
+    .popup-selected {
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(40, 209, 124, 0.1);
+        color: #d6ffe7;
+        margin-bottom: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .popup-selected span.tag {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+    }
+
+    .popup-input {
+        width: 100%;
+        padding: 10px 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(5, 31, 19, 0.9);
+        color: var(--text-main);
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .popup-input::placeholder {
+        color: rgba(199, 235, 215, 0.6);
+    }
+
+    .popup-row {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 6px;
+    }
+
+    .btn-secondary {
+        padding: 8px 14px;
+        border-radius: var(--radius-pill);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: transparent;
+        color: var(--text-main);
+        font-size: 12px;
+        cursor: pointer;
+        transition: background 0.16s ease, border-color 0.16s ease;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .popup-footnote {
+        margin-top: 8px;
+        font-size: 10px;
+        color: var(--text-muted);
+    }
+
+    /* ========= RESPONSIVE ========= */
+    @media (max-width: 980px) {
+        .layout {
+            grid-template-columns: 1fr;
+        }
+        .sidebar {
+            order: 2;
+        }
+    }
+
+    @media (max-width: 780px) {
+        .hero-card {
+            grid-template-columns: 1fr;
+        }
+        .stats-row {
+            grid-template-columns: 1fr;
+        }
+        .topbar {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .top-pills {
+            justify-content: flex-start;
+        }
+    }
 </style>
 </head>
-
 <body>
 
+<!-- ========== TOP BAR ========== -->
 <header class="topbar">
     <div class="brand-wrap">
         <div class="brand-logo">S</div>
         <div>
             <div class="brand-text-main">ServicePoint SA</div>
-            <div class="brand-text-sub">Home & Business Service Network</div>
+            <div class="brand-text-sub">Home &amp; Business Service Network</div>
         </div>
     </div>
-
     <div class="top-pills">
-        <div class="pill"><span class="pill-dot"></span> Smart contractor matching</div>
-        <div class="pill pill-accent"><span class="pill-dot"></span> Live human assistant chat</div>
-        <div class="pill"><span class="pill-dot"></span> SA coverage · KZN · JHB · CPT</div>
+        <div class="pill">
+            <span class="pill-dot"></span>
+            Smart contractor matching
+        </div>
+        <div class="pill pill-accent">
+            <span class="pill-dot"></span>
+            Live human assistant chat
+        </div>
+        <div class="pill">
+            <span class="pill-dot"></span>
+            SA coverage · KZN · JHB · CPT
+        </div>
     </div>
 </header>
 
 <main class="layout">
-
-<!------------ SIDEBAR (FIXED) ------------>
-<aside class="sidebar">
-    <div class="sidebar-header">
-        Tap a category to see services.<br>
-        Tap a service to request it.
-    </div>
-
-    <div class="scroll-area" id="categoryList"></div>
-
-    <div class="sidebar-footer">
-        Serving Durban, Johannesburg & Cape Town.
-    </div>
-</aside>
-
-<!------------ MAIN CONTENT ------------>
-<section class="content">
-
-    <!-- HERO -->
-    <section class="hero-card">
-        <div>
-            <div class="hero-eyebrow">Built for South African homes & businesses</div>
-            <h1 class="hero-title">Connect with trusted contractors in KZN, JHB & CPT.</h1>
-            <p class="hero-sub">One request. Verified contractors compete to give you the best service.</p>
-
-            <div class="region-chips">
-                <div class="chip"><span class="chip-dot"></span>KZN – Durban</div>
-                <div class="chip"><span class="chip-dot"></span>JHB – Gauteng</div>
-                <div class="chip"><span class="chip-dot"></span>CPT – Cape Town</div>
-            </div>
-
-            <div class="hero-meta">
-                <span>Avg response: &lt; 15 minutes.</span>
-                <span>We only send details once you confirm.</span>
-            </div>
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            Tap a category to see services.<br />
+            Tap a service to request it via our human assistant.
         </div>
 
-        <div class="hero-right">
-            <div class="hero-right-text">
-                Answer a few quick questions, then our <strong>human assistant</strong> confirms details.
+        <div class="scroll-area" id="categoryList">
+            <!-- Populated by JS -->
+        </div>
+
+        <div class="sidebar-footer">
+            Serving Durban, Johannesburg &amp; Cape Town with rollout to the rest
+            of South Africa.
+        </div>
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <section class="content">
+        <!-- HERO -->
+        <section class="hero-card">
+            <div>
+                <div class="hero-eyebrow">Built for South African homes &amp; businesses</div>
+                <h1 class="hero-title">
+                    Connect with trusted contractors in KZN, JHB &amp; CPT.
+                </h1>
+                <p class="hero-sub">
+                    One request. Verified contractors compete to give you the best
+                    service. You stay in control &mdash; we handle the admin, follow-ups
+                    and reminders.
+                </p>
+
+                <div class="region-chips">
+                    <div class="chip">
+                        <span class="chip-dot"></span>
+                        KZN &ndash; Durban &amp; surrounds
+                    </div>
+                    <div class="chip">
+                        <span class="chip-dot"></span>
+                        JHB &ndash; Johannesburg &amp; Gauteng
+                    </div>
+                    <div class="chip">
+                        <span class="chip-dot"></span>
+                        CPT &ndash; Cape Town &amp; Winelands
+                    </div>
+                </div>
+
+                <div class="hero-meta">
+                    <span>Average response time: &lt; 15 minutes during office hours.</span>
+                    <span>We only send your details once you confirm the quote.</span>
+                </div>
             </div>
 
-            <div class="hero-right-cta">
-                <button class="btn-primary" onclick="openPopupFromCTA()">Get matched now</button>
-                <button class="btn-ghost" onclick="scrollToWhy()">How it works</button>
+            <div class="hero-right">
+                <div class="hero-right-text">
+                    Answer a few quick questions, pick a service and our
+                    <strong>human assistant</strong> chats with you to confirm the details
+                    before sending it to the best-scored contractors.
+                </div>
+
+                <div class="hero-right-cta">
+                    <button class="btn-primary" onclick="openPopupFromCTA()">
+                        Get matched now
+                    </button>
+                    <button class="btn-ghost" onclick="scrollToWhy()">
+                        How it works
+                    </button>
+                </div>
+
+                <div class="assistant-tag">
+                    <div class="assistant-avatar"></div>
+                    <span>Real people on standby if anything goes wrong on-site.</span>
+                </div>
             </div>
-        </div>
+        </section>
+
+        <!-- STATS -->
+        <section class="stats-row">
+            <article class="stat-card">
+                <div class="stat-label">Leads successfully fed</div>
+                <div class="stat-value">168</div>
+                <div class="stat-foot">
+                    Real jobs routed to verified contractors across SA.
+                </div>
+            </article>
+            <article class="stat-card">
+                <div class="stat-label">Regions covered</div>
+                <div class="stat-value">3</div>
+                <div class="stat-foot">
+                    KZN · Gauteng · Cape Town (nationwide rollout coming soon).
+                </div>
+            </article>
+            <article class="stat-card">
+                <div class="stat-label">Average rating</div>
+                <div class="stat-value">4.8★</div>
+                <div class="stat-foot">Based on job reviews &amp; comeback rate.</div>
+            </article>
+        </section>
+
+        <!-- WHY CHOOSE -->
+        <section id="why-section" class="why-card">
+            <div>
+                <h2 class="why-title">Why choose ServicePoint SA?</h2>
+                <ul class="why-list">
+                    <li>
+                        <span class="why-bullet">✓</span>
+                        <span>
+                            We pre-vet contractors for documents, workmanship history and
+                            real-world references.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="why-bullet">✓</span>
+                        <span>
+                            Smart lead routing hides your number until you accept a
+                            contractor.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="why-bullet">✓</span>
+                        <span>
+                            Our human assistant keeps you updated in plain language &mdash;
+                            not bots or call centres.
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <h2 class="why-title">How ServicePoint SA works</h2>
+                <ul class="why-list">
+                    <li>
+                        <span class="why-bullet">1</span>
+                        <span>Choose a category and tap the service you need.</span>
+                    </li>
+                    <li>
+                        <span class="why-bullet">2</span>
+                        <span>
+                            Our assistant confirms the details with you.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="why-bullet">3</span>
+                        <span>
+                            We send the job to the right pros and you pick who to book.
+                        </span>
+                    </li>
+                </ul>
+                <p class="why-foot">
+                    You stay in control at every step. No spam, no mass WhatsApp groups.
+                </p>
+            </div>
+        </section>
     </section>
-
-</section>
 </main>
 
-<!-- POPUP -->
+<!-- ========== POPUP ========= -->
 <div class="popup-bg" id="popup">
     <div class="popup-box">
         <h3 class="popup-title">Request this service</h3>
-        <p class="popup-sub">Our human assistant will confirm your details.</p>
+        <p class="popup-sub">
+            Our human assistant will confirm your details and match you to the
+            right contractor.
+        </p>
 
         <div class="popup-selected">
             <span class="tag"></span>
             <span id="selectedService">General service</span>
         </div>
 
-        <input id="clientName" class="popup-input" type="text" placeholder="Your full name">
-        <input id="clientPhone" class="popup-input" type="text" placeholder="Best contact number">
+        <input
+            id="clientName"
+            class="popup-input"
+            type="text"
+            placeholder="Your full name"
+        />
+        <input
+            id="clientPhone"
+            class="popup-input"
+            type="text"
+            placeholder="Best contact number"
+        />
 
         <div class="popup-row">
             <button class="btn-secondary" onclick="closePopup()">Cancel</button>
             <button class="btn-primary" onclick="sendLead()">Send request</button>
         </div>
+
+        <div class="popup-footnote">
+            By sending a request you agree for us to contact you about this job.
+        </div>
     </div>
 </div>
 
 <script>
-/* =====================================
-   CATEGORY DATA
-===================================== */
+/* =========================================
+   CATEGORY + SERVICE DATA (FULL, DIVERSE)
+   ========================================= */
 const categories = {
-    "Solar & Backup Power": [
-        "Full solar system design","Inverter + battery installation",
-        "Solar geyser conversion","Load-shedding backup kits",
-        "Solar COC & compliance","Commercial solar audit",
-        "Solar panel cleaning","Off-grid farm solutions"
-    ],
-    "Electrical": [
-        "New plug & light points","DB board upgrade","Full house re-wiring",
-        "Pre-paid meter installation","Fault finding & tripping power",
-        "Certificate of Compliance (COC)","Generator change-over","Surge protection install"
-    ],
-    "Plumbing & Geysers": [
-        "Burst pipe repair","Geyser replacement","Blocked drain",
-        "Bathroom renovation plumbing","Leak detection report",
-        "Kitchen plumbing upgrade","Septic tank","Rainwater tank connection"
-    ],
-    "HVAC & Refrigeration": [
-        "Aircon supply & install","Aircon regas","Cold room repair",
-        "Ventilation systems","Office HVAC","Server room cooling",
-        "Underfloor heating","Commercial fridge repair"
-    ],
-    "Security, CCTV & Access": [
-        "CCTV installation","Alarm system service","Electric fence repair",
-        "Gate motor replacement","Access control","Remote viewing setup",
-        "Perimeter beams","Security lighting"
-    ]
+  "Solar & Backup Power": [
+    "Full solar system design",
+    "Inverter + battery installation",
+    "Solar geyser conversion",
+    "Load-shedding backup kits",
+    "Solar COC & compliance",
+    "Commercial solar audit",
+    "Solar panel cleaning",
+    "Off-grid farm solutions"
+  ],
+  "Electrical": [
+    "New plug & light points",
+    "DB board upgrade",
+    "Full house re-wiring",
+    "Pre-paid meter installation",
+    "Fault finding & tripping power",
+    "Certificate of Compliance (COC)",
+    "Generator change-over",
+    "Surge protection install"
+  ],
+  "Plumbing & Geysers": [
+    "Burst pipe repair",
+    "Geyser replacement",
+    "Blocked drain & sewer",
+    "Bathroom renovation plumbing",
+    "Leak detection report",
+    "Kitchen plumbing upgrade",
+    "Septic tank & French drain",
+    "Rainwater tank connection"
+  ],
+  "HVAC & Refrigeration": [
+    "Aircon supply & install",
+    "Aircon service & regas",
+    "Cold room repair",
+    "Ventilation & extraction fans",
+    "Office HVAC maintenance",
+    "Server-room cooling",
+    "Underfloor heating",
+    "Commercial fridge repair"
+  ],
+  "Security, CCTV & Access": [
+    "CCTV camera installation",
+    "Alarm system install & service",
+    "Electric fence repair",
+    "Gate motor replacement",
+    "Intercom & access control",
+    "Remote viewing setup",
+    "Perimeter beams",
+    "Security lighting projects"
+  ],
+  "Roofing & Waterproofing": [
+    "Leak detection & repair",
+    "Roof tile replacement",
+    "IBR / corrugated roof install",
+    "Torch-on waterproofing",
+    "Gutter replacement",
+    "Ceiling board repair",
+    "Roof cleaning & painting",
+    "Skylight installation"
+  ],
+  "Painting & Decorating": [
+    "Interior repaint",
+    "Exterior repaint",
+    "Roof painting",
+    "Feature wall & decor",
+    "Damp proofing",
+    "Complex & body corporate repaint",
+    "Industrial painting",
+    "Varnish & wood treatment"
+  ],
+  "Carpentry & Joinery": [
+    "New kitchen cupboards",
+    "Built-in bedroom cupboards",
+    "Shopfitting & counters",
+    "Decking supply & install",
+    "Timber pergolas",
+    "Custom furniture build",
+    "Door hanging & frames",
+    "Wooden window repair"
+  ],
+  "Flooring & Tiling": [
+    "Porcelain & ceramic tiling",
+    "Vinyl flooring",
+    "Laminate flooring",
+    "Carpet supply & fit",
+    "Screeding & self-levelling",
+    "Timber / parquet flooring",
+    "Bathroom & shower tiling",
+    "Commercial flooring upgrade"
+  ],
+  "Landscaping & Gardens": [
+    "Garden design & makeover",
+    "Instant lawn & roll-on grass",
+    "Tree felling & trimming",
+    "Irrigation system install",
+    "Artificial turf",
+    "Outdoor lighting",
+    "Complex garden maintenance",
+    "Pool area revamp"
+  ],
+  "Cleaning Services": [
+    "Deep cleaning – home",
+    "Post-construction clean",
+    "Office & commercial cleaning",
+    "Carpet & upholstery cleaning",
+    "Window cleaning (multi-storey)",
+    "Move-in / move-out clean",
+    "Short-let & Airbnb clean",
+    "Industrial warehouse cleaning"
+  ],
+  "Appliance & Electronics Repair": [
+    "Washing machine repair",
+    "Fridge & freezer repair",
+    "Dishwasher repair",
+    "TV & home-theatre setup",
+    "Oven & hob repair",
+    "Tumble-dryer repair",
+    "Microwave repair",
+    "Bar fridge & ice-maker"
+  ],
+  "Windows, Doors & Glass": [
+    "Aluminium window installation",
+    "Stacking / sliding doors",
+    "Garage door supply & fit",
+    "Wooden door refurbishment",
+    "Shower glass & enclosures",
+    "Burglar bars & security gates",
+    "Glazing & glass replacement",
+    "Automatic doors"
+  ],
+  "Walls, Fencing & Paving": [
+    "Boundary wall build",
+    "Vibracrete walling",
+    "Palisade fencing",
+    "Clear-view fencing",
+    "Driveway paving",
+    "Retaining wall engineering",
+    "Complex perimeter upgrades",
+    "Wall repairs & crack stitching"
+  ],
+  "Pools & Water Features": [
+    "New pool build",
+    "Fibreglass relining",
+    "Pool leak detection",
+    "Salt-chlorinator install",
+    "Pump & filter replacement",
+    "Solar pool heating",
+    "Koi pond build",
+    "Jacuzzi & spa maintenance"
+  ],
+  "Pest Control": [
+    "Cockroach & ant treatment",
+    "Termite & wood borer",
+    "Rodent control",
+    "Flea & bedbug treatment",
+    "Bird proofing",
+    "Industrial fumigation",
+    "Restaurant pest programme",
+    "Pre-construction soil poisoning"
+  ],
+  "IT, Wi-Fi & Smart Home": [
+    "Fibre & Wi-Fi setup",
+    "Whole-home Wi-Fi mesh",
+    "Network cabling & racks",
+    "Smart home automation",
+    "VOIP & IP phones",
+    "Smart lighting & scenes",
+    "Home cinema room",
+    "Computer support – small business"
+  ],
+  "Photography & Media": [
+    "Brand & campaign shoots",
+    "Event photography",
+    "Real-estate & Airbnb photos",
+    "Product photography",
+    "Studio & portrait session",
+    "Video content creation",
+    "Drone photo / video",
+    "Social media content day"
+  ],
+  "Graphic, Web & Branding": [
+    "Logo & brand identity",
+    "Business cards & stationery",
+    "Website design & build",
+    "E-commerce store setup",
+    "Social media templates",
+    "Vehicle & shop signage",
+    "Brochures & catalogues",
+    "Rebrand strategy session"
+  ],
+  "Events, Catering & Décor": [
+    "Birthday & private events",
+    "Corporate event management",
+    "Catering – platters & buffets",
+    "Wedding planning",
+    "Marquee & stretch tents",
+    "Sound, stage & lighting",
+    "Event décor & flowers",
+    "Photobooth & media wall"
+  ],
+  "Fitness & Personal Training": [
+    "Home personal training",
+    "Gym-based personal training",
+    "Online coaching plan",
+    "Boot-camp classes",
+    "Nutrition guidance",
+    "Weight-loss programme",
+    "Strength & conditioning",
+    "Pre- & post-natal training"
+  ],
+  "Sports Coaching": [
+    "Kids soccer coaching",
+    "Rugby skills coaching",
+    "Cricket nets & coaching",
+    "Swimming lessons",
+    "Tennis coaching",
+    "Running & athletics coaching",
+    "High-performance coaching",
+    "School holiday sports clinics"
+  ],
+  "Beauty, Hair & Wellness": [
+    "Mobile hairdresser",
+    "Make-up artist",
+    "Nails & mani-pedi",
+    "Massage therapist (mobile)",
+    "Aesthetic skincare treatments",
+    "Barber & grooming",
+    "Bridal beauty package",
+    "Lash & brow services"
+  ],
+  "Childcare & Tutors": [
+    "Au pair / nanny placement",
+    "Homework & study tutor",
+    "Matric exam prep",
+    "Coding & robotics classes",
+    "Music & piano lessons",
+    "Homeschool support",
+    "Special-needs support",
+    "After-care programme"
+  ],
+  "Transport & Moving": [
+    "Local home move",
+    "Office relocation",
+    "Mini moves & bakkie hire",
+    "Furniture removals",
+    "Courier & same-day delivery",
+    "Cross-border moves",
+    "Packing & boxes",
+    "Piano & heavy-item moves"
+  ],
+  "Real Estate & Property": [
+    "Sales agent – list my property",
+    "Rental agent – manage my unit",
+    "Snag list & handover report",
+    "Home inspection report",
+    "Eviction & legal advisory (referral)",
+    "Body corporate maintenance plan",
+    "Short-let / Airbnb management",
+    "Property photography + listing setup"
+  ],
+  "Business Services": [
+    "Bookkeeping & monthly accounts",
+    "Tax returns & SARS help",
+    "Payroll setup",
+    "HR & labour consulting",
+    "Business coaching",
+    "Tender & RFQ assistance",
+    "CIPC registrations",
+    "POS & payment systems"
+  ],
+  "Auto Services": [
+    "Mobile mechanic",
+    "Major car service",
+    "Auto electrical",
+    "Tyres & wheel alignment",
+    "Panel beating & spray painting",
+    "Car valet & detailing",
+    "Tow-in service",
+    "Sound & tracking system install"
+  ]
 };
 
-/* =====================================
-   BUILD SIDEBAR
-===================================== */
 const categoryListEl = document.getElementById("categoryList");
 
-Object.keys(categories).forEach(categoryName => {
+Object.keys(categories).forEach((categoryName) => {
     const services = categories[categoryName];
 
     const category = document.createElement("div");
@@ -412,13 +1106,15 @@ Object.keys(categories).forEach(categoryName => {
 
     const titleWrap = document.createElement("div");
     titleWrap.className = "category-title";
+
     const bullet = document.createElement("span");
     bullet.textContent = "•";
-    const nameSpan = document.createElement("span");
-    nameSpan.textContent = categoryName;
+
+    const title = document.createElement("span");
+    title.textContent = categoryName;
 
     titleWrap.appendChild(bullet);
-    titleWrap.appendChild(nameSpan);
+    titleWrap.appendChild(title);
 
     const rightWrap = document.createElement("div");
     rightWrap.style.display = "flex";
@@ -442,7 +1138,7 @@ Object.keys(categories).forEach(categoryName => {
     const list = document.createElement("div");
     list.className = "service-list";
 
-    services.forEach(serviceName => {
+    services.forEach((serviceName) => {
         const item = document.createElement("button");
         item.type = "button";
         item.className = "service-item";
@@ -450,6 +1146,7 @@ Object.keys(categories).forEach(categoryName => {
 
         const dot = document.createElement("span");
         dot.className = "service-dot";
+
         const label = document.createElement("span");
         label.textContent = serviceName;
 
@@ -466,13 +1163,12 @@ Object.keys(categories).forEach(categoryName => {
 
     category.appendChild(header);
     category.appendChild(list);
-
     categoryListEl.appendChild(category);
 });
 
-/* =====================================
-   POPUP CONTROLS
-===================================== */
+/* =========================================
+   POPUP + HUMAN ASSISTANT + TELEGRAM LEAD
+   ========================================= */
 const popupEl = document.getElementById("popup");
 const selectedServiceEl = document.getElementById("selectedService");
 
@@ -480,16 +1176,22 @@ function openPopup(serviceName) {
     selectedServiceEl.textContent = serviceName;
     popupEl.style.display = "flex";
 }
+
 function openPopupFromCTA() {
+    // Default label if user clicks "Get matched now" first
     openPopup("General service request");
 }
+
 function closePopup() {
     popupEl.style.display = "none";
 }
 
-/* =====================================
-   SEND TO TELEGRAM
-===================================== */
+function scrollToWhy() {
+    const el = document.getElementById("why-section");
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 function sendLead() {
     const name = document.getElementById("clientName").value.trim();
     const phone = document.getElementById("clientPhone").value.trim();
@@ -500,6 +1202,7 @@ function sendLead() {
         return;
     }
 
+    // TELEGRAM BOT SETTINGS
     const botToken = "8526401033:AAFrG8IH8xqQL_RTD7s7JLyxZpc8e8GOyyg";
     const chatId = "8187670531";
 
@@ -510,24 +1213,22 @@ function sendLead() {
 
     fetch(
         `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}` +
-        `&text=${encodeURIComponent(msg)}&parse_mode=Markdown`
+            `&text=${encodeURIComponent(msg)}&parse_mode=Markdown`
     )
-    .then(() => {
-        alert("Thanks! Our assistant will contact you shortly.");
-        closePopup();
-        document.getElementById("clientName").value = "";
-        document.getElementById("clientPhone").value = "";
-    })
-    .catch(() => {
-        alert("Error sending lead. Try again.");
-    });
-}
-
-function scrollToWhy() {
-    const el = document.getElementById("why-section");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+        .then(() => {
+            alert(
+                "Thanks! Our human assistant will contact you shortly to confirm the details."
+            );
+            closePopup();
+            document.getElementById("clientName").value = "";
+            document.getElementById("clientPhone").value = "";
+        })
+        .catch(() => {
+            alert(
+                "We couldn't reach our assistant right now. Please try again in a moment."
+            );
+        });
 }
 </script>
-
 </body>
-</html>
+</html> 
