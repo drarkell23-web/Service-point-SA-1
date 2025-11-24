@@ -410,6 +410,25 @@ body {
   color: var(--text-muted);
 }
 
+/* FOOTER */
+.site-footer {
+  max-width: 1240px;
+  margin: 0 auto 30px;
+  padding: 0 20px;
+}
+
+.site-footer-inner {
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid #cbd5e1;
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 /* POPUP */
 .popup-bg {
   position: fixed;
@@ -458,8 +477,7 @@ body {
 }
 
 .popup-box input,
-.popup-box textarea,
-.popup-box select {
+.popup-box textarea {
   width: 100%;
   padding: 9px 10px;
   border-radius: 10px;
@@ -509,43 +527,18 @@ body {
   color: var(--text-muted);
 }
 
-/* FOOTER */
-.site-footer {
-  max-width: 1240px;
-  margin: 0 auto 26px;
-  padding: 0 20px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.site-footer-inner {
-  background: #f1f5f9;
-  border-radius: 14px;
-  padding: 10px 14px;
-  border: 1px solid var(--border-soft);
-}
-
-.site-footer a {
-  color: var(--sa-blue);
-  text-decoration: none;
-}
-
-.site-footer a:hover {
-  text-decoration: underline;
-}
-
 /* RESPONSIVE */
 @media (max-width: 1024px) {
   .hero-grid {
     grid-template-columns: 1fr;
   }
-
-  .stats-row {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 640px) {
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+
   .hero-bottom {
     grid-template-columns: 1fr;
   }
@@ -604,7 +597,10 @@ body {
 
           <div class="hero-cta-card">
             <h3>Tell our assistant what you need</h3>
-            <p>Pick a category on the left, choose a service and share your details. Our human assistant will message you to confirm and route it to the right pros.</p>
+            <p>
+              Pick a category on the left, choose a service and share your details.
+              Our human assistant will message you to confirm and route it to the right pros.
+            </p>
             <div class="hero-cta-row">
               <button class="hero-cta-btn" onclick="openPopup('General request – I\'m not sure')">
                 Get matched now
@@ -624,14 +620,14 @@ body {
             <div class="stat-footnote">Real jobs connected to vetted contractors across SA.</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Contractors live on network</div>
-            <div class="stat-value">210</div>
-            <div class="stat-footnote">Trade-tested teams from solo specialists to enterprise crews.</div>
+            <div class="stat-label">Service categories available</div>
+            <div class="stat-value">25+</div>
+            <div class="stat-footnote">From home repairs to media, fitness, property and more.</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Average client rating</div>
             <div class="stat-value">4.8★</div>
-            <div class="stat-footnote">Based on comeback-rate & verified post-job reviews.</div>
+            <div class="stat-footnote">Based on comeback rate & verified post-job reviews.</div>
           </div>
         </div>
       </div>
@@ -642,8 +638,11 @@ body {
 <!-- FOOTER -->
 <footer class="site-footer">
   <div class="site-footer-inner">
-    Want to become a verified contractor on ServicePoint SA?  
-    Email <a href="mailto:servicepoint.info@gmail.com">servicepoint.info@gmail.com</a> with your trade, service areas and a short description of your business.
+    <div>© ServicePoint SA – connecting South Africans with trusted contractors.</div>
+    <div>
+      Want to become a contractor on our network?
+      Email <strong>servicepoint.info@gmail.com</strong> with your trade, area and a short description.
+    </div>
   </div>
 </footer>
 
@@ -652,7 +651,7 @@ body {
   <div class="popup-box">
     <h3 class="popup-title">Chat to our assistant</h3>
     <div class="popup-subtitle">
-      Answer a few quick questions so we can send your request to the right contractor.
+      Share your details and we’ll match you to the best contractor for:
     </div>
     <div class="popup-service" id="selectedService"></div>
 
@@ -662,30 +661,18 @@ body {
     <label for="clientPhone">WhatsApp / phone number</label>
     <input type="text" id="clientPhone" placeholder="e.g. 082 123 4567" />
 
-    <label for="clientLocation">Area / suburb</label>
-    <input type="text" id="clientLocation" placeholder="e.g. Durban North, Sandton, Bellville" />
+    <label for="clientArea">Suburb & city</label>
+    <input type="text" id="clientArea" placeholder="e.g. Umhlanga, Durban / Fourways, JHB" />
 
-    <label for="clientTiming">When do you need this done?</label>
-    <select id="clientTiming">
-      <option value="As soon as possible">As soon as possible</option>
-      <option value="Today">Today</option>
-      <option value="This week">This week</option>
-      <option value="This month">This month</option>
-      <option value="Just getting quotes for now">Just getting quotes for now</option>
-    </select>
-
-    <label for="clientBudget">Rough budget (if you know)</label>
-    <input type="text" id="clientBudget" placeholder="e.g. Under R2 000 / R5k–R10k / Not sure" />
-
-    <label for="clientNotes">Short description of the job</label>
-    <textarea id="clientNotes" placeholder="Tell us what’s happening or what you want done."></textarea>
+    <label for="clientDetails">Tell us briefly what you need</label>
+    <textarea id="clientDetails" placeholder="Example: Need a plumber to replace a leaking geyser this week, double-storey home, insurance claim."></textarea>
 
     <div class="popup-actions">
       <button class="popup-btn-secondary" onclick="closePopup()">Cancel</button>
       <button class="popup-btn-primary" onclick="sendLead()">Send request</button>
     </div>
     <div class="popup-note">
-      Our human assistant will WhatsApp or call you to confirm details before introducing you to contractors.
+      Our human assistant will confirm details with you and then introduce you to the right contractors.
     </div>
   </div>
 </div>
@@ -693,7 +680,7 @@ body {
 <script>
 /* ===========================
    CATEGORY + SERVICE DATA
-   (many, diverse, SA-style)
+   (diverse, SA-style, 200+)
 =========================== */
 const CATEGORY_DATA = {
   "Solar & Backup Power": [
@@ -951,10 +938,10 @@ const CATEGORY_DATA = {
     "Rental agent – manage my unit",
     "Snag list & handover report",
     "Home inspection report",
-    "Eviction & legal advisory (referral)",
     "Body corporate maintenance plan",
     "Short-let / Airbnb management",
-    "Property photography + listing setup"
+    "Property photography + listing setup",
+    "Rental-ready repairs & maintenance"
   ],
   "Business Services": [
     "Bookkeeping & monthly accounts",
@@ -1057,28 +1044,26 @@ function closePopup() {
 function sendLead() {
   const name = document.getElementById("clientName").value.trim();
   const phone = document.getElementById("clientPhone").value.trim();
-  const location = document.getElementById("clientLocation").value.trim();
-  const timing = document.getElementById("clientTiming").value;
-  const budget = document.getElementById("clientBudget").value.trim();
-  const notes = document.getElementById("clientNotes").value.trim();
+  const area = document.getElementById("clientArea").value.trim();
+  const details = document.getElementById("clientDetails").value.trim();
   const service = document.getElementById("selectedService").innerText;
 
-  if (!name || !phone) {
-    alert("Please add your name and a contact number so our assistant can reach you.");
+  if (!name || !phone || !details) {
+    alert("Please add your name, contact number and a short description so our assistant can help you properly.");
     return;
   }
 
+  const locationLine = area ? `📍 Area: ${area}\n` : "";
+
+  // Your Telegram bot details (already provided by you)
   const botToken = "8526401033:AAFrG8IH8xqQL_RTD7s7JLyxZpc8e8GOyyg";
   const chatId = "8187670531";
 
   const msg = `🔥 *New Service Lead*
 📌 Service: ${service}
-👤 Name: ${name}
+${locationLine}👤 Name: ${name}
 📱 Phone: ${phone}
-📍 Area: ${location || "Not specified"}
-⏱ Timing: ${timing}
-💰 Budget: ${budget || "Not specified"}
-📝 Notes: ${notes || "No extra notes given"}`;
+📝 Details: ${details}`;
 
   fetch(
     `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}` +
@@ -1088,9 +1073,8 @@ function sendLead() {
       alert("Lekker! Your request has been sent. Our assistant will contact you shortly.");
       document.getElementById("clientName").value = "";
       document.getElementById("clientPhone").value = "";
-      document.getElementById("clientLocation").value = "";
-      document.getElementById("clientBudget").value = "";
-      document.getElementById("clientNotes").value = "";
+      document.getElementById("clientArea").value = "";
+      document.getElementById("clientDetails").value = "";
       closePopup();
     })
     .catch(() => {
