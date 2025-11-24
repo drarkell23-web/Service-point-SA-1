@@ -6,683 +6,819 @@
 <title>ServicePoint SA</title>
 
 <style>
-:root {
-  /* South African flag inspired palette */
-  --sa-green: #007a4d;
-  --sa-yellow: #ffb81c;
-  --sa-red: #d62828;
-  --sa-blue: #0052b4;
-  --sa-black: #111111;
-  --sa-white: #ffffff;
-
-  --bg-page: #ecf0f3;
-  --card-bg: #ffffff;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --border-soft: #dde4ee;
-  --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.12);
-}
-
-/* GLOBAL */
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--bg-page);
-  color: var(--text-main);
-}
-
-/* HEADER */
-.site-header {
-  padding: 18px 20px;
-  text-align: center;
-  background: linear-gradient(90deg, var(--sa-green), var(--sa-blue));
-  color: var(--sa-white);
-  box-shadow: 0 4px 18px rgba(0,0,0,0.2);
-  position: sticky;
-  top: 0;
-  z-index: 20;
-}
-
-.site-header h1 {
-  margin: 0;
-  font-size: 26px;
-  letter-spacing: 0.04em;
-}
-
-.site-header span {
-  display: block;
-  font-size: 13px;
-  margin-top: 4px;
-  opacity: 0.9;
-}
-
-/* APP SHELL */
-.app-shell {
-  max-width: 1240px;
-  margin: 22px auto 40px;
-  padding: 0 20px;
-}
-
-/* HERO GRID */
-.hero-grid {
-  display: grid;
-  grid-template-columns: 290px minmax(0, 1fr);
-  gap: 22px;
-  align-items: flex-start;
-}
-
-/* SIDEBAR */
-.sidebar {
-  background: var(--card-bg);
-  border-radius: 18px;
-  padding: 16px 14px 18px;
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--border-soft);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.sidebar-title {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.sidebar-subtitle {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 12px;
-}
-
-.category-list {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 4px;
-  max-height: 560px;
-}
-
-/* Custom scrollbar */
-.category-list::-webkit-scrollbar {
-  width: 6px;
-}
-.category-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-.category-list::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 999px;
-}
-
-.category {
-  margin-bottom: 4px;
-  border-radius: 10px;
-  transition: background 0.18s ease, transform 0.12s ease;
-}
-
-.category-header {
-  padding: 8px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-}
-
-.category-header-left {
-  display: flex;
-  flex-direction: column;
-}
-
-.category-name {
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.category-count {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.category-arrow {
-  font-size: 12px;
-  color: var(--text-muted);
-  transition: transform 0.15s ease;
-}
-
-.category.open .category-arrow {
-  transform: rotate(90deg);
-}
-
-.category:hover {
-  background: #f1f5f9;
-  transform: translateY(-1px);
-}
-
-.service-list {
-  display: none;
-  padding: 0 0 6px 6px;
-}
-
-.service-list.open {
-  display: block;
-}
-
-.service-item {
-  font-size: 12px;
-  padding: 4px 10px 4px 16px;
-  cursor: pointer;
-  color: var(--sa-blue);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 999px;
-  margin: 1px 2px;
-  background: transparent;
-  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
-}
-
-.service-item span {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.service-item:hover {
-  background: rgba(0,122,77,0.08);
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
-  transform: translateY(-1px);
-}
-
-/* HERO MAIN */
-.hero-card {
-  background: radial-gradient(circle at top left, #00a859 0, #006c3c 40%, #004225 70%, #001814 100%);
-  border-radius: 22px;
-  color: var(--sa-white);
-  padding: 20px 24px 22px;
-  box-shadow: var(--shadow-soft);
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 120% -10%, rgba(255,184,28,0.35), transparent 60%),
-              radial-gradient(circle at -10% 120%, rgba(0,82,180,0.35), transparent 55%);
-  opacity: 0.9;
-  pointer-events: none;
-}
-
-.hero-inner {
-  position: relative;
-  z-index: 1;
-}
-
-/* Chips */
-.hero-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.chip {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(15,23,42,0.62);
-  border: 1px solid rgba(148,163,184,0.6);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.chip.dot-green::before,
-.chip.dot-yellow::before,
-.chip.dot-blue::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-}
-
-.chip.dot-green::before { background: var(--sa-green); }
-.chip.dot-yellow::before { background: var(--sa-yellow); }
-.chip.dot-blue::before { background: var(--sa-blue); }
-
-.hero-title {
-  font-size: 26px;
-  line-height: 1.25;
-  font-weight: 700;
-  margin: 8px 0 6px;
-}
-
-.hero-subtitle {
-  font-size: 13px;
-  max-width: 560px;
-  color: rgba(255,255,255,0.86);
-  margin-bottom: 18px;
-}
-
-/* Region pills */
-.hero-regions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.region-pill {
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 12px;
-  border: 1px solid rgba(241,245,249,0.8);
-  background: rgba(15,23,42,0.3);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.region-pill span.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--sa-yellow);
-}
-
-/* Hero bottom row */
-.hero-bottom {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: 18px;
-  margin-top: 12px;
-}
-
-.hero-why {
-  font-size: 12px;
-}
-
-.hero-why h3 {
-  margin: 0 0 8px;
-  font-size: 13px;
-}
-
-.hero-why ul {
-  padding-left: 18px;
-  margin: 0;
-}
-
-.hero-why li {
-  margin-bottom: 4px;
-  color: rgba(226,232,240,0.96);
-}
-
-/* CTA card */
-.hero-cta-card {
-  border-radius: 18px;
-  padding: 10px 14px 12px;
-  background: rgba(15,23,42,0.55);
-  border: 1px solid rgba(148,163,184,0.7);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 6px;
-}
-
-.hero-cta-card h3 {
-  margin: 0;
-  font-size: 13px;
-}
-
-.hero-cta-card p {
-  margin: 0;
-  font-size: 11px;
-  color: rgba(226,232,240,0.9);
-}
-
-.hero-cta-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 6px;
-}
-
-.hero-cta-btn {
-  padding: 7px 14px;
-  border: none;
-  border-radius: 999px;
-  background: var(--sa-yellow);
-  color: #111827;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 10px 25px rgba(15,23,42,0.4);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-
-.hero-cta-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 30px rgba(15,23,42,0.5);
-}
-
-.hero-eta {
-  font-size: 11px;
-  color: rgba(226,232,240,0.9);
-}
-
-/* STATS ROW */
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 18px;
-}
-
-.stat-card {
-  background: var(--card-bg);
-  border-radius: 16px;
-  padding: 12px 14px;
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--border-soft);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 4px;
-}
-
-.stat-value {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.stat-footnote {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-/* FOOTER */
-.site-footer {
-  max-width: 1240px;
-  margin: 0 auto 30px;
-  padding: 0 20px;
-}
-
-.site-footer-inner {
-  margin-top: 24px;
-  padding-top: 14px;
-  border-top: 1px solid #cbd5e1;
-  font-size: 12px;
-  color: var(--text-muted);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-/* POPUP */
-.popup-bg {
-  position: fixed;
-  inset: 0;
-  background: rgba(15,23,42,0.55);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 50;
-}
-
-.popup-box {
-  background: var(--card-bg);
-  border-radius: 18px;
-  padding: 20px 22px 18px;
-  width: 360px;
-  max-width: 94vw;
-  box-shadow: 0 22px 55px rgba(15,23,42,0.3);
-  border: 1px solid var(--border-soft);
-}
-
-.popup-title {
-  font-size: 17px;
-  margin: 0 0 4px;
-}
-
-.popup-subtitle {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-}
-
-.popup-service {
-  font-size: 12px;
-  margin-bottom: 10px;
-  padding: 6px 10px;
-  border-radius: 10px;
-  background: #f1f5f9;
-}
-
-.popup-box label {
-  display: block;
-  font-size: 12px;
-  margin-top: 8px;
-  margin-bottom: 4px;
-}
-
-.popup-box input,
-.popup-box textarea {
-  width: 100%;
-  padding: 9px 10px;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-  font-size: 13px;
-}
-
-.popup-box textarea {
-  min-height: 70px;
-  resize: vertical;
-}
-
-.popup-actions {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.popup-btn-primary,
-.popup-btn-secondary {
-  flex: 1;
-  padding: 8px 10px;
-  border-radius: 999px;
-  border: none;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.popup-btn-primary {
-  background: var(--sa-green);
-  color: white;
-}
-
-.popup-btn-primary:hover {
-  background: #059669;
-}
-
-.popup-btn-secondary {
-  background: #e5e7eb;
-  color: #111827;
-}
-
-.popup-note {
-  margin-top: 6px;
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-/* RESPONSIVE */
-@media (max-width: 1024px) {
-  .hero-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .stats-row {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-bottom {
-    grid-template-columns: 1fr;
-  }
-}
+    :root {
+        --bg-page: #031b10;
+        --bg-shell: #052618;
+        --bg-hero: #054527;
+        --bg-sidebar: #06331f;
+        --bg-card: #073320;
+        --bg-card-soft: #0a3d26;
+        --accent: #28d17c;
+        --accent-soft: rgba(40, 209, 124, 0.1);
+        --text-main: #f5fff8;
+        --text-muted: #a7c9b3;
+        --border-soft: rgba(255, 255, 255, 0.06);
+        --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.65);
+        --radius-lg: 18px;
+        --radius-md: 12px;
+        --radius-pill: 999px;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+            sans-serif;
+        background: radial-gradient(circle at top, #06311f 0, #020f09 55%, #000 100%);
+        color: var(--text-main);
+    }
+
+    /* ========= TOP BAR ========= */
+    .topbar {
+        max-width: 1200px;
+        margin: 18px auto 10px auto;
+        padding: 14px 18px;
+        border-radius: var(--radius-lg);
+        background: rgba(3, 25, 16, 0.9);
+        border: 1px solid var(--border-soft);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
+    }
+
+    .brand-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .brand-logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at 20% 0, #28d17c, #0a7d46);
+        color: #02140b;
+        font-weight: 800;
+        font-size: 18px;
+    }
+
+    .brand-text-main {
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        font-size: 18px;
+    }
+
+    .brand-text-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+
+    .top-pills {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .pill {
+        padding: 8px 14px;
+        border-radius: var(--radius-pill);
+        font-size: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--text-muted);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(7, 46, 30, 0.85);
+        backdrop-filter: blur(14px);
+    }
+
+    .pill-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+    }
+
+    .pill-accent {
+        background: var(--accent-soft);
+        color: #d9ffe8;
+        border-color: transparent;
+    }
+
+    /* ========= LAYOUT ========= */
+    .layout {
+        max-width: 1200px;
+        margin: 0 auto 40px auto;
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        gap: 18px;
+    }
+
+    /* ========= SIDEBAR ========= */
+    .sidebar {
+        background: var(--bg-sidebar);
+        border-radius: var(--radius-lg);
+        padding: 18px 14px;
+        border: 1px solid var(--border-soft);
+        box-shadow: var(--shadow-soft);
+        display: flex;
+        flex-direction: column;
+        min-height: 480px;
+    }
+
+    .sidebar-header {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+        line-height: 1.5;
+    }
+
+    .scroll-area {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    .scroll-area::-webkit-scrollbar {
+        width: 5px;
+    }
+    .scroll-area::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 999px;
+    }
+
+    .category {
+        margin-bottom: 6px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .category-header {
+        cursor: pointer;
+        padding: 9px 9px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 10px;
+        transition: background 0.18s ease, transform 0.12s ease;
+    }
+
+    .category-header:hover {
+        background: rgba(255, 255, 255, 0.06);
+        transform: translateY(-1px);
+    }
+
+    .category-title {
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .category-count {
+        font-size: 11px;
+        color: var(--text-muted);
+    }
+
+    .category-arrow {
+        font-size: 11px;
+        color: var(--text-muted);
+    }
+
+    .service-list {
+        display: none;
+        padding: 6px 7px 8px 10px;
+        border-radius: 10px;
+        margin-top: 4px;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .service-item {
+        font-size: 11px;
+        color: #d3ffe7;
+        padding: 5px 8px;
+        border-radius: 999px;
+        cursor: pointer;
+        margin-bottom: 4px;
+        border: 1px solid transparent;
+        background: transparent;
+        transition: background 0.18s ease, transform 0.12s ease,
+            border-color 0.18s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .service-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(40, 209, 124, 0.7);
+    }
+
+    .service-item:hover {
+        background: rgba(6, 110, 63, 0.8);
+        border-color: rgba(40, 209, 124, 0.4);
+        transform: translateY(-1px);
+    }
+
+    .sidebar-footer {
+        margin-top: 10px;
+        font-size: 11px;
+        color: var(--text-muted);
+    }
+
+    /* ========= MAIN CONTENT ========= */
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .hero-card {
+        background: var(--bg-hero);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-soft);
+        padding: 24px 24px 20px 24px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.1fr);
+        gap: 20px;
+        box-shadow: var(--shadow-soft);
+    }
+
+    .hero-eyebrow {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+    }
+
+    .hero-title {
+        font-size: 26px;
+        line-height: 1.3;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .hero-sub {
+        font-size: 13px;
+        color: var(--text-muted);
+        max-width: 480px;
+        margin-bottom: 18px;
+    }
+
+    .region-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 18px;
+    }
+
+    .chip {
+        padding: 8px 12px;
+        border-radius: var(--radius-pill);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        font-size: 11px;
+        color: var(--text-main);
+        background: rgba(7, 58, 36, 0.9);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: default;
+    }
+
+    .chip-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+    }
+
+    .hero-meta {
+        font-size: 11px;
+        color: var(--text-muted);
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+
+    .hero-right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+    .hero-right-text {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.5;
+    }
+
+    .hero-right-cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .btn-primary {
+        padding: 10px 20px;
+        border-radius: var(--radius-pill);
+        border: none;
+        outline: none;
+        background: linear-gradient(135deg, #28d17c, #19a35c);
+        color: #02140b;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 14px 30px rgba(24, 199, 107, 0.6);
+        transition: transform 0.12s ease, box-shadow 0.12s ease,
+            filter 0.12s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.06);
+        box-shadow: 0 18px 40px rgba(24, 199, 107, 0.8);
+    }
+
+    .btn-ghost {
+        padding: 9px 16px;
+        border-radius: var(--radius-pill);
+        border: 1px dashed rgba(255, 255, 255, 0.3);
+        background: transparent;
+        color: var(--text-main);
+        font-size: 12px;
+        cursor: pointer;
+        transition: background 0.18s ease, border-color 0.18s ease,
+            color 0.18s ease;
+    }
+
+    .btn-ghost:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(40, 209, 124, 0.7);
+    }
+
+    .assistant-tag {
+        font-size: 11px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .assistant-avatar {
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        background: radial-gradient(circle at 0 0, #fed7aa, #fb7185);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* ========= STATS ========= */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .stat-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-md);
+        padding: 14px 14px 12px 14px;
+        border: 1px solid var(--border-soft);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7);
+    }
+
+    .stat-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+    }
+
+    .stat-value {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .stat-foot {
+        font-size: 11px;
+        color: var(--text-muted);
+    }
+
+    /* ========= WHY CHOOSE ========= */
+    .why-card {
+        margin-top: 10px;
+        background: var(--bg-card-soft);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-soft);
+        padding: 18px 18px 16px 18px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr);
+        gap: 18px;
+    }
+
+    .why-title {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+
+    .why-list {
+        font-size: 12px;
+        color: var(--text-muted);
+        list-style: none;
+    }
+
+    .why-list li {
+        margin-bottom: 6px;
+        display: flex;
+        gap: 6px;
+    }
+
+    .why-bullet {
+        color: var(--accent);
+        font-size: 14px;
+        margin-top: -2px;
+    }
+
+    .why-foot {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 10px;
+    }
+
+    /* ========= POPUP ========= */
+    .popup-bg {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 50;
+    }
+
+    .popup-box {
+        width: 360px;
+        max-width: 92vw;
+        background: #041e13;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 18px 18px 16px 18px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+    }
+
+    .popup-title {
+        font-size: 15px;
+        margin-bottom: 4px;
+    }
+
+    .popup-sub {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+    }
+
+    .popup-selected {
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(40, 209, 124, 0.1);
+        color: #d6ffe7;
+        margin-bottom: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .popup-selected span.tag {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+    }
+
+    .popup-input {
+        width: 100%;
+        padding: 10px 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(5, 31, 19, 0.9);
+        color: var(--text-main);
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .popup-input::placeholder {
+        color: rgba(199, 235, 215, 0.6);
+    }
+
+    .popup-row {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 6px;
+    }
+
+    .btn-secondary {
+        padding: 8px 14px;
+        border-radius: var(--radius-pill);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: transparent;
+        color: var(--text-main);
+        font-size: 12px;
+        cursor: pointer;
+        transition: background 0.16s ease, border-color 0.16s ease;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .popup-footnote {
+        margin-top: 8px;
+        font-size: 10px;
+        color: var(--text-muted);
+    }
+
+    /* ========= RESPONSIVE ========= */
+    @media (max-width: 980px) {
+        .layout {
+            grid-template-columns: 1fr;
+        }
+        .sidebar {
+            order: 2;
+        }
+    }
+
+    @media (max-width: 780px) {
+        .hero-card {
+            grid-template-columns: 1fr;
+        }
+        .stats-row {
+            grid-template-columns: 1fr;
+        }
+        .topbar {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .top-pills {
+            justify-content: flex-start;
+        }
+    }
 </style>
 </head>
 <body>
 
-<header class="site-header">
-  <h1>ServicePoint SA</h1>
-  <span>South Africa’s all-services contractor network – KZN · Gauteng · Cape Town</span>
+<!-- ========== TOP BAR ========== -->
+<header class="topbar">
+    <div class="brand-wrap">
+        <div class="brand-logo">S</div>
+        <div>
+            <div class="brand-text-main">ServicePoint SA</div>
+            <div class="brand-text-sub">Home &amp; Business Service Network</div>
+        </div>
+    </div>
+    <div class="top-pills">
+        <div class="pill">
+            <span class="pill-dot"></span>
+            Smart contractor matching
+        </div>
+        <div class="pill pill-accent">
+            <span class="pill-dot"></span>
+            Live human assistant chat
+        </div>
+        <div class="pill">
+            <span class="pill-dot"></span>
+            SA coverage · KZN · JHB · CPT
+        </div>
+    </div>
 </header>
 
-<div class="app-shell">
-  <div class="hero-grid">
-    <!-- SIDEBAR -->
+<main class="layout">
+    <!-- ========== SIDEBAR ========== -->
     <aside class="sidebar">
-      <div class="sidebar-title">Tap a category to see services</div>
-      <div class="sidebar-subtitle">Choose a service – our human assistant will take it from there.</div>
-      <div id="categoryList" class="category-list"></div>
+        <div class="sidebar-header">
+            Tap a category to see services.<br />
+            Tap a service to request it via our human assistant.
+        </div>
+
+        <div class="scroll-area" id="categoryList">
+            <!-- Populated by JS -->
+        </div>
+
+        <div class="sidebar-footer">
+            Serving Durban, Johannesburg &amp; Cape Town with rollout to the rest
+            of South Africa.
+        </div>
     </aside>
 
-    <!-- HERO MAIN -->
-    <section class="hero-card">
-      <div class="hero-inner">
-        <div class="hero-chips">
-          <div class="chip dot-green">Smart contractor matching</div>
-          <div class="chip dot-yellow">Human assistant chat</div>
-          <div class="chip dot-blue">Built for South African homes & businesses</div>
-        </div>
+    <!-- ========== MAIN CONTENT ========== -->
+    <section class="content">
+        <!-- HERO -->
+        <section class="hero-card">
+            <div>
+                <div class="hero-eyebrow">Built for South African homes &amp; businesses</div>
+                <h1 class="hero-title">
+                    Connect with trusted contractors in KZN, JHB &amp; CPT.
+                </h1>
+                <p class="hero-sub">
+                    One request. Verified contractors compete to give you the best
+                    service. You stay in control &mdash; we handle the admin, follow-ups
+                    and reminders.
+                </p>
 
-        <h2 class="hero-title">
-          Connect with trusted contractors in KZN, JHB & CPT.
-        </h2>
-        <p class="hero-subtitle">
-          One request. Verified contractors compete to give you the best service. You stay in control –
-          we handle the heavy admin, follow-ups and quotes.
+                <div class="region-chips">
+                    <div class="chip">
+                        <span class="chip-dot"></span>
+                        KZN &ndash; Durban &amp; surrounds
+                    </div>
+                    <div class="chip">
+                        <span class="chip-dot"></span>
+                        JHB &ndash; Johannesburg &amp; Gauteng
+                    </div>
+                    <div class="chip">
+                        <span class="chip-dot"></span>
+                        CPT &ndash; Cape Town &amp; Winelands
+                    </div>
+                </div>
+
+                <div class="hero-meta">
+                    <span>Average response time: &lt; 15 minutes during office hours.</span>
+                    <span>We only send your details once you confirm the quote.</span>
+                </div>
+            </div>
+
+            <div class="hero-right">
+                <div class="hero-right-text">
+                    Answer a few quick questions, pick a service and our
+                    <strong>human assistant</strong> chats with you to confirm the details
+                    before sending it to the best-scored contractors.
+                </div>
+
+                <div class="hero-right-cta">
+                    <button class="btn-primary" onclick="openPopupFromCTA()">
+                        Get matched now
+                    </button>
+                    <button class="btn-ghost" onclick="scrollToWhy()">
+                        How it works
+                    </button>
+                </div>
+
+                <div class="assistant-tag">
+                    <div class="assistant-avatar"></div>
+                    <span>Real people on standby if anything goes wrong on-site.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATS -->
+        <section class="stats-row">
+            <article class="stat-card">
+                <div class="stat-label">Leads successfully fed</div>
+                <div class="stat-value">168</div>
+                <div class="stat-foot">
+                    Real jobs routed to verified contractors across SA.
+                </div>
+            </article>
+            <article class="stat-card">
+                <div class="stat-label">Regions covered</div>
+                <div class="stat-value">3</div>
+                <div class="stat-foot">
+                    KZN · Gauteng · Cape Town (nationwide rollout coming soon).
+                </div>
+            </article>
+            <article class="stat-card">
+                <div class="stat-label">Average rating</div>
+                <div class="stat-value">4.8★</div>
+                <div class="stat-foot">Based on job reviews &amp; comeback rate.</div>
+            </article>
+        </section>
+
+        <!-- WHY CHOOSE -->
+        <section id="why-section" class="why-card">
+            <div>
+                <h2 class="why-title">Why choose ServicePoint SA?</h2>
+                <ul class="why-list">
+                    <li>
+                        <span class="why-bullet">✓</span>
+                        <span>
+                            We pre-vet contractors for documents, workmanship history and
+                            real-world references.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="why-bullet">✓</span>
+                        <span>
+                            Smart lead routing hides your number until you accept a
+                            contractor.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="why-bullet">✓</span>
+                        <span>
+                            We track jobs, quotes and follow-ups so nothing slips through
+                            the cracks.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="why-bullet">✓</span>
+                        <span>
+                            Our human assistant keeps you updated in plain language &mdash;
+                            not bots or call centres.
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <h2 class="why-title">How ServicePoint SA works</h2>
+                <ul class="why-list">
+                    <li>
+                        <span class="why-bullet">1</span>
+                        <span>Choose a category and tap the service you need.</span>
+                    </li>
+                    <li>
+                        <span class="why-bullet">2</span>
+                        <span>
+                            Our assistant confirms the details, budget and timing with
+                            you.
+                        </span>
+                    </li>
+                    <li>
+                        <span class="why-bullet">3</span>
+                        <span>
+                            We send the job to the right pros and you pick who to book.
+                        </span>
+                    </li>
+                </ul>
+                <p class="why-foot">
+                    You stay in control at every step. No spam, no mass WhatsApp groups.
+                </p>
+            </div>
+        </section>
+    </section>
+</main>
+
+<!-- ========== POPUP ========= -->
+<div class="popup-bg" id="popup">
+    <div class="popup-box">
+        <h3 class="popup-title">Request this service</h3>
+        <p class="popup-sub">
+            Our human assistant will confirm your details and match you to the
+            right contractor.
         </p>
 
-        <div class="hero-regions">
-          <div class="region-pill"><span class="dot"></span> KZN – Durban & surrounds</div>
-          <div class="region-pill"><span class="dot"></span> JHB – Gauteng metros</div>
-          <div class="region-pill"><span class="dot"></span> CPT – Cape Town & Winelands</div>
+        <div class="popup-selected">
+            <span class="tag"></span>
+            <span id="selectedService">General service</span>
         </div>
 
-        <div class="hero-bottom">
-          <div class="hero-why">
-            <h3>Why choose ServicePoint SA?</h3>
-            <ul>
-              <li>We pre-vet contractors for documents, reviews and workmanship history.</li>
-              <li>Smart lead routing hides your number until you accept a contractor.</li>
-              <li>We track jobs, quotes and follow-ups so nothing slips through the cracks.</li>
-              <li>Support team on standby if something goes wrong on-site.</li>
-            </ul>
-          </div>
+        <input
+            id="clientName"
+            class="popup-input"
+            type="text"
+            placeholder="Your full name"
+        />
+        <input
+            id="clientPhone"
+            class="popup-input"
+            type="text"
+            placeholder="Best contact number"
+        />
 
-          <div class="hero-cta-card">
-            <h3>Tell our assistant what you need</h3>
-            <p>
-              Pick a category on the left, choose a service and share your details.
-              Our human assistant will message you to confirm and route it to the right pros.
-            </p>
-            <div class="hero-cta-row">
-              <button class="hero-cta-btn" onclick="openPopup('General request – I\'m not sure')">
-                Get matched now
-              </button>
-              <div class="hero-eta">
-                Avg. response: <strong>&lt; 15 minutes</strong> during office hours.
-              </div>
-            </div>
-          </div>
+        <div class="popup-row">
+            <button class="btn-secondary" onclick="closePopup()">Cancel</button>
+            <button class="btn-primary" onclick="sendLead()">Send request</button>
         </div>
 
-        <!-- Stats / trust row -->
-        <div class="stats-row">
-          <div class="stat-card">
-            <div class="stat-label">Leads successfully matched</div>
-            <div class="stat-value">168</div>
-            <div class="stat-footnote">Real jobs connected to vetted contractors across SA.</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Service categories available</div>
-            <div class="stat-value">25+</div>
-            <div class="stat-footnote">From home repairs to media, fitness, property and more.</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Average client rating</div>
-            <div class="stat-value">4.8★</div>
-            <div class="stat-footnote">Based on comeback rate & verified post-job reviews.</div>
-          </div>
+        <div class="popup-footnote">
+            By sending a request you agree for us to contact you about this job.
         </div>
-      </div>
-    </section>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer class="site-footer">
-  <div class="site-footer-inner">
-    <div>© ServicePoint SA – connecting South Africans with trusted contractors.</div>
-    <div>
-      Want to become a contractor on our network?
-      Email <strong>servicepoint.info@gmail.com</strong> with your trade, area and a short description.
     </div>
-  </div>
-</footer>
-
-<!-- POPUP: HUMAN ASSISTANT -->
-<div class="popup-bg" id="popup">
-  <div class="popup-box">
-    <h3 class="popup-title">Chat to our assistant</h3>
-    <div class="popup-subtitle">
-      Share your details and we’ll match you to the best contractor for:
-    </div>
-    <div class="popup-service" id="selectedService"></div>
-
-    <label for="clientName">Your name</label>
-    <input type="text" id="clientName" placeholder="e.g. Thandi / Dyllon" />
-
-    <label for="clientPhone">WhatsApp / phone number</label>
-    <input type="text" id="clientPhone" placeholder="e.g. 082 123 4567" />
-
-    <label for="clientArea">Suburb & city</label>
-    <input type="text" id="clientArea" placeholder="e.g. Umhlanga, Durban / Fourways, JHB" />
-
-    <label for="clientDetails">Tell us briefly what you need</label>
-    <textarea id="clientDetails" placeholder="Example: Need a plumber to replace a leaking geyser this week, double-storey home, insurance claim."></textarea>
-
-    <div class="popup-actions">
-      <button class="popup-btn-secondary" onclick="closePopup()">Cancel</button>
-      <button class="popup-btn-primary" onclick="sendLead()">Send request</button>
-    </div>
-    <div class="popup-note">
-      Our human assistant will confirm details with you and then introduce you to the right contractors.
-    </div>
-  </div>
 </div>
 
 <script>
-/* ===========================
-   CATEGORY + SERVICE DATA
-   (diverse, SA-style, 200+)
-=========================== */
-const CATEGORY_DATA = {
+/* =========================================
+   CATEGORY + SERVICE DATA (FULL, DIVERSE)
+   ========================================= */
+const categories = {
   "Solar & Backup Power": [
     "Full solar system design",
     "Inverter + battery installation",
@@ -938,10 +1074,10 @@ const CATEGORY_DATA = {
     "Rental agent – manage my unit",
     "Snag list & handover report",
     "Home inspection report",
+    "Eviction & legal advisory (referral)",
     "Body corporate maintenance plan",
     "Short-let / Airbnb management",
-    "Property photography + listing setup",
-    "Rental-ready repairs & maintenance"
+    "Property photography + listing setup"
   ],
   "Business Services": [
     "Bookkeeping & monthly accounts",
@@ -965,123 +1101,142 @@ const CATEGORY_DATA = {
   ]
 };
 
-/* ===========================
-   BUILD CATEGORY SIDEBAR
-=========================== */
 const categoryListEl = document.getElementById("categoryList");
 
-Object.keys(CATEGORY_DATA).forEach((categoryName) => {
-  const services = CATEGORY_DATA[categoryName];
-  const catEl = document.createElement("div");
-  catEl.className = "category";
+Object.keys(categories).forEach((categoryName) => {
+    const services = categories[categoryName];
 
-  const headerEl = document.createElement("div");
-  headerEl.className = "category-header";
+    const category = document.createElement("div");
+    category.className = "category";
 
-  const leftEl = document.createElement("div");
-  leftEl.className = "category-header-left";
+    const header = document.createElement("div");
+    header.className = "category-header";
 
-  const nameEl = document.createElement("div");
-  nameEl.className = "category-name";
-  nameEl.textContent = categoryName;
+    const titleWrap = document.createElement("div");
+    titleWrap.className = "category-title";
 
-  const countEl = document.createElement("div");
-  countEl.className = "category-count";
-  countEl.textContent = services.length + " services";
+    const bullet = document.createElement("span");
+    bullet.textContent = "•";
 
-  leftEl.appendChild(nameEl);
-  leftEl.appendChild(countEl);
+    const title = document.createElement("span");
+    title.textContent = categoryName;
 
-  const arrowEl = document.createElement("div");
-  arrowEl.className = "category-arrow";
-  arrowEl.textContent = "›";
+    titleWrap.appendChild(bullet);
+    titleWrap.appendChild(title);
 
-  headerEl.appendChild(leftEl);
-  headerEl.appendChild(arrowEl);
+    const rightWrap = document.createElement("div");
+    rightWrap.style.display = "flex";
+    rightWrap.style.alignItems = "center";
+    rightWrap.style.gap = "6px";
 
-  const serviceListEl = document.createElement("div");
-  serviceListEl.className = "service-list";
+    const count = document.createElement("span");
+    count.className = "category-count";
+    count.textContent = services.length + " services";
 
-  services.forEach((serviceName) => {
-    const serviceEl = document.createElement("div");
-    serviceEl.className = "service-item";
-    serviceEl.innerHTML = `<span>${serviceName}</span><span>Tap to request</span>`;
-    serviceEl.addEventListener("click", () =>
-      openPopup(`${categoryName} – ${serviceName}`)
-    );
-    serviceListEl.appendChild(serviceEl);
-  });
+    const arrow = document.createElement("span");
+    arrow.className = "category-arrow";
+    arrow.textContent = "▾";
 
-  headerEl.addEventListener("click", () => {
-    const isOpen = catEl.classList.contains("open");
-    if (isOpen) {
-      catEl.classList.remove("open");
-      serviceListEl.classList.remove("open");
-    } else {
-      catEl.classList.add("open");
-      serviceListEl.classList.add("open");
-    }
-  });
+    rightWrap.appendChild(count);
+    rightWrap.appendChild(arrow);
 
-  catEl.appendChild(headerEl);
-  catEl.appendChild(serviceListEl);
-  categoryListEl.appendChild(catEl);
+    header.appendChild(titleWrap);
+    header.appendChild(rightWrap);
+
+    const list = document.createElement("div");
+    list.className = "service-list";
+
+    services.forEach((serviceName) => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "service-item";
+        item.onclick = () => openPopup(`${categoryName} – ${serviceName}`);
+
+        const dot = document.createElement("span");
+        dot.className = "service-dot";
+
+        const label = document.createElement("span");
+        label.textContent = serviceName;
+
+        item.appendChild(dot);
+        item.appendChild(label);
+        list.appendChild(item);
+    });
+
+    header.onclick = () => {
+        const isOpen = list.style.display === "block";
+        list.style.display = isOpen ? "none" : "block";
+        arrow.textContent = isOpen ? "▾" : "▴";
+    };
+
+    category.appendChild(header);
+    category.appendChild(list);
+    categoryListEl.appendChild(category);
 });
 
-/* ===========================
-   POPUP + TELEGRAM BOT
-   (human assistant front-end)
-=========================== */
-function openPopup(service) {
-  document.getElementById("selectedService").innerText = service;
-  document.getElementById("popup").style.display = "flex";
+/* =========================================
+   POPUP + HUMAN ASSISTANT + TELEGRAM LEAD
+   ========================================= */
+const popupEl = document.getElementById("popup");
+const selectedServiceEl = document.getElementById("selectedService");
+
+function openPopup(serviceName) {
+    selectedServiceEl.textContent = serviceName;
+    popupEl.style.display = "flex";
+}
+
+function openPopupFromCTA() {
+    // Default label if user clicks "Get matched now" first
+    openPopup("General service request");
 }
 
 function closePopup() {
-  document.getElementById("popup").style.display = "none";
+    popupEl.style.display = "none";
+}
+
+function scrollToWhy() {
+    const el = document.getElementById("why-section");
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function sendLead() {
-  const name = document.getElementById("clientName").value.trim();
-  const phone = document.getElementById("clientPhone").value.trim();
-  const area = document.getElementById("clientArea").value.trim();
-  const details = document.getElementById("clientDetails").value.trim();
-  const service = document.getElementById("selectedService").innerText;
+    const name = document.getElementById("clientName").value.trim();
+    const phone = document.getElementById("clientPhone").value.trim();
+    const service = selectedServiceEl.textContent.trim();
 
-  if (!name || !phone || !details) {
-    alert("Please add your name, contact number and a short description so our assistant can help you properly.");
-    return;
-  }
+    if (!name || !phone) {
+        alert("Please fill in your name and contact number.");
+        return;
+    }
 
-  const locationLine = area ? `📍 Area: ${area}\n` : "";
+    // TELEGRAM BOT SETTINGS
+    const botToken = "8526401033:AAFrG8IH8xqQL_RTD7s7JLyxZpc8e8GOyyg";
+    const chatId = "8187670531";
 
-  // Your Telegram bot details (already provided by you)
-  const botToken = "8526401033:AAFrG8IH8xqQL_RTD7s7JLyxZpc8e8GOyyg";
-  const chatId = "8187670531";
-
-  const msg = `🔥 *New Service Lead*
+    const msg = `🔥 *New Service Lead*
 📌 Service: ${service}
-${locationLine}👤 Name: ${name}
-📱 Phone: ${phone}
-📝 Details: ${details}`;
+👤 Name: ${name}
+📱 Phone: ${phone}`;
 
-  fetch(
-    `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}` +
-      `&text=${encodeURIComponent(msg)}&parse_mode=Markdown`
-  )
-    .then(() => {
-      alert("Lekker! Your request has been sent. Our assistant will contact you shortly.");
-      document.getElementById("clientName").value = "";
-      document.getElementById("clientPhone").value = "";
-      document.getElementById("clientArea").value = "";
-      document.getElementById("clientDetails").value = "";
-      closePopup();
-    })
-    .catch(() => {
-      alert("We couldn't send your request right now. Please try again in a moment.");
-    });
+    fetch(
+        `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}` +
+            `&text=${encodeURIComponent(msg)}&parse_mode=Markdown`
+    )
+        .then(() => {
+            alert(
+                "Thanks! Our human assistant will contact you shortly to confirm the details."
+            );
+            closePopup();
+            document.getElementById("clientName").value = "";
+            document.getElementById("clientPhone").value = "";
+        })
+        .catch(() => {
+            alert(
+                "We couldn't reach our assistant right now. Please try again in a moment."
+            );
+        });
 }
 </script>
-
 </body>
 </html>
