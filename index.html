@@ -410,106 +410,6 @@ body {
   color: var(--text-muted);
 }
 
-/* CONTRACTORS SECTION */
-.contractors-section {
-  margin-top: 28px;
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 10px;
-}
-
-.section-header h2 {
-  margin: 0;
-  font-size: 17px;
-}
-
-.section-header span {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.contractors-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.contractor-card {
-  background: var(--card-bg);
-  border-radius: 14px;
-  padding: 10px 10px 11px;
-  border: 1px solid var(--border-soft);
-  box-shadow: 0 10px 26px rgba(15,23,42,0.12);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-}
-
-.contractor-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(0,122,77,0.08), transparent 40%);
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.contractor-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 40px rgba(15,23,42,0.18);
-  border-color: rgba(0,122,77,0.6);
-}
-
-.contractor-card:hover::before {
-  opacity: 1;
-}
-
-.contractor-pill {
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: rgba(0,122,77,0.09);
-  color: var(--sa-green);
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.contractor-name {
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.contractor-meta {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.contractor-rating {
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.contractor-rating span.star {
-  color: #facc15;
-}
-
-.contractor-tagline {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
 /* POPUP */
 .popup-bg {
   position: fixed;
@@ -525,7 +425,8 @@ body {
   background: var(--card-bg);
   border-radius: 18px;
   padding: 20px 22px 18px;
-  width: 340px;
+  width: 360px;
+  max-width: 94vw;
   box-shadow: 0 22px 55px rgba(15,23,42,0.3);
   border: 1px solid var(--border-soft);
 }
@@ -556,12 +457,19 @@ body {
   margin-bottom: 4px;
 }
 
-.popup-box input {
+.popup-box input,
+.popup-box textarea,
+.popup-box select {
   width: 100%;
   padding: 9px 10px;
   border-radius: 10px;
   border: 1px solid #cbd5e1;
   font-size: 13px;
+}
+
+.popup-box textarea {
+  min-height: 70px;
+  resize: vertical;
 }
 
 .popup-actions {
@@ -601,26 +509,43 @@ body {
   color: var(--text-muted);
 }
 
+/* FOOTER */
+.site-footer {
+  max-width: 1240px;
+  margin: 0 auto 26px;
+  padding: 0 20px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.site-footer-inner {
+  background: #f1f5f9;
+  border-radius: 14px;
+  padding: 10px 14px;
+  border: 1px solid var(--border-soft);
+}
+
+.site-footer a {
+  color: var(--sa-blue);
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}
+
 /* RESPONSIVE */
 @media (max-width: 1024px) {
   .hero-grid {
     grid-template-columns: 1fr;
   }
 
-  .contractors-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .stats-row {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 640px) {
-  .stats-row {
-    grid-template-columns: 1fr;
-  }
-
-  .contractors-grid {
-    grid-template-columns: 1fr;
-  }
-
   .hero-bottom {
     grid-template-columns: 1fr;
   }
@@ -712,79 +637,22 @@ body {
       </div>
     </section>
   </div>
-
-  <!-- TOP CONTRACTORS -->
-  <section class="contractors-section">
-    <div class="section-header">
-      <h2>Top 5 contractors this month</h2>
-      <span>Updated monthly from your admin dashboard.</span>
-    </div>
-    <div class="contractors-grid">
-      <!-- CAL MEDIA (photographer) -->
-      <div class="contractor-card">
-        <div class="contractor-pill">
-          <span style="width:6px;height:6px;border-radius:999px;background:var(--sa-yellow);"></span>
-          Photography & Media
-        </div>
-        <div class="contractor-name">CAL MEDIA</div>
-        <div class="contractor-meta">Cape Town · Lifestyle, events & property photography</div>
-        <div class="contractor-rating"><span class="star">★</span> 4.9 · 120 shoots</div>
-        <div class="contractor-tagline">Clean, cinematic content for brands, agents & creators.</div>
-      </div>
-
-      <div class="contractor-card">
-        <div class="contractor-pill">
-          <span style="width:6px;height:6px;border-radius:999px;background:var(--sa-green);"></span>
-          Solar & Backup Power
-        </div>
-        <div class="contractor-name">KZN PowerWorks</div>
-        <div class="contractor-meta">Durban North · COC, inverters & lithium systems</div>
-        <div class="contractor-rating"><span class="star">★</span> 4.8 · 85 installs</div>
-        <div class="contractor-tagline">NRS-compliant solar for homes, sectional title and SME.</div>
-      </div>
-
-      <div class="contractor-card">
-        <div class="contractor-pill">
-          <span style="width:6px;height:6px;border-radius:999px;background:var(--sa-red);"></span>
-          Plumbing & Leak Detection
-        </div>
-        <div class="contractor-name">Joburg Rapid Plumbing</div>
-        <div class="contractor-meta">Randburg · 24/7 burst pipe & geyser specialists</div>
-        <div class="contractor-rating"><span class="star">★</span> 4.7 · 190 jobs</div>
-        <div class="contractor-tagline">Fast insurance-ready reports with same-day repairs.</div>
-      </div>
-
-      <div class="contractor-card">
-        <div class="contractor-pill">
-          <span style="width:6px;height:6px;border-radius:999px;background:var(--sa-blue);"></span>
-          Fitness & Coaching
-        </div>
-        <div class="contractor-name">PT Nation Sandton</div>
-        <div class="contractor-meta">Sandton · 1-on-1 & small group training</div>
-        <div class="contractor-rating"><span class="star">★</span> 4.9 · 60 clients</div>
-        <div class="contractor-tagline">Busy-professional programmes, home or gym based.</div>
-      </div>
-
-      <div class="contractor-card">
-        <div class="contractor-pill">
-          <span style="width:6px;height:6px;border-radius:999px;background:var(--sa-yellow);"></span>
-          Real Estate & Maintenance
-        </div>
-        <div class="contractor-name">Cape Property Care</div>
-        <div class="contractor-meta">Southern Suburbs · Rentals, snag lists & fixes</div>
-        <div class="contractor-rating"><span class="star">★</span> 4.8 · 140 properties</div>
-        <div class="contractor-tagline">Turn-key support for landlords, body corporates & agents.</div>
-      </div>
-    </div>
-  </section>
 </div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    Want to become a verified contractor on ServicePoint SA?  
+    Email <a href="mailto:servicepoint.info@gmail.com">servicepoint.info@gmail.com</a> with your trade, service areas and a short description of your business.
+  </div>
+</footer>
 
 <!-- POPUP: HUMAN ASSISTANT -->
 <div class="popup-bg" id="popup">
   <div class="popup-box">
     <h3 class="popup-title">Chat to our assistant</h3>
     <div class="popup-subtitle">
-      Share your details and we’ll match you to the best contractor for:
+      Answer a few quick questions so we can send your request to the right contractor.
     </div>
     <div class="popup-service" id="selectedService"></div>
 
@@ -794,12 +662,30 @@ body {
     <label for="clientPhone">WhatsApp / phone number</label>
     <input type="text" id="clientPhone" placeholder="e.g. 082 123 4567" />
 
+    <label for="clientLocation">Area / suburb</label>
+    <input type="text" id="clientLocation" placeholder="e.g. Durban North, Sandton, Bellville" />
+
+    <label for="clientTiming">When do you need this done?</label>
+    <select id="clientTiming">
+      <option value="As soon as possible">As soon as possible</option>
+      <option value="Today">Today</option>
+      <option value="This week">This week</option>
+      <option value="This month">This month</option>
+      <option value="Just getting quotes for now">Just getting quotes for now</option>
+    </select>
+
+    <label for="clientBudget">Rough budget (if you know)</label>
+    <input type="text" id="clientBudget" placeholder="e.g. Under R2 000 / R5k–R10k / Not sure" />
+
+    <label for="clientNotes">Short description of the job</label>
+    <textarea id="clientNotes" placeholder="Tell us what’s happening or what you want done."></textarea>
+
     <div class="popup-actions">
       <button class="popup-btn-secondary" onclick="closePopup()">Cancel</button>
       <button class="popup-btn-primary" onclick="sendLead()">Send request</button>
     </div>
     <div class="popup-note">
-      Our human assistant will confirm details with you and then introduce you to the right contractors.
+      Our human assistant will WhatsApp or call you to confirm details before introducing you to contractors.
     </div>
   </div>
 </div>
@@ -1171,6 +1057,10 @@ function closePopup() {
 function sendLead() {
   const name = document.getElementById("clientName").value.trim();
   const phone = document.getElementById("clientPhone").value.trim();
+  const location = document.getElementById("clientLocation").value.trim();
+  const timing = document.getElementById("clientTiming").value;
+  const budget = document.getElementById("clientBudget").value.trim();
+  const notes = document.getElementById("clientNotes").value.trim();
   const service = document.getElementById("selectedService").innerText;
 
   if (!name || !phone) {
@@ -1178,14 +1068,17 @@ function sendLead() {
     return;
   }
 
-  // Your Telegram bot details (already provided by you)
   const botToken = "8526401033:AAFrG8IH8xqQL_RTD7s7JLyxZpc8e8GOyyg";
   const chatId = "8187670531";
 
   const msg = `🔥 *New Service Lead*
 📌 Service: ${service}
 👤 Name: ${name}
-📱 Phone: ${phone}`;
+📱 Phone: ${phone}
+📍 Area: ${location || "Not specified"}
+⏱ Timing: ${timing}
+💰 Budget: ${budget || "Not specified"}
+📝 Notes: ${notes || "No extra notes given"}`;
 
   fetch(
     `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}` +
@@ -1195,6 +1088,9 @@ function sendLead() {
       alert("Lekker! Your request has been sent. Our assistant will contact you shortly.");
       document.getElementById("clientName").value = "";
       document.getElementById("clientPhone").value = "";
+      document.getElementById("clientLocation").value = "";
+      document.getElementById("clientBudget").value = "";
+      document.getElementById("clientNotes").value = "";
       closePopup();
     })
     .catch(() => {
