@@ -137,7 +137,7 @@
         flex-direction: column;
         min-height: 480px;
 
-        /* make sidebar fixed/sticky on the page */
+        /* sticky */
         position: sticky;
         top: 18px;
         max-height: calc(100vh - 36px);
@@ -146,8 +146,62 @@
     .sidebar-header {
         font-size: 13px;
         color: var(--text-muted);
-        margin-bottom: 14px;
+        margin-bottom: 10px;
         line-height: 1.5;
+    }
+
+    /* ==== SERVICE SEARCH (AUTO-COMPLETE) ==== */
+    .service-search {
+        margin-bottom: 12px;
+    }
+
+    .service-search-input {
+        width: 100%;
+        padding: 7px 9px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(3, 25, 16, 0.95);
+        color: var(--text-main);
+        font-size: 11px;
+        outline: none;
+    }
+
+    .service-search-input::placeholder {
+        color: rgba(199, 235, 215, 0.6);
+    }
+
+    .search-results {
+        margin-top: 4px;
+        max-height: 180px;
+        overflow-y: auto;
+        border-radius: 12px;
+        background: rgba(1, 10, 6, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        display: none;
+    }
+
+    .search-result-item {
+        padding: 6px 8px;
+        font-size: 11px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        transition: background 0.15s ease;
+    }
+
+    .search-result-item span.label {
+        color: #e9fff4;
+    }
+
+    .search-result-item span.cat {
+        color: var(--text-muted);
+        font-size: 10px;
+    }
+
+    .search-result-item:hover {
+        background: rgba(40, 209, 124, 0.14);
     }
 
     .scroll-area {
@@ -193,6 +247,20 @@
         gap: 8px;
     }
 
+    .category-icon {
+        width: 10px;
+        height: 10px;
+        border-radius: 4px;
+        background: radial-gradient(circle at 0 0, #28d17c, #0b7a46);
+        box-shadow: 0 0 8px rgba(40, 209, 124, 0.5);
+        animation: pulseIcon 2.4s infinite ease-in-out;
+    }
+
+    @keyframes pulseIcon {
+        0%, 100% { transform: scale(1); opacity: 0.9; }
+        50% { transform: scale(1.15); opacity: 1; }
+    }
+
     .category-count {
         font-size: 11px;
         color: var(--text-muted);
@@ -232,6 +300,7 @@
         height: 6px;
         border-radius: 50%;
         background: rgba(40, 209, 124, 0.7);
+        box-shadow: 0 0 10px rgba(40, 209, 124, 0.7);
     }
 
     .service-item:hover {
@@ -395,6 +464,46 @@
         border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
+    /* ========= EMERGENCY QUICK ROW ========= */
+    .emergency-row {
+        margin-top: 6px;
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-soft);
+        padding: 10px 14px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+    }
+
+    .emergency-label {
+        color: var(--text-muted);
+        margin-right: 4px;
+    }
+
+    .emergency-chip {
+        padding: 7px 10px;
+        border-radius: var(--radius-pill);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        font-size: 11px;
+        background: rgba(138, 23, 23, 0.18);
+        color: #ffecec;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .emergency-chip span.icon {
+        font-size: 12px;
+    }
+
+    .emergency-chip:hover {
+        background: rgba(214, 32, 32, 0.3);
+    }
+
     /* ========= STATS ========= */
     .stats-row {
         display: grid;
@@ -425,6 +534,11 @@
     .stat-foot {
         font-size: 11px;
         color: var(--text-muted);
+    }
+
+    /* Extra KPI row */
+    .kpi-row {
+        margin-top: 6px;
     }
 
     /* ========= WHY CHOOSE ========= */
@@ -466,6 +580,132 @@
         font-size: 11px;
         color: var(--text-muted);
         margin-top: 10px;
+    }
+
+    /* ========= CONTRACTOR CARDS ========= */
+    .contractors-section {
+        margin-top: 12px;
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-soft);
+        padding: 16px 16px 14px 16px;
+        box-shadow: var(--shadow-soft);
+    }
+
+    .section-heading {
+        font-size: 15px;
+        margin-bottom: 4px;
+    }
+
+    .section-sub {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+    }
+
+    .contractor-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .contractor-card {
+        background: #042016;
+        border-radius: 14px;
+        padding: 10px 10px 9px 10px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        font-size: 11px;
+    }
+
+    .contractor-name {
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+
+    .contractor-meta {
+        color: var(--text-muted);
+        margin-bottom: 4px;
+    }
+
+    .contractor-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 6px;
+    }
+
+    .contractor-tag {
+        padding: 3px 7px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        font-size: 10px;
+        color: #e3fff0;
+    }
+
+    .contractor-btn {
+        padding: 6px 9px;
+        border-radius: 999px;
+        border: none;
+        font-size: 11px;
+        background: linear-gradient(135deg, #28d17c, #19a35c);
+        color: #02140b;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    /* ========= REVIEWS ========= */
+    .reviews-section {
+        margin-top: 12px;
+        background: var(--bg-card-soft);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-soft);
+        padding: 14px 16px 12px 16px;
+    }
+
+    .reviews-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+    }
+
+    .reviews-carousel {
+        position: relative;
+        min-height: 70px;
+    }
+
+    .review-text {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+    }
+
+    .review-meta {
+        font-size: 11px;
+        color: #e7fff5;
+    }
+
+    .review-stars {
+        color: #facc15;
+        font-size: 11px;
+        margin-right: 4px;
+    }
+
+    .review-nav {
+        display: flex;
+        gap: 4px;
+    }
+
+    .review-btn {
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: transparent;
+        color: #e5fff5;
+        font-size: 11px;
+        cursor: pointer;
     }
 
     /* ========= POPUP ========= */
@@ -563,6 +803,177 @@
         color: var(--text-muted);
     }
 
+    /* ========= PROGRESS TRACKER ========= */
+    .progress-tracker {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 18px;
+        background: #041e13;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        padding: 8px 14px;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        font-size: 11px;
+        z-index: 60;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .progress-step-wrap {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .progress-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: transparent;
+    }
+
+    .progress-dot.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        box-shadow: 0 0 10px rgba(40, 209, 124, 0.8);
+    }
+
+    .progress-label {
+        color: var(--text-muted);
+    }
+
+    /* ========= COST ESTIMATOR MODAL ========= */
+    .cost-modal .popup-box {
+        max-width: 400px;
+    }
+
+    .cost-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .cost-label {
+        font-size: 11px;
+        margin-bottom: 4px;
+        color: var(--text-muted);
+    }
+
+    .cost-select,
+    .cost-input {
+        width: 100%;
+        padding: 8px 9px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(5, 31, 19, 0.9);
+        color: var(--text-main);
+        font-size: 12px;
+    }
+
+    .cost-result {
+        margin-top: 6px;
+        font-size: 12px;
+        color: #e7fff5;
+    }
+
+    /* ========= FLOATING ASSISTANT BUBBLE ========= */
+    .assistant-bubble {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        width: 46px;
+        height: 46px;
+        border-radius: 999px;
+        background: radial-gradient(circle at 0 0, #28d17c, #0d7a45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
+        cursor: pointer;
+        z-index: 55;
+    }
+
+    .assistant-bubble span {
+        font-size: 22px;
+        color: #02140b;
+    }
+
+    .assistant-panel {
+        position: fixed;
+        right: 18px;
+        bottom: 76px;
+        width: 260px;
+        max-width: 90vw;
+        background: #041e13;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+        display: none;
+        flex-direction: column;
+        padding: 10px 10px 8px 10px;
+        font-size: 11px;
+        z-index: 55;
+    }
+
+    .assistant-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .assistant-panel-title {
+        font-weight: 600;
+    }
+
+    .assistant-panel-body {
+        max-height: 160px;
+        overflow-y: auto;
+        margin-bottom: 6px;
+    }
+
+    .assistant-msg {
+        margin-bottom: 4px;
+    }
+
+    .assistant-msg.assistant {
+        color: var(--text-muted);
+    }
+
+    .assistant-msg.user {
+        color: #e7fff5;
+        text-align: right;
+    }
+
+    .assistant-input-row {
+        display: flex;
+        gap: 6px;
+    }
+
+    .assistant-input {
+        flex: 1;
+        padding: 5px 7px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(5, 31, 19, 0.9);
+        color: var(--text-main);
+        font-size: 11px;
+        outline: none;
+    }
+
+    .assistant-send-btn {
+        padding: 5px 9px;
+        border-radius: 999px;
+        border: none;
+        background: var(--accent);
+        color: #02140b;
+        font-size: 11px;
+        cursor: pointer;
+    }
+
     /* ========= RESPONSIVE ========= */
     @media (max-width: 980px) {
         .layout {
@@ -580,6 +991,9 @@
             grid-template-columns: 1fr;
         }
         .stats-row {
+            grid-template-columns: 1fr;
+        }
+        .contractor-grid {
             grid-template-columns: 1fr;
         }
         .topbar {
@@ -625,6 +1039,17 @@
         <div class="sidebar-header">
             Tap a category to see services.<br />
             Tap a service to request it via our human assistant.
+        </div>
+
+        <!-- SEARCH BAR -->
+        <div class="service-search">
+            <input
+                id="serviceSearch"
+                class="service-search-input"
+                type="text"
+                placeholder="Search across 200+ services..."
+            />
+            <div id="searchResults" class="search-results"></div>
         </div>
 
         <div class="scroll-area" id="categoryList">
@@ -687,6 +1112,9 @@
                     <button class="btn-ghost" onclick="scrollToWhy()">
                         How it works
                     </button>
+                    <button class="btn-ghost" onclick="openCostModal()">
+                        Estimate cost
+                    </button>
                 </div>
 
                 <div class="assistant-tag">
@@ -696,11 +1124,31 @@
             </div>
         </section>
 
+        <!-- EMERGENCY QUICK BUTTONS -->
+        <section class="emergency-row">
+            <span class="emergency-label">🚨 Emergency?</span>
+            <button class="emergency-chip" onclick="openPopup('Emergency – Burst pipe / major leak')">
+                <span class="icon">💧</span> Burst pipe
+            </button>
+            <button class="emergency-chip" onclick="openPopup('Emergency – Power tripping / no power')">
+                <span class="icon">⚡</span> Power tripping
+            </button>
+            <button class="emergency-chip" onclick="openPopup('Emergency – No hot water / geyser issue')">
+                <span class="icon">🔥</span> No hot water
+            </button>
+            <button class="emergency-chip" onclick="openPopup('Emergency – Locked out / access issue')">
+                <span class="icon">🚪</span> Locked out
+            </button>
+            <button class="emergency-chip" onclick="openPopup('Emergency – Wi-Fi / internet down')">
+                <span class="icon">📶</span> Wi-Fi down
+            </button>
+        </section>
+
         <!-- STATS -->
         <section class="stats-row">
             <article class="stat-card">
                 <div class="stat-label">Leads successfully fed</div>
-                <div class="stat-value">168</div>
+                <div class="stat-value" id="statLeads">168</div>
                 <div class="stat-foot">
                     Real jobs routed to verified contractors across SA.
                 </div>
@@ -716,6 +1164,25 @@
                 <div class="stat-label">Average rating</div>
                 <div class="stat-value">4.8★</div>
                 <div class="stat-foot">Based on job reviews &amp; comeback rate.</div>
+            </article>
+        </section>
+
+        <!-- KPI ROW -->
+        <section class="stats-row kpi-row">
+            <article class="stat-card">
+                <div class="stat-label">Leads today</div>
+                <div class="stat-value" id="statToday">12</div>
+                <div class="stat-foot">Live requests in the last 24 hours.</div>
+            </article>
+            <article class="stat-card">
+                <div class="stat-label">This week</div>
+                <div class="stat-value" id="statWeek">54</div>
+                <div class="stat-foot">New jobs logged since Monday.</div>
+            </article>
+            <article class="stat-card">
+                <div class="stat-label">Top category</div>
+                <div class="stat-value" id="statTopCat">Plumbing</div>
+                <div class="stat-foot">Based on total requests this week.</div>
             </article>
         </section>
 
@@ -773,6 +1240,73 @@
                 </p>
             </div>
         </section>
+
+        <!-- FEATURED CONTRACTORS -->
+        <section class="contractors-section">
+            <h2 class="section-heading">Featured contractors</h2>
+            <p class="section-sub">
+                Examples from our network. Chat to our assistant to be matched to the best option for your area.
+            </p>
+            <div class="contractor-grid">
+                <article class="contractor-card">
+                    <div class="contractor-name">KZN Elite Plumbing</div>
+                    <div class="contractor-meta">Durban · 4.9★ · 240+ jobs</div>
+                    <div class="contractor-tags">
+                        <span class="contractor-tag">Burst pipes</span>
+                        <span class="contractor-tag">Geysers</span>
+                        <span class="contractor-tag">Blockages</span>
+                    </div>
+                    <button class="contractor-btn"
+                        onclick="openPopup('Contractor enquiry – KZN Elite Plumbing')">
+                        Request a quote
+                    </button>
+                </article>
+                <article class="contractor-card">
+                    <div class="contractor-name">Gauteng Power &amp; Solar</div>
+                    <div class="contractor-meta">JHB · 4.8★ · 190+ jobs</div>
+                    <div class="contractor-tags">
+                        <span class="contractor-tag">COC &amp; compliance</span>
+                        <span class="contractor-tag">Solar backup</span>
+                        <span class="contractor-tag">DB upgrades</span>
+                    </div>
+                    <button class="contractor-btn"
+                        onclick="openPopup('Contractor enquiry – Gauteng Power & Solar')">
+                        Request a quote
+                    </button>
+                </article>
+                <article class="contractor-card">
+                    <div class="contractor-name">Cape Build &amp; Finish</div>
+                    <div class="contractor-meta">Cape Town · 4.7★ · 160+ jobs</div>
+                    <div class="contractor-tags">
+                        <span class="contractor-tag">Renovations</span>
+                        <span class="contractor-tag">Tiling</span>
+                        <span class="contractor-tag">Painting</span>
+                    </div>
+                    <button class="contractor-btn"
+                        onclick="openPopup('Contractor enquiry – Cape Build & Finish')">
+                        Request a quote
+                    </button>
+                </article>
+            </div>
+        </section>
+
+        <!-- REVIEWS -->
+        <section class="reviews-section">
+            <div class="reviews-header">
+                <div>
+                    <h2 class="section-heading">What clients are saying</h2>
+                    <p class="section-sub">Real feedback from jobs routed through our network.</p>
+                </div>
+                <div class="review-nav">
+                    <button class="review-btn" onclick="prevReview()">&lt;</button>
+                    <button class="review-btn" onclick="nextReview()">&gt;</button>
+                </div>
+            </div>
+            <div class="reviews-carousel">
+                <div id="reviewText" class="review-text"></div>
+                <div id="reviewMeta" class="review-meta"></div>
+            </div>
+        </section>
     </section>
 </main>
 
@@ -812,6 +1346,103 @@
             By sending a request you agree for us to contact you about this job.
         </div>
     </div>
+</div>
+
+<!-- ========== COST ESTIMATOR MODAL ========= -->
+<div class="popup-bg cost-modal" id="costModal">
+    <div class="popup-box">
+        <h3 class="popup-title">Quick cost estimate</h3>
+        <p class="popup-sub">
+            Get a rough price range before you submit your request. Final quotes
+            depend on site conditions.
+        </p>
+
+        <div class="cost-row">
+            <div style="flex:1;">
+                <div class="cost-label">Category</div>
+                <select id="costCategory" class="cost-select">
+                    <option value="Plumbing">Plumbing</option>
+                    <option value="Electrical">Electrical</option>
+                    <option value="Painting">Painting</option>
+                    <option value="Renovation">Renovation</option>
+                    <option value="Solar">Solar / Backup</option>
+                </select>
+            </div>
+            <div style="flex:1;">
+                <div class="cost-label">Job size</div>
+                <select id="costSize" class="cost-select">
+                    <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="large">Large</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="cost-row">
+            <div style="flex:1;">
+                <div class="cost-label">Urgency</div>
+                <select id="costUrgency" class="cost-select">
+                    <option value="normal">Within a week</option>
+                    <option value="soon">Next 48 hours</option>
+                    <option value="emergency">Emergency today</option>
+                </select>
+            </div>
+            <div style="flex:1;">
+                <div class="cost-label">Rough budget (optional)</div>
+                <input id="costBudget" class="cost-input" type="number" placeholder="e.g. 2500" />
+            </div>
+        </div>
+
+        <div class="popup-row">
+            <button class="btn-secondary" onclick="closeCostModal()">Close</button>
+            <button class="btn-primary" onclick="calculateEstimate()">Calculate</button>
+        </div>
+
+        <div id="costResult" class="cost-result"></div>
+    </div>
+</div>
+
+<!-- ========== PROGRESS TRACKER ========= -->
+<div id="progressTracker" class="progress-tracker">
+    <div class="progress-step-wrap">
+        <div class="progress-dot" data-step="1"></div>
+        <span class="progress-label">Confirming details</span>
+    </div>
+    <div class="progress-step-wrap">
+        <div class="progress-dot" data-step="2"></div>
+        <span class="progress-label">Routing to contractors</span>
+    </div>
+    <div class="progress-step-wrap">
+        <div class="progress-dot" data-step="3"></div>
+        <span class="progress-label">Preparing quotes</span>
+    </div>
+</div>
+
+<!-- ========== FLOATING ASSISTANT ========= -->
+<div class="assistant-panel" id="assistantPanel">
+    <div class="assistant-panel-header">
+        <span class="assistant-panel-title">ServicePoint assistant</span>
+        <button class="btn-secondary" style="padding:2px 6px;font-size:10px;" onclick="toggleAssistantPanel()">×</button>
+    </div>
+    <div id="assistantBody" class="assistant-panel-body">
+        <div class="assistant-msg assistant">
+            Hi 👋&nbsp;Tell me what you need and I’ll help you pick the best service.
+        </div>
+    </div>
+    <div class="assistant-input-row">
+        <input
+            id="assistantInput"
+            class="assistant-input"
+            type="text"
+            placeholder="e.g. Need someone to fix a burst pipe"
+            onkeydown="assistantKeyDown(event)"
+        />
+        <button class="assistant-send-btn" onclick="sendAssistantMessage()">Send</button>
+    </div>
+</div>
+
+<div class="assistant-bubble" onclick="toggleAssistantPanel()">
+    <span>💬</span>
 </div>
 
 <script>
@@ -1115,13 +1746,13 @@ Object.keys(categories).forEach((categoryName) => {
     const titleWrap = document.createElement("div");
     titleWrap.className = "category-title";
 
-    const bullet = document.createElement("span");
-    bullet.textContent = "•";
+    const icon = document.createElement("span");
+    icon.className = "category-icon";
 
     const title = document.createElement("span");
     title.textContent = categoryName;
 
-    titleWrap.appendChild(bullet);
+    titleWrap.appendChild(icon);
     titleWrap.appendChild(title);
 
     const rightWrap = document.createElement("div");
@@ -1175,10 +1806,78 @@ Object.keys(categories).forEach((categoryName) => {
 });
 
 /* =========================================
-   POPUP + LEAD SEND
+   SERVICE SEARCH (AUTO-COMPLETE)
+   ========================================= */
+const searchInput = document.getElementById("serviceSearch");
+const searchResults = document.getElementById("searchResults");
+
+const allServices = [];
+Object.keys(categories).forEach((categoryName) => {
+    categories[categoryName].forEach((serviceName) => {
+        allServices.push({
+            category: categoryName,
+            service: serviceName
+        });
+    });
+});
+
+searchInput.addEventListener("input", () => {
+    const q = searchInput.value.trim().toLowerCase();
+    if (!q) {
+        searchResults.style.display = "none";
+        searchResults.innerHTML = "";
+        return;
+    }
+
+    const matches = allServices.filter(entry =>
+        entry.service.toLowerCase().includes(q) ||
+        entry.category.toLowerCase().includes(q)
+    ).slice(0, 20);
+
+    if (!matches.length) {
+        searchResults.style.display = "none";
+        searchResults.innerHTML = "";
+        return;
+    }
+
+    searchResults.innerHTML = "";
+    matches.forEach(entry => {
+        const div = document.createElement("div");
+        div.className = "search-result-item";
+        div.onclick = () => {
+            openPopup(`${entry.category} – ${entry.service}`);
+            searchResults.style.display = "none";
+        };
+
+        const label = document.createElement("span");
+        label.className = "label";
+        label.textContent = entry.service;
+
+        const cat = document.createElement("span");
+        cat.className = "cat";
+        cat.textContent = entry.category;
+
+        div.appendChild(label);
+        div.appendChild(cat);
+        searchResults.appendChild(div);
+    });
+
+    searchResults.style.display = "block";
+});
+
+document.addEventListener("click", (e) => {
+    if (!searchResults.contains(e.target) && e.target !== searchInput) {
+        searchResults.style.display = "none";
+    }
+});
+
+/* =========================================
+   POPUP + LEAD SEND + PROGRESS TRACKER
    ========================================= */
 const popupEl = document.getElementById("popup");
 const selectedServiceEl = document.getElementById("selectedService");
+const progressEl = document.getElementById("progressTracker");
+let progressTimer = null;
 
 function openPopup(serviceName) {
     selectedServiceEl.textContent = serviceName;
@@ -1199,6 +1898,41 @@ function scrollToWhy() {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function setProgressStep(step) {
+    const dots = progressEl.querySelectorAll(".progress-dot");
+    dots.forEach(dot => {
+        const s = parseInt(dot.getAttribute("data-step"), 10);
+        if (s <= step) {
+            dot.classList.add("active");
+        } else {
+            dot.classList.remove("active");
+        }
+    });
+}
+
+function startProgress() {
+    progressEl.style.display = "flex";
+    setProgressStep(1);
+
+    if (progressTimer) clearTimeout(progressTimer);
+
+    progressTimer = setTimeout(() => {
+        setProgressStep(2);
+        progressTimer = setTimeout(() => {
+            setProgressStep(3);
+        }, 1800);
+    }, 1600);
+}
+
+function stopProgress() {
+    if (progressTimer) clearTimeout(progressTimer);
+    progressTimer = null;
+    setTimeout(() => {
+        progressEl.style.display = "none";
+        setProgressStep(1);
+    }, 900);
+}
+
 function sendLead() {
     const name = document.getElementById("clientName").value.trim();
     const phone = document.getElementById("clientPhone").value.trim();
@@ -1208,6 +1942,8 @@ function sendLead() {
         alert("Please fill in your name and contact number.");
         return;
     }
+
+    startProgress();
 
     // TODO: add your own Telegram bot token + chat ID here
     const botToken = "YOUR_TELEGRAM_BOT_TOKEN";
@@ -1234,7 +1970,154 @@ function sendLead() {
             alert(
                 "We couldn't reach our assistant right now. Please try again in a moment."
             );
+        })
+        .finally(() => {
+            stopProgress();
         });
+}
+
+/* =========================================
+   REVIEWS CAROUSEL
+   ========================================= */
+const reviews = [
+    {
+        text: "“ServicePoint SA sorted out a burst pipe at 9pm. The plumber was professional and the assistant kept me updated the whole time.”",
+        meta: "– Thandi, Durban · Emergency plumbing",
+        stars: 5
+    },
+    {
+        text: "“Got three quotes for a painting job within a day. Chose the best one and everything was handled through WhatsApp with their assistant.”",
+        meta: "– Jason, Johannesburg · Interior repaint",
+        stars: 5
+    },
+    {
+        text: "“They connected us with a solar contractor who understood our budget and explained everything clearly. Highly recommended.”",
+        meta: "– Ayesha, Cape Town · Solar backup",
+        stars: 4
+    },
+    {
+        text: "“Quick, simple and no spam calls. Submitted once, picked my contractor and the job was done within 48 hours.”",
+        meta: "– Kabelo, Pietermaritzburg · Electrical fault",
+        stars: 5
+    }
+];
+
+let reviewIndex = 0;
+const reviewTextEl = document.getElementById("reviewText");
+const reviewMetaEl = document.getElementById("reviewMeta");
+
+function renderReview() {
+    const r = reviews[reviewIndex];
+    const stars = "★".repeat(r.stars) + "☆".repeat(5 - r.stars);
+    reviewTextEl.innerHTML = `<span class="review-stars">${stars}</span>${r.text}`;
+    reviewMetaEl.textContent = r.meta;
+}
+
+function nextReview() {
+    reviewIndex = (reviewIndex + 1) % reviews.length;
+    renderReview();
+}
+
+function prevReview() {
+    reviewIndex = (reviewIndex - 1 + reviews.length) % reviews.length;
+    renderReview();
+}
+
+renderReview();
+
+/* =========================================
+   COST ESTIMATOR
+   ========================================= */
+const costModal = document.getElementById("costModal");
+
+function openCostModal() {
+    costModal.style.display = "flex";
+}
+
+function closeCostModal() {
+    costModal.style.display = "none";
+}
+
+function calculateEstimate() {
+    const category = document.getElementById("costCategory").value;
+    const size = document.getElementById("costSize").value;
+    const urgency = document.getElementById("costUrgency").value;
+    const budget = document.getElementById("costBudget").value.trim();
+    const resultEl = document.getElementById("costResult");
+
+    let baseMin = 500;
+    let baseMax = 1500;
+
+    if (category === "Plumbing") { baseMin = 800; baseMax = 3000; }
+    if (category === "Electrical") { baseMin = 700; baseMax = 2800; }
+    if (category === "Painting") { baseMin = 1500; baseMax = 6000; }
+    if (category === "Renovation") { baseMin = 5000; baseMax = 30000; }
+    if (category === "Solar") { baseMin = 8000; baseMax = 80000; }
+
+    if (size === "medium") {
+        baseMin *= 1.5;
+        baseMax *= 1.7;
+    } else if (size === "large") {
+        baseMin *= 2.2;
+        baseMax *= 3;
+    }
+
+    if (urgency === "soon") {
+        baseMin *= 1.1;
+        baseMax *= 1.2;
+    } else if (urgency === "emergency") {
+        baseMin *= 1.3;
+        baseMax *= 1.4;
+    }
+
+    const formattedMin = Math.round(baseMin / 100) * 100;
+    const formattedMax = Math.round(baseMax / 100) * 100;
+
+    let text = `For ${size} ${category.toLowerCase()} (${urgency}), typical jobs range between ±R${formattedMin.toLocaleString()} and R${formattedMax.toLocaleString()}.`;
+    if (budget) {
+        text += ` Based on your rough budget of R${Number(budget).toLocaleString()}, our assistant will try match you with the best fit.`;
+    }
+
+    resultEl.textContent = text;
+}
+
+/* =========================================
+   FLOATING ASSISTANT (FRONT-END ONLY)
+   ========================================= */
+const assistantPanel = document.getElementById("assistantPanel");
+const assistantBody = document.getElementById("assistantBody");
+const assistantInput = document.getElementById("assistantInput");
+
+function toggleAssistantPanel() {
+    const isOpen = assistantPanel.style.display === "flex";
+    assistantPanel.style.display = isOpen ? "none" : "flex";
+}
+
+function sendAssistantMessage() {
+    const text = assistantInput.value.trim();
+    if (!text) return;
+
+    const userMsg = document.createElement("div");
+    userMsg.className = "assistant-msg user";
+    userMsg.textContent = text;
+    assistantBody.appendChild(userMsg);
+
+    assistantInput.value = "";
+
+    const reply = document.createElement("div");
+    reply.className = "assistant-msg assistant";
+    reply.textContent =
+        "Thanks! For the fastest response, pick the closest service on the left or tell me your suburb and I’ll suggest a category.";
+    assistantBody.appendChild(reply);
+
+    assistantBody.scrollTop = assistantBody.scrollHeight;
+}
+
+function assistantKeyDown(e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        sendAssistantMessage();
+    }
 }
 </script>
 </body>
