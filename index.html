@@ -121,8 +121,9 @@
         max-width: 1200px;
         margin: 0 auto 40px auto;
         display: grid;
-        grid-template-columns: 260px minmax(0, 1fr);
+        grid-template-columns: 270px minmax(0, 1fr);
         gap: 18px;
+        align-items: flex-start;
     }
 
     /* ========= SIDEBAR ========= */
@@ -135,6 +136,11 @@
         display: flex;
         flex-direction: column;
         min-height: 480px;
+
+        /* make sidebar fixed/sticky on the page */
+        position: sticky;
+        top: 18px;
+        max-height: calc(100vh - 36px);
     }
 
     .sidebar-header {
@@ -563,6 +569,8 @@
             grid-template-columns: 1fr;
         }
         .sidebar {
+            position: static;
+            max-height: none;
             order: 2;
         }
     }
@@ -641,7 +649,7 @@
                 <p class="hero-sub">
                     One request. Verified contractors compete to give you the best
                     service. You stay in control &mdash; we handle the admin, follow-ups
-                    and reminders.
+                    and reminders across <strong>200+ services</strong>.
                 </p>
 
                 <div class="region-chips">
@@ -808,7 +816,7 @@
 
 <script>
 /* =========================================
-   CATEGORY + SERVICE DATA (FULL, DIVERSE)
+   CATEGORY + SERVICE DATA (200+ SERVICES)
    ========================================= */
 const categories = {
   "Solar & Backup Power": [
@@ -1167,7 +1175,7 @@ Object.keys(categories).forEach((categoryName) => {
 });
 
 /* =========================================
-   POPUP + HUMAN ASSISTANT + TELEGRAM LEAD
+   POPUP + LEAD SEND
    ========================================= */
 const popupEl = document.getElementById("popup");
 const selectedServiceEl = document.getElementById("selectedService");
@@ -1178,7 +1186,6 @@ function openPopup(serviceName) {
 }
 
 function openPopupFromCTA() {
-    // Default label if user clicks "Get matched now" first
     openPopup("General service request");
 }
 
@@ -1202,9 +1209,9 @@ function sendLead() {
         return;
     }
 
-    // TELEGRAM BOT SETTINGS
-    const botToken = "8526401033:AAFrG8IH8xqQL_RTD7s7JLyxZpc8e8GOyyg";
-    const chatId = "8187670531";
+    // TODO: add your own Telegram bot token + chat ID here
+    const botToken = "YOUR_TELEGRAM_BOT_TOKEN";
+    const chatId = "YOUR_CHAT_ID";
 
     const msg = `🔥 *New Service Lead*
 📌 Service: ${service}
@@ -1231,4 +1238,4 @@ function sendLead() {
 }
 </script>
 </body>
-</html> 
+</html>
